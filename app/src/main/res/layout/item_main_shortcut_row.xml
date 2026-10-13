@@ -3,29 +3,36 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_shortcut_row"
-    style="@style/Widget.TermuxWidget.Card.Outlined"
+    style="@style/Widget.TermuxWidget.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="4dp"
-    app:cardBackgroundColor="@color/nothing_surface">
+    android:layout_marginBottom="8dp"
+    app:cardBackgroundColor="@color/m3_surface_container"
+    android:clickable="true"
+    android:focusable="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="8dp">
+        android:padding="12dp">
 
-        <ImageView
-            android:id="@+id/row_shortcut_icon"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:background="@drawable/widget_pill_badge_bg"
-            android:padding="4dp"
-            android:src="@drawable/ic_lucide_terminal"
-            android:layout_marginEnd="10dp"
-            app:tint="@color/nothing_text_primary"
-            android:contentDescription="@null" />
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/widget_icon_badge_bg"
+            android:layout_marginEnd="12dp">
+
+            <ImageView
+                android:id="@+id/row_shortcut_icon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_lucide_terminal"
+                app:tint="@color/m3_primary"
+                android:contentDescription="@null" />
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -37,9 +44,9 @@
                 android:id="@+id/row_shortcut_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
-                android:textColor="@color/nothing_text_primary"
+                android:textColor="@color/m3_on_surface"
                 android:singleLine="true"
                 android:ellipsize="middle" />
 
@@ -47,8 +54,9 @@
                 android:id="@+id/row_shortcut_path"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="10sp"
-                android:textColor="@color/nothing_text_secondary"
+                android:layout_marginTop="2dp"
+                android:textSize="11sp"
+                android:textColor="@color/m3_on_surface_variant"
                 android:singleLine="true"
                 android:ellipsize="middle" />
         </LinearLayout>
@@ -58,24 +66,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/widget_pill_badge_bg"
-            android:paddingStart="6dp"
-            android:paddingEnd="6dp"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:textSize="8sp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:textSize="9sp"
             android:textStyle="bold"
-            android:textColor="@color/nothing_text_secondary"
-            android:layout_marginEnd="8dp" />
+            android:textColor="@color/badge_task_text"
+            android:layout_marginEnd="10dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/row_btn_run"
             style="@style/Widget.Material3.Button.IconButton.Filled"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
             app:icon="@drawable/ic_lucide_play"
-            app:iconSize="14dp"
-            app:iconTint="@color/nothing_red"
-            app:backgroundTint="@color/nothing_red_dim"
+            app:iconSize="16dp"
+            app:iconTint="@color/m3_primary"
+            app:backgroundTint="@color/m3_primary_container"
             android:contentDescription="Run Script" />
     </LinearLayout>
 

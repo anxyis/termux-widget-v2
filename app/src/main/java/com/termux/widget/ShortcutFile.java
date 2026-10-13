@@ -229,7 +229,7 @@ public final class ShortcutFile {
         remoteViews.setTextViewText(R.id.widget_item, getLabel());
 
         boolean isTaskScript = isTask();
-        int defaultIcon = isTaskScript ? R.drawable.ic_hero_bolt_red : R.drawable.ic_lucide_terminal;
+        int defaultIcon = isTaskScript ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
         int iconRes = mIconId != null ? IconRegistry.getDrawableResId(mIconId, defaultIcon) : defaultIcon;
         remoteViews.setImageViewResource(R.id.widget_item_icon, iconRes);
 
@@ -246,7 +246,7 @@ public final class ShortcutFile {
         boolean isTaskScript = isTask();
         remoteViews.setTextViewText(R.id.widget_grid_item_badge, isTaskScript ? "TASK" : "TERM");
 
-        int defaultIcon = isTaskScript ? R.drawable.ic_hero_bolt_red : R.drawable.ic_lucide_terminal;
+        int defaultIcon = isTaskScript ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
         int iconRes = mIconId != null ? IconRegistry.getDrawableResId(mIconId, defaultIcon) : defaultIcon;
         remoteViews.setImageViewResource(R.id.widget_grid_item_icon, iconRes);
 

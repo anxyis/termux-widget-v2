@@ -1,56 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Nothing OS Monochromatic Base Palette (Dark / AMOLED) -->
-    <color name="nothing_bg">#000000</color>
-    <color name="nothing_surface">#141414</color>
-    <color name="nothing_surface_elevated">#1E1E1E</color>
-    <color name="nothing_border">#2C2C2E</color>
-    <color name="nothing_red">#D71921</color>
-    <color name="nothing_red_dim">#2A1215</color>
-    <color name="nothing_text_primary">#FFFFFF</color>
-    <color name="nothing_text_secondary">#8E8E93</color>
-    <color name="nothing_text_muted">#636366</color>
-
-    <!-- Material 3 Dark Color Roles Mapped to Nothing OS Monochromatic -->
-    <color name="m3_primary">#D71921</color>
+    <!-- PixelPlayer Expressive Palette (Dark Mode) -->
+    <color name="m3_primary">#9E7AFF</color>
     <color name="m3_on_primary">#FFFFFF</color>
-    <color name="m3_primary_container">#2A1215</color>
-    <color name="m3_on_primary_container">#FFDADA</color>
+    <color name="m3_primary_container">#3D286E</color>
+    <color name="m3_on_primary_container">#E9D5FF</color>
 
-    <color name="m3_secondary">#8E8E93</color>
-    <color name="m3_on_secondary">#000000</color>
-    <color name="m3_secondary_container">#1E1E1E</color>
-    <color name="m3_on_secondary_container">#FFFFFF</color>
+    <color name="m3_secondary">#F472B6</color>
+    <color name="m3_on_secondary">#FFFFFF</color>
+    <color name="m3_secondary_container">#4A1535</color>
+    <color name="m3_on_secondary_container">#FCE7F3</color>
 
-    <color name="m3_tertiary">#D71921</color>
+    <color name="m3_tertiary">#38BDF8</color>
     <color name="m3_on_tertiary">#FFFFFF</color>
-    <color name="m3_tertiary_container">#2A1215</color>
-    <color name="m3_on_tertiary_container">#FFDADA</color>
+    <color name="m3_tertiary_container">#0C3A5A</color>
+    <color name="m3_on_tertiary_container">#BAE6FD</color>
 
-    <color name="m3_surface">#000000</color>
-    <color name="m3_on_surface">#FFFFFF</color>
-    <color name="m3_surface_variant">#141414</color>
-    <color name="m3_on_surface_variant">#8E8E93</color>
+    <color name="m3_surface">#130F24</color>
+    <color name="m3_on_surface">#F5F3FF</color>
+    <color name="m3_surface_variant">#261E42</color>
+    <color name="m3_on_surface_variant">#C4B5FD</color>
 
-    <color name="m3_surface_container_lowest">#000000</color>
-    <color name="m3_surface_container_low">#0A0A0A</color>
-    <color name="m3_surface_container">#141414</color>
-    <color name="m3_surface_container_high">#1E1E1E</color>
-    <color name="m3_surface_container_highest">#2C2C2E</color>
+    <color name="m3_surface_container_lowest">#0E0A1A</color>
+    <color name="m3_surface_container_low">#18132D</color>
+    <color name="m3_surface_container">#241C3E</color>
+    <color name="m3_surface_container_high">#2F2550</color>
+    <color name="m3_surface_container_highest">#3B2F62</color>
 
-    <color name="m3_outline">#3A3A3C</color>
-    <color name="m3_outline_variant">#2C2C2E</color>
+    <color name="m3_outline">#4C3D6E</color>
+    <color name="m3_outline_variant">#2F264C</color>
 
     <!-- Semantic Status & Task Badges -->
-    <color name="badge_task_bg">#2A1215</color>
-    <color name="badge_task_text">#D71921</color>
-    <color name="badge_session_bg">#1E1E1E</color>
-    <color name="badge_session_text">#8E8E93</color>
-    <color name="badge_group_bg">#1E1E1E</color>
-    <color name="badge_group_text">#FFFFFF</color>
+    <color name="badge_task_bg">#3D286E</color>
+    <color name="badge_task_text">#C4B5FD</color>
+    <color name="badge_session_bg">#251E3C</color>
+    <color name="badge_session_text">#E2E8F0</color>
+    <color name="badge_group_bg">#241C3E</color>
+    <color name="badge_group_text">#F5F3FF</color>
 
-    <!-- Widget Specific High-Contrast Elements -->
-    <color name="widget_card_bg">#141414</color>
-    <color name="widget_container_bg">#0A0A0A</color>
-    <color name="widget_ripple">#30D71921</color>
+    <color name="status_connected">#34D399</color>
+    <color name="status_connected_dim">#064E3B</color>
+    <color name="status_disconnected">#F87171</color>
+    <color name="status_disconnected_dim">#450A0A</color>
+
+    <!-- Widget Specific Elements -->
+    <color name="widget_card_bg">#241C3E</color>
+    <color name="widget_container_bg">#18122E</color>
+    <color name="widget_ripple">#309E7AFF</color>
 </resources>

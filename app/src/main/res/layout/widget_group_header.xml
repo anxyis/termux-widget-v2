@@ -19,20 +19,20 @@
         android:textSize="11sp"
         android:textStyle="bold"
         android:textAllCaps="true"
-        android:letterSpacing="0.08"
-        android:textColor="@color/nothing_text_secondary" />
+        android:letterSpacing="0.04"
+        android:textColor="@color/m3_primary" />
 
     <TextView
         android:id="@+id/widget_group_header_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/widget_pill_badge_bg"
-        android:paddingStart="6dp"
-        android:paddingEnd="6dp"
-        android:paddingTop="1dp"
-        android:paddingBottom="1dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
         android:textSize="9sp"
         android:textStyle="bold"
-        android:textColor="@color/nothing_text_primary" />
+        android:textColor="@color/badge_task_text" />
 
 </LinearLayout>

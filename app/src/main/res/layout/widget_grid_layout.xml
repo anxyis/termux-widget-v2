@@ -11,28 +11,27 @@
     <LinearLayout
         android:id="@+id/top_row"
         android:layout_width="match_parent"
-        android:layout_height="34dp"
+        android:layout_height="38dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingStart="12dp"
-        android:paddingEnd="6dp">
+        android:paddingEnd="8dp">
 
         <ImageView
-            android:layout_width="6dp"
-            android:layout_height="6dp"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
             android:layout_marginEnd="8dp"
             android:contentDescription="@null"
-            android:src="@drawable/ic_nothing_red_dot" />
+            android:src="@drawable/ic_status_dot" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="TERMUX // GRID"
-            android:textSize="12sp"
+            android:text="Termux Grid"
+            android:textSize="13sp"
             android:textStyle="bold"
-            android:letterSpacing="0.06"
-            android:textColor="@color/nothing_text_primary"
+            android:textColor="@color/m3_on_surface"
             android:singleLine="true"
             android:ellipsize="end" />
 
@@ -50,22 +49,22 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:contentDescription="@null"
-        android:src="@color/nothing_border" />
+        android:src="@color/m3_outline_variant" />
 
     <!-- Grid View Collection -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="4dp">
+        android:padding="6dp">
 
         <GridView
             android:id="@+id/widget_grid"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:numColumns="2"
-            android:verticalSpacing="4dp"
-            android:horizontalSpacing="4dp"
+            android:verticalSpacing="6dp"
+            android:horizontalSpacing="6dp"
             android:stretchMode="columnWidth"
             android:scrollbars="vertical" />
 
@@ -76,24 +75,22 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center"
-            android:padding="12dp">
+            android:padding="16dp">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginBottom="6dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginBottom="8dp"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_lucide_folder" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="[ NO SCRIPTS FOUND ]"
+                android:text="@string/msg_no_shortcut_scripts"
                 android:gravity="center"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.04"
-                android:textColor="@color/nothing_text_secondary" />
+                android:textSize="12sp"
+                android:textColor="@color/m3_on_surface_variant" />
         </LinearLayout>
     </FrameLayout>
 

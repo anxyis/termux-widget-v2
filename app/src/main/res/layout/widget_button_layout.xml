@@ -14,8 +14,8 @@
 
     <ImageView
         android:id="@+id/widget_button_icon"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_marginEnd="8dp"
         android:contentDescription="@null"
         android:src="@drawable/ic_lucide_terminal" />
@@ -33,7 +33,7 @@
             android:text="@string/title_button_widget_name"
             android:textSize="12sp"
             android:textStyle="bold"
-            android:textColor="@color/nothing_text_primary"
+            android:textColor="@color/m3_on_surface"
             android:maxLines="1"
             android:ellipsize="end" />
 
@@ -41,11 +41,10 @@
             android:id="@+id/widget_button_sublabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="RUN // TASK"
-            android:textSize="9sp"
+            android:text="Tap to run"
+            android:textSize="10sp"
             android:textStyle="bold"
-            android:letterSpacing="0.06"
-            android:textColor="@color/nothing_red"
+            android:textColor="@color/m3_primary"
             android:maxLines="1" />
     </LinearLayout>
 

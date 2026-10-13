@@ -6,50 +6,44 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/nothing_bg"
+    android:background="@color/m3_surface"
     tools:context=".activities.TermuxWidgetMainActivity">
 
-    <!-- Nothing OS Technical Top Bar -->
+    <!-- Expressive PixelPlayer Top Bar -->
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/main_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/nothing_bg"
-        app:title="TERMUX // WIDGET"
-        app:titleTextColor="@color/nothing_text_primary"
-        app:titleTextAppearance="@style/TextAppearance.Material3.TitleMedium" />
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:contentDescription="@null"
-        android:src="@color/nothing_border" />
+        android:background="@color/m3_surface"
+        app:title="Termux Shortcuts"
+        app:titleTextColor="@color/m3_on_surface"
+        app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:padding="12dp">
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Technical Status & Sync Bento Card -->
+            <!-- Hero Status & Connection Banner -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_status_banner"
                 style="@style/Widget.TermuxWidget.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="@color/nothing_surface">
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/m3_surface_container">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="14dp">
+                    android:padding="16dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -57,13 +51,21 @@
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
 
-                        <ImageView
-                            android:id="@+id/img_status_icon"
-                            android:layout_width="8dp"
-                            android:layout_height="8dp"
-                            android:src="@drawable/ic_nothing_red_dot"
-                            android:layout_marginEnd="10dp"
-                            android:contentDescription="@null" />
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:background="@drawable/widget_icon_badge_bg"
+                            android:layout_marginEnd="12dp">
+
+                            <ImageView
+                                android:id="@+id/img_status_icon"
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_hero_bolt"
+                                app:tint="@color/m3_primary"
+                                android:contentDescription="@null" />
+                        </FrameLayout>
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -75,169 +77,200 @@
                                 android:id="@+id/txt_status_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="STATUS : CONNECTED"
-                                android:textSize="12sp"
+                                android:text="Connected to Termux"
+                                android:textSize="15sp"
                                 android:textStyle="bold"
-                                android:letterSpacing="0.06"
-                                android:textColor="@color/nothing_text_primary" />
+                                android:textColor="@color/m3_on_surface" />
 
                             <TextView
                                 android:id="@+id/txt_status_subtitle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
-                                android:text="PATH : ~/.shortcuts/ • 0 shortcuts"
-                                android:textSize="11sp"
-                                android:textColor="@color/nothing_text_secondary" />
+                                android:text="~/.shortcuts/ • 0 shortcuts"
+                                android:textSize="12sp"
+                                android:textColor="@color/m3_on_surface_variant" />
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Technical Action Buttons -->
+                    <!-- Expressive Action Buttons -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_marginTop="12dp">
+                        android:layout_marginTop="14dp">
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btn_refresh_shortcuts"
                             style="@style/Widget.TermuxWidget.Button.Tonal"
                             android:layout_width="0dp"
-                            android:layout_height="38dp"
+                            android:layout_height="42dp"
                             android:layout_weight="1"
-                            android:layout_marginEnd="6dp"
-                            android:text="[ SYNC TERMUX ]"
-                            android:textSize="10sp"
+                            android:layout_marginEnd="8dp"
+                            android:text="Sync Scripts"
+                            android:textSize="12sp"
                             android:textStyle="bold"
-                            android:letterSpacing="0.04"
-                            app:backgroundTint="@color/nothing_red_dim"
-                            android:textColor="@color/nothing_red"
+                            app:backgroundTint="@color/m3_primary_container"
+                            android:textColor="@color/m3_on_primary_container"
                             app:icon="@drawable/ic_hero_arrow_path"
-                            app:iconTint="@color/nothing_red"
-                            app:iconSize="14dp"
-                            android:paddingStart="6dp"
-                            android:paddingEnd="6dp" />
+                            app:iconTint="@color/m3_on_primary_container"
+                            app:iconSize="16dp" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/button_refresh_all_widgets"
                             style="@style/Widget.TermuxWidget.Button.Tonal"
                             android:layout_width="0dp"
-                            android:layout_height="38dp"
+                            android:layout_height="42dp"
                             android:layout_weight="1"
-                            android:text="[ REFRESH WIDGETS ]"
-                            android:textSize="10sp"
+                            android:text="Refresh Widgets"
+                            android:textSize="12sp"
                             android:textStyle="bold"
-                            android:letterSpacing="0.04"
-                            app:backgroundTint="@color/nothing_surface_elevated"
-                            android:textColor="@color/nothing_text_primary"
+                            app:backgroundTint="@color/m3_surface_container_high"
+                            android:textColor="@color/m3_on_surface"
                             app:icon="@drawable/ic_lucide_terminal"
-                            app:iconTint="@color/nothing_text_primary"
-                            app:iconSize="14dp"
-                            android:paddingStart="6dp"
-                            android:paddingEnd="6dp" />
+                            app:iconTint="@color/m3_on_surface"
+                            app:iconSize="16dp" />
                     </LinearLayout>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Compact Technical Setup Helper -->
+            <!-- Compact Setup Helper -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_setup_guide"
                 style="@style/Widget.TermuxWidget.Card.Outlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="14dp"
-                app:cardBackgroundColor="@color/nothing_surface">
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/m3_surface_container">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:padding="10dp">
+                    android:padding="12dp">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="CONFIG : allow-external-apps=true"
-                        android:textSize="11sp"
-                        android:textColor="@color/nothing_text_secondary" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Termux Configuration"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/m3_on_surface" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="allow-external-apps=true"
+                            android:textSize="11sp"
+                            android:textColor="@color/m3_on_surface_variant" />
+                    </LinearLayout>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_copy_setup_command"
-                        style="@style/Widget.Material3.Button.TextButton"
+                        style="@style/Widget.Material3.Button.TonalButton"
                         android:layout_width="wrap_content"
-                        android:layout_height="32dp"
-                        android:text="[ COPY ]"
-                        android:textSize="10sp"
+                        android:layout_height="36dp"
+                        android:text="Copy"
+                        android:textSize="11sp"
                         android:textStyle="bold"
-                        android:letterSpacing="0.04"
-                        android:textColor="@color/nothing_text_primary"
-                        android:padding="0dp" />
+                        app:cornerRadius="18dp"
+                        android:layout_marginEnd="6dp" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_open_app_settings"
-                        style="@style/Widget.Material3.Button.TextButton"
+                        style="@style/Widget.Material3.Button.TonalButton"
                         android:layout_width="wrap_content"
-                        android:layout_height="32dp"
-                        android:text="[ PERMISSIONS ]"
-                        android:textSize="10sp"
+                        android:layout_height="36dp"
+                        android:text="Permissions"
+                        android:textSize="11sp"
                         android:textStyle="bold"
-                        android:letterSpacing="0.04"
-                        android:textColor="@color/nothing_red"
-                        android:padding="0dp" />
+                        app:cornerRadius="18dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Quick Tiles Section Header -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="QUICK SETTINGS TILES [08]"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.08"
-                android:textColor="@color/nothing_text_secondary"
-                android:layout_marginBottom="8dp" />
-
-            <!-- Quick Tiles Grid -->
-            <GridLayout
-                android:id="@+id/grid_quick_tiles"
+            <!-- Quick Tiles Section -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:columnCount="2"
-                android:layout_marginBottom="16dp" />
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp">
 
-            <!-- Shortcuts Header & Add Command Row -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Quick Settings Tiles"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/m3_on_surface" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Tap any tile slot to assign or customize a script"
+                    android:textSize="11sp"
+                    android:textColor="@color/m3_on_surface_variant"
+                    android:layout_marginBottom="10dp" />
+
+                <GridLayout
+                    android:id="@+id/grid_quick_tiles"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="2" />
+            </LinearLayout>
+
+            <!-- Shortcuts Directory Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="10dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="SHORTCUT DIRECTORY"
-                    android:textSize="11sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.08"
-                    android:textColor="@color/nothing_text_secondary" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Shortcuts Directory"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/m3_on_surface" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Tap any script for details, run, or pin to home"
+                        android:textSize="11sp"
+                        android:textColor="@color/m3_on_surface_variant" />
+                </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_add_command"
-                    style="@style/Widget.Material3.Button.TextButton"
+                    style="@style/Widget.TermuxWidget.Button.Tonal"
                     android:layout_width="wrap_content"
-                    android:layout_height="32dp"
-                    android:text="[ + ADD COMMAND ]"
-                    android:textSize="10sp"
+                    android:layout_height="36dp"
+                    android:text="+ Custom Command"
+                    android:textSize="11sp"
                     android:textStyle="bold"
-                    android:letterSpacing="0.04"
-                    android:textColor="@color/nothing_red"
-                    android:padding="0dp" />
+                    app:backgroundTint="@color/m3_primary_container"
+                    android:textColor="@color/m3_on_primary_container"
+                    app:icon="@drawable/ic_lucide_plus"
+                    app:iconTint="@color/m3_on_primary_container"
+                    app:iconSize="14dp" />
             </LinearLayout>
 
             <!-- Shortcuts Container -->

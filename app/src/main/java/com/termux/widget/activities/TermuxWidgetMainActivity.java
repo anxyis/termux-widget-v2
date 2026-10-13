@@ -38,6 +38,7 @@ import com.termux.shared.logger.Logger;
 import com.termux.shared.termux.TermuxConstants;
 import com.termux.shared.termux.file.TermuxFileUtils;
 import com.termux.widget.R;
+import com.termux.widget.ScriptInfoBottomSheet;
 import com.termux.widget.ShortcutFile;
 import com.termux.widget.TermuxCustomCommandPreferences;
 import com.termux.widget.TermuxCustomCommandPreferences.CustomCommand;
@@ -170,11 +171,11 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         ShortcutUtils.enumerateShortcutFiles(this, files, false);
 
         if (!accessible) {
-            mTxtStatusTitle.setText("STATUS : DISCONNECTED");
+            mTxtStatusTitle.setText("Termux Disconnected");
             mTxtStatusSubtitle.setText("Termux app (com.termux) not detected");
         } else {
-            mTxtStatusTitle.setText("STATUS : CONNECTED");
-            mTxtStatusSubtitle.setText("PATH : ~/.shortcuts/ • " + files.size() + " shortcuts loaded");
+            mTxtStatusTitle.setText("Connected to Termux");
+            mTxtStatusSubtitle.setText("~/.shortcuts/ • " + files.size() + " shortcuts loaded");
         }
     }
 
@@ -200,7 +201,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
 
             if (scriptPath != null && !scriptPath.isEmpty()) {
                 txtLabel.setText(label != null ? label : ("Tile " + slot));
-                txtStatus.setText("READY");
+                txtStatus.setText("Ready");
                 int iconRes = IconRegistry.getDrawableResId(iconId, R.drawable.ic_lucide_terminal);
                 imgIcon.setImageResource(iconRes);
             } else {
@@ -250,7 +251,8 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
 
             boolean isTask = sf.isTask();
             txtBadge.setText(isTask ? "TASK" : "TERM");
-            txtBadge.setTextColor(getResources().getColor(isTask ? R.color.nothing_red : R.color.nothing_text_secondary));
+            txtBadge.setBackgroundResource(isTask ? R.drawable.widget_pill_badge_bg : R.drawable.widget_pill_session_bg);
+            txtBadge.setTextColor(getResources().getColor(isTask ? R.color.badge_task_text : R.color.badge_session_text));
 
             int defaultIcon = isTask ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
             int iconRes = sf.mIconId != null ? IconRegistry.getDrawableResId(sf.mIconId, defaultIcon) : defaultIcon;
@@ -259,6 +261,45 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
             btnRun.setOnClickListener(v -> {
                 TermuxWidgetProvider.sendExecutionIntentToTermuxService(this, sf.getPath(), LOG_TAG);
                 Toast.makeText(this, "Executing: " + sf.getLabel(), Toast.LENGTH_SHORT).show();
+            });
+
+            row.setOnClickListener(v -> {
+                ScriptInfoBottomSheet sheet = ScriptInfoBottomSheet.newInstance(sf);
+                sheet.setScriptActionListener(new ScriptInfoBottomSheet.ScriptActionListener() {
+                    @Override
+                    public void onEditCommand(@NonNull ShortcutFile shortcutFile) {
+                        String cmdId = shortcutFile.getPath().replace("custom:", "");
+                        CustomCommand cmd = TermuxCustomCommandPreferences.getCommandById(TermuxWidgetMainActivity.this, cmdId);
+                        if (cmd != null) {
+                            showAddEditCommandDialog(cmd);
+                        }
+                    }
+
+                    @Override
+                    public void onDeleteCommand(@NonNull ShortcutFile shortcutFile) {
+                        String cmdId = shortcutFile.getPath().replace("custom:", "");
+                        CustomCommand cmd = TermuxCustomCommandPreferences.getCommandById(TermuxWidgetMainActivity.this, cmdId);
+                        if (cmd != null) {
+                            new MaterialAlertDialogBuilder(TermuxWidgetMainActivity.this)
+                                    .setTitle("Delete Command")
+                                    .setMessage("Are you sure you want to delete '" + cmd.name + "'?")
+                                    .setPositiveButton("Delete", (d, w) -> {
+                                        TermuxCustomCommandPreferences.deleteCustomCommand(TermuxWidgetMainActivity.this, cmd.id);
+                                        populateDashboard();
+                                        sendIntentToRefreshAllWidgets();
+                                        Toast.makeText(TermuxWidgetMainActivity.this, "Command deleted", Toast.LENGTH_SHORT).show();
+                                    })
+                                    .setNegativeButton("Cancel", null)
+                                    .show();
+                        }
+                    }
+
+                    @Override
+                    public void onTileAssigned() {
+                        populateQuickTiles();
+                    }
+                });
+                sheet.show(getSupportFragmentManager(), "script_info_sheet");
             });
 
             if (sf.mIsCustomCommand) {
