@@ -294,9 +294,11 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         btnPickIcon.setText("Select Icon: " + selectedIconId[0]);
         btnPickIcon.setIconResource(IconRegistry.getDrawableResId(selectedIconId[0], R.drawable.ic_lucide_terminal));
         btnPickIcon.setOnClickListener(v -> {
-            IconPickerBottomSheet picker = IconPickerBottomSheet.newInstance(selectedIconId[0]);
-            picker.setOnIconSelectedListener((iconId, iconName) -> {
+            IconPickerBottomSheet picker = IconPickerBottomSheet.newInstance();
+            picker.setOnIconSelectedListener(iconId -> {
                 selectedIconId[0] = iconId;
+                IconRegistry.IconItem item = IconRegistry.getIcon(iconId);
+                String iconName = item != null ? item.name : iconId;
                 btnPickIcon.setText("Select Icon: " + iconName);
                 btnPickIcon.setIconResource(IconRegistry.getDrawableResId(iconId, R.drawable.ic_lucide_terminal));
             });
