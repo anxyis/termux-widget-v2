@@ -37,7 +37,7 @@ import java.util.concurrent.Executors;
 
 public class IconPickerBottomSheet extends BottomSheetDialogFragment {
 
-    private static final int PAGE_SIZE = 48;
+    private static final int PAGE_SIZE = 24;
 
     public interface OnIconSelectedListener {
         void onIconSelected(@NonNull String iconId);
@@ -288,9 +288,9 @@ public class IconPickerBottomSheet extends BottomSheetDialogFragment {
         @Override
         public void onBindViewHolder(@NonNull IconViewHolder holder, int position) {
             IconItem item = mItems.get(position);
-            holder.imgIcon.setImageResource(item.drawableResId);
             holder.txtName.setText(item.name);
             holder.txtPack.setText(item.pack);
+            IconLoader.loadIconAsync(holder.imgIcon, item.id, item.drawableResId, 72);
             holder.card.setOnClickListener(v -> mClickListener.onIconClick(item));
         }
 

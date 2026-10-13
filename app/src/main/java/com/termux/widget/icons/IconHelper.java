@@ -125,34 +125,17 @@ public final class IconHelper {
     }
 
     /**
-     * Applies icon to standard UI ImageView.
+     * Applies icon to standard UI ImageView using asynchronous background rendering and cache.
      */
     public static void applyToImageView(@NonNull ImageView iconView,
                                         @Nullable ImageView customImageView,
                                         @Nullable String iconId,
                                         @DrawableRes int defaultRes) {
-        if (isCustomFile(iconId)) {
-            Bitmap bmp = loadCustomBitmap(iconId);
-            if (bmp != null) {
-                if (customImageView != null) {
-                    iconView.setVisibility(View.GONE);
-                    customImageView.setVisibility(View.VISIBLE);
-                    customImageView.setImageBitmap(bmp);
-                } else {
-                    iconView.setVisibility(View.VISIBLE);
-                    iconView.setImageTintList(null);
-                    iconView.setImageBitmap(bmp);
-                }
-                return;
-            }
-        }
-
         if (customImageView != null) {
             customImageView.setVisibility(View.GONE);
         }
         iconView.setVisibility(View.VISIBLE);
-        int resId = IconRegistry.getDrawableResId(iconId, defaultRes);
-        iconView.setImageResource(resId);
+        IconLoader.loadIconAsync(iconView, iconId, defaultRes);
     }
 
     /**

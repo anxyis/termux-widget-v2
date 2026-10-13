@@ -36,6 +36,9 @@ public class TermuxWidgetApplication extends Application {
                         .setPrecondition((activity, theme) -> !com.termux.widget.theme.ThemeManager.isAmoledMode(activity))
                         .build()
         );
+
+        // Pre-warm icon cache in background thread pool to ensure 0-lag instant picker opening
+        com.termux.widget.icons.IconLoader.prewarmCache(this);
     }
 
     public static Context getAppContext() {

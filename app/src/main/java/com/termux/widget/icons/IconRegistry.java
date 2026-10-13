@@ -39,7 +39,7 @@ public final class IconRegistry {
         @DrawableRes public final int drawableResId;
         public final String category;
         public final String pack;
-        public final List<String> tags;
+        public final String searchKey;
 
         public IconItem(String id, String name, @DrawableRes int drawableResId, String category, String pack, String... tags) {
             this.id = id;
@@ -47,11 +47,19 @@ public final class IconRegistry {
             this.drawableResId = drawableResId;
             this.category = category;
             this.pack = pack;
-            this.tags = tags != null ? Arrays.asList(tags) : Collections.emptyList();
+
+            StringBuilder sb = new StringBuilder(name.length() + id.length() + category.length() + pack.length() + 32);
+            sb.append(name).append(' ').append(id).append(' ').append(category).append(' ').append(pack);
+            if (tags != null) {
+                for (String t : tags) {
+                    sb.append(' ').append(t);
+                }
+            }
+            this.searchKey = sb.toString().toLowerCase(Locale.ROOT);
         }
     }
 
-    private static final Map<String, IconItem> ICONS = new LinkedHashMap<>();
+    private static final Map<String, IconItem> ICONS = new LinkedHashMap<>(512, 0.75f);
 
     static {
         register(new IconItem("ion_cube", "Container / Pod", R.drawable.ic_ion_cube, CAT_DEV, "Ion", "container", "docker", "pod", "cube"));
@@ -566,28 +574,16 @@ public final class IconRegistry {
 
     @NonNull
     public static List<IconItem> searchIcons(@Nullable String query, @Nullable String category) {
-        List<IconItem> result = new ArrayList<>();
         String normalizedQuery = query != null ? query.trim().toLowerCase(Locale.ROOT) : "";
         boolean filterCategory = category != null && !CAT_ALL.equalsIgnoreCase(category);
 
+        List<IconItem> result = new ArrayList<>();
         for (IconItem item : ICONS.values()) {
             if (filterCategory && !item.category.equalsIgnoreCase(category)) {
                 continue;
             }
-            if (normalizedQuery.isEmpty()) {
+            if (normalizedQuery.isEmpty() || item.searchKey.contains(normalizedQuery)) {
                 result.add(item);
-                continue;
-            }
-            if (item.name.toLowerCase(Locale.ROOT).contains(normalizedQuery) ||
-                item.id.toLowerCase(Locale.ROOT).contains(normalizedQuery)) {
-                result.add(item);
-                continue;
-            }
-            for (String tag : item.tags) {
-                if (tag.toLowerCase(Locale.ROOT).contains(normalizedQuery)) {
-                    result.add(item);
-                    break;
-                }
             }
         }
         return result;
