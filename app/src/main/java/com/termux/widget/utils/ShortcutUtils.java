@@ -57,15 +57,17 @@ public class ShortcutUtils {
     public static void enumerateShortcutFiles(@NonNull Context context, @NonNull List<ShortcutFile> files, boolean sorted) {
         List<ShortcutFile> tempList = new ArrayList<>();
 
-        // 1. Synced paths from Termux ~/.shortcuts (populated via RUN_COMMAND query)
-        List<String> syncedPaths = TermuxShortcutSyncManager.getSyncedPaths(context);
-        for (String p : syncedPaths) {
-            tempList.add(new ShortcutFile(p));
+        // 1. Direct Termux internal ~/.shortcuts (if readable directly)
+        if (TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR.exists() && TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR.canRead()) {
+            enumerateShortcutFiles(tempList, TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR, false, 0);
         }
 
-        // 2. Direct Termux internal ~/.shortcuts (if readable directly)
-        if (syncedPaths.isEmpty() && TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR.exists() && TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR.canRead()) {
-            enumerateShortcutFiles(tempList, TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR, false, 0);
+        // 2. Synced paths from Termux ~/.shortcuts (populated via RUN_COMMAND query)
+        if (tempList.isEmpty()) {
+            List<String> syncedPaths = TermuxShortcutSyncManager.getSyncedPaths(context);
+            for (String p : syncedPaths) {
+                tempList.add(new ShortcutFile(p));
+            }
         }
 
         // 3. Shared storage /sdcard/Termux/shortcuts/
@@ -80,9 +82,10 @@ public class ShortcutUtils {
             enumerateShortcutFiles(tempList, appExternalShortcuts, false, 0);
         }
 
-        // 5. In-app custom commands (if manually created by user)
+        // 5. In-app custom commands (if manually created by user, excluding legacy mock commands)
         List<TermuxCustomCommandPreferences.CustomCommand> customCmds = TermuxCustomCommandPreferences.getCustomCommands(context);
         for (TermuxCustomCommandPreferences.CustomCommand cmd : customCmds) {
+            if (cmd.id != null && isLegacyDummyCommand(cmd.id)) continue;
             tempList.add(new ShortcutFile(cmd));
         }
 
@@ -157,6 +160,12 @@ public class ShortcutUtils {
             }
             return false;
         }
+    }
+
+    private static boolean isLegacyDummyCommand(String id) {
+        return "pkg_update".equals(id) || "htop".equals(id) || "neofetch".equals(id)
+                || "sshd_start".equals(id) || "sshd_stop".equals(id)
+                || "http_server".equals(id) || "git_status".equals(id);
     }
 
 }

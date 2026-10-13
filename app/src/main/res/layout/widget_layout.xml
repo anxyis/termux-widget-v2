@@ -7,43 +7,49 @@
     android:background="@drawable/widget_container_bg"
     android:padding="0dp">
 
-    <!-- Compact Header Row -->
+    <!-- Compact Nothing OS Technical Header -->
     <LinearLayout
         android:id="@+id/top_row"
         android:layout_width="match_parent"
-        android:layout_height="36dp"
+        android:layout_height="34dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingStart="12dp"
         android:paddingEnd="6dp">
 
+        <!-- Signal Red Status Dot -->
         <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="6dp"
+            android:layout_height="6dp"
             android:layout_marginEnd="8dp"
             android:contentDescription="@null"
-            android:src="@drawable/ic_lucide_terminal" />
+            android:src="@drawable/ic_nothing_red_dot" />
 
+        <!-- Technical Monospace Title -->
         <TextView
             android:id="@+id/txt_widget_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/title_termux_shortcuts"
-            android:textSize="13sp"
+            android:text="TERMUX // SHORTS"
+            android:textSize="12sp"
             android:textStyle="bold"
-            android:textColor="@color/m3_on_surface"
+            android:letterSpacing="0.06"
+            android:textColor="@color/nothing_text_primary"
             android:singleLine="true"
             android:ellipsize="end" />
 
+        <!-- Count Indicator [04] -->
         <TextView
             android:id="@+id/txt_widget_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="6dp"
-            android:textSize="11sp"
-            android:textColor="@color/m3_on_surface_variant" />
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:textColor="@color/nothing_text_secondary" />
 
+        <!-- Minimal Refresh Control -->
         <ImageButton
             android:id="@+id/refresh_button"
             android:layout_width="28dp"
@@ -51,15 +57,15 @@
             android:background="@drawable/widget_header_btn_bg"
             android:src="@drawable/ic_hero_arrow_path"
             android:contentDescription="@string/action_refresh"
-            android:padding="5dp" />
+            android:padding="6dp" />
     </LinearLayout>
 
-    <!-- Header Divider (ImageView is allowed in RemoteViews, View is not) -->
+    <!-- 1px Hairline Technical Divider -->
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:contentDescription="@null"
-        android:src="@color/m3_outline_variant" />
+        android:src="@color/nothing_border" />
 
     <!-- Scrollable Shortcuts Collection -->
     <FrameLayout
@@ -71,25 +77,24 @@
             android:id="@+id/widget_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@color/m3_outline_variant"
+            android:divider="@color/nothing_border"
             android:dividerHeight="1px"
             android:scrollbars="vertical"
-            android:clipToPadding="false"
-            android:paddingBottom="2dp" />
+            android:clipToPadding="false" />
 
-        <!-- Empty State View -->
+        <!-- Minimal Empty State View -->
         <LinearLayout
             android:id="@+id/empty_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center"
-            android:padding="16dp">
+            android:padding="12dp">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginBottom="8dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginBottom="6dp"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_lucide_folder" />
 
@@ -97,10 +102,12 @@
                 android:id="@+id/txt_empty_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/msg_no_shortcut_scripts"
+                android:text="[ NO SCRIPTS FOUND ]"
                 android:gravity="center"
-                android:textSize="12sp"
-                android:textColor="@color/m3_on_surface_variant" />
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.04"
+                android:textColor="@color/nothing_text_secondary" />
         </LinearLayout>
     </FrameLayout>
 

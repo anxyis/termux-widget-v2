@@ -88,7 +88,7 @@ public final class TermuxWidgetProvider extends AppWidgetProvider {
 
         List<ShortcutFile> shortcutCountList = new ArrayList<>();
         ShortcutUtils.enumerateShortcutFiles(context, shortcutCountList, false);
-        remoteViews.setTextViewText(R.id.txt_widget_count, String.valueOf(shortcutCountList.size()));
+        remoteViews.setTextViewText(R.id.txt_widget_count, String.format("[%02d]", shortcutCountList.size()));
 
         // Setup intent which points to the TermuxWidgetService which will provide the views for this collection.
         Intent intent = new Intent(context, TermuxWidgetService.class);

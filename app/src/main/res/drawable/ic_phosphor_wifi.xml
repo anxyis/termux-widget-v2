@@ -4,25 +4,25 @@
     android:viewportWidth="24"
     android:viewportHeight="24">
     <path
-        android:fillColor="?attr/colorOnSurface"
+        android:fillColor="@color/m3_on_surface"
         android:pathData="M12,18a1.5,1.5 0 1,0 0.001,0z" />
     <path
         android:fillColor="#00000000"
-        android:strokeColor="?attr/colorOnSurface"
+        android:strokeColor="@color/m3_on_surface"
         android:strokeWidth="2"
         android:strokeLineCap="round"
         android:strokeLineJoin="round"
         android:pathData="M8.5,14.5a5,5 0 0,1 7,0" />
     <path
         android:fillColor="#00000000"
-        android:strokeColor="?attr/colorOnSurface"
+        android:strokeColor="@color/m3_on_surface"
         android:strokeWidth="2"
         android:strokeLineCap="round"
         android:strokeLineJoin="round"
         android:pathData="M5,11a10,10 0 0,1 14,0" />
     <path
         android:fillColor="#00000000"
-        android:strokeColor="?attr/colorOnSurface"
+        android:strokeColor="@color/m3_on_surface"
         android:strokeWidth="2"
         android:strokeLineCap="round"
         android:strokeLineJoin="round"

@@ -21,17 +21,12 @@ import com.termux.shared.termux.TermuxConstants.TERMUX_WIDGET_APP;
 import com.termux.shared.termux.settings.preferences.TermuxWidgetAppSharedPreferences;
 import com.termux.widget.utils.ShortcutUtils;
 
-import org.reactivestreams.FlowAdapters;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Flow;
 import java.util.function.Consumer;
-
-import io.reactivex.Flowable;
-import io.reactivex.processors.ReplayProcessor;
 
 /**
  * ControlProviderService for Android 11+ Device Control which allows running
@@ -44,8 +39,6 @@ public class TermuxWidgetControlsProviderService extends ControlsProviderService
 
     private static final int WIDGET_REQUEST_CODE = 2233;
     private static final String STATELESS_TEMPLATE_ID = "2";
-
-    private final ReplayProcessor<Control> mReplayProcessor = ReplayProcessor.create();
 
     /**
      * Creates the initial selection of all our shortcut widget controls that the user can add.
@@ -61,7 +54,19 @@ public class TermuxWidgetControlsProviderService extends ControlsProviderService
             Control control = createDefaultSelectableWidgetControl(shortcutFile);
             controlList.add(control);
         }
-        return FlowAdapters.toFlowPublisher(Flowable.fromIterable(controlList));
+
+        return subscriber -> subscriber.onSubscribe(new Flow.Subscription() {
+            @Override
+            public void request(long n) {
+                for (Control c : controlList) {
+                    subscriber.onNext(c);
+                }
+                subscriber.onComplete();
+            }
+
+            @Override
+            public void cancel() {}
+        });
     }
 
     /**
@@ -73,6 +78,7 @@ public class TermuxWidgetControlsProviderService extends ControlsProviderService
      */
     @Override
     public Flow.Publisher<Control> createPublisherFor(List<String> list) {
+        List<Control> controlList = new ArrayList<>();
         for (String shortcutFilePath : list) {
             File shortcutFile = new File(shortcutFilePath);
             Control control;
@@ -82,9 +88,21 @@ public class TermuxWidgetControlsProviderService extends ControlsProviderService
             } else {
                 control = createWidgetControlForValidShortcutFile(shortcutFile);
             }
-            mReplayProcessor.onNext(control);
+            controlList.add(control);
         }
-        return FlowAdapters.toFlowPublisher(mReplayProcessor);
+
+        return subscriber -> subscriber.onSubscribe(new Flow.Subscription() {
+            @Override
+            public void request(long n) {
+                for (Control c : controlList) {
+                    subscriber.onNext(c);
+                }
+                subscriber.onComplete();
+            }
+
+            @Override
+            public void cancel() {}
+        });
     }
 
     /**

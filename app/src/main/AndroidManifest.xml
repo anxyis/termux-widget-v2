@@ -28,7 +28,7 @@
         <!-- 1. List Widget Provider -->
         <receiver
             android:name=".TermuxWidgetProvider"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_shortcut_widget_name">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -41,7 +41,7 @@
         <!-- 2. Grid Widget Provider -->
         <receiver
             android:name=".TermuxGridWidgetProvider"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_grid_widget_name">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -54,7 +54,7 @@
         <!-- 3. Button Widget Provider -->
         <receiver
             android:name=".TermuxButtonWidgetProvider"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_button_widget_name">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -144,12 +144,12 @@
         <!-- RemoteViews Services -->
         <service
             android:name=".TermuxWidgetService"
-            android:exported="false"
+            android:exported="true"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <service
             android:name=".TermuxGridWidgetService"
-            android:exported="false"
+            android:exported="true"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <!-- Android 11+ Power Menu Device Controls -->

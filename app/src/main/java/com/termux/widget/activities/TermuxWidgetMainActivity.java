@@ -170,11 +170,11 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         ShortcutUtils.enumerateShortcutFiles(this, files, false);
 
         if (!accessible) {
-            mTxtStatusTitle.setText("Termux App Not Found");
-            mTxtStatusSubtitle.setText("Install Termux (com.termux) to execute commands & shortcuts");
+            mTxtStatusTitle.setText("STATUS : DISCONNECTED");
+            mTxtStatusSubtitle.setText("Termux app (com.termux) not detected");
         } else {
-            mTxtStatusTitle.setText("Termux Connected");
-            mTxtStatusSubtitle.setText(files.size() + " shortcut(s) active • Public RUN_COMMAND API");
+            mTxtStatusTitle.setText("STATUS : CONNECTED");
+            mTxtStatusSubtitle.setText("PATH : ~/.shortcuts/ • " + files.size() + " shortcuts loaded");
         }
     }
 
@@ -192,7 +192,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
             TextView txtStatus = slotView.findViewById(R.id.slot_tile_status);
             ImageView imgIcon = slotView.findViewById(R.id.slot_tile_icon);
 
-            txtSlotNum.setText("TILE " + slot);
+            txtSlotNum.setText(String.format("%02d", slot));
 
             String scriptPath = TermuxTilePreferences.getScriptPath(this, slot);
             String label = TermuxTilePreferences.getLabel(this, slot);
@@ -200,7 +200,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
 
             if (scriptPath != null && !scriptPath.isEmpty()) {
                 txtLabel.setText(label != null ? label : ("Tile " + slot));
-                txtStatus.setText("Ready");
+                txtStatus.setText("READY");
                 int iconRes = IconRegistry.getDrawableResId(iconId, R.drawable.ic_lucide_terminal);
                 imgIcon.setImageResource(iconRes);
             } else {
@@ -250,6 +250,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
 
             boolean isTask = sf.isTask();
             txtBadge.setText(isTask ? "TASK" : "TERM");
+            txtBadge.setTextColor(getResources().getColor(isTask ? R.color.nothing_red : R.color.nothing_text_secondary));
 
             int defaultIcon = isTask ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
             int iconRes = sf.mIconId != null ? IconRegistry.getDrawableResId(sf.mIconId, defaultIcon) : defaultIcon;

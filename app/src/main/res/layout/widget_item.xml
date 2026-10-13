@@ -3,30 +3,30 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_item_layout"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
+    android:layout_height="38dp"
     android:orientation="horizontal"
     android:gravity="center_vertical"
     android:paddingStart="12dp"
     android:paddingEnd="12dp"
     android:background="@drawable/ripple_mask">
 
-    <!-- Leading Vector Indicator (18dp) -->
+    <!-- 16dp Monochromatic Indicator Icon -->
     <ImageView
         android:id="@+id/widget_item_icon"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
         android:layout_marginEnd="10dp"
         android:contentDescription="@null"
         android:src="@drawable/ic_hero_bolt" />
 
-    <!-- Compact Label (e.g. tasks/sleep_mode.sh or start-ssh) -->
+    <!-- Compact Script Label (e.g. tasks/sleep_mode.sh) -->
     <TextView
         android:id="@+id/widget_item"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textSize="13sp"
-        android:textColor="@color/m3_on_surface"
+        android:textSize="12sp"
+        android:textColor="@color/nothing_text_primary"
         android:ellipsize="middle"
         android:singleLine="true" />
 

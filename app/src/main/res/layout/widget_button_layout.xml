@@ -7,16 +7,16 @@
     android:orientation="horizontal"
     android:gravity="center"
     android:background="@drawable/widget_button_single_bg"
-    android:paddingStart="14dp"
-    android:paddingEnd="14dp"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp">
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
 
     <ImageView
         android:id="@+id/widget_button_icon"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:layout_marginEnd="10dp"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_marginEnd="8dp"
         android:contentDescription="@null"
         android:src="@drawable/ic_lucide_terminal" />
 
@@ -31,9 +31,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/title_button_widget_name"
-            android:textSize="13sp"
+            android:textSize="12sp"
             android:textStyle="bold"
-            android:textColor="@color/m3_on_primary_container"
+            android:textColor="@color/nothing_text_primary"
             android:maxLines="1"
             android:ellipsize="end" />
 
@@ -41,9 +41,11 @@
             android:id="@+id/widget_button_sublabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tap to Run"
-            android:textSize="10sp"
-            android:textColor="@color/m3_primary"
+            android:text="RUN // TASK"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.06"
+            android:textColor="@color/nothing_red"
             android:maxLines="1" />
     </LinearLayout>
 
