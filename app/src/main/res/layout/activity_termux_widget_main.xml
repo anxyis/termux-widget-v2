@@ -189,54 +189,67 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- PRIMARY SECTION: Shortcuts Directory (FIRST & ACCESSIBLE) -->
+            <!-- Section Header: Scripts -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:layout_marginTop="4dp"
                 android:layout_marginBottom="12dp">
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/header_scripts_dir_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="SCRIPTS DIRECTORY"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="0.08"
-                        android:textColor="?attr/colorPrimary" />
-
-                    <TextView
-                        android:id="@+id/txt_shortcuts_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="Tap to run, or tap for options"
-                        android:textSize="12sp"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
-                </LinearLayout>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_add_command"
-                    style="@style/Widget.TermuxWidget.Button.Tonal"
+                <TextView
+                    android:id="@+id/txt_shortcuts_count"
                     android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:text="New Command"
-                    android:textSize="13sp"
+                    android:layout_height="wrap_content"
+                    android:text="Scripts : 0"
+                    android:textSize="18sp"
                     android:textStyle="bold"
-                    app:cornerRadius="16dp"
-                    app:backgroundTint="?attr/colorPrimaryContainer"
-                    android:textColor="?attr/colorOnPrimaryContainer"
-                    app:icon="@drawable/ic_lucide_plus"
-                    app:iconTint="?attr/colorOnPrimaryContainer"
-                    app:iconSize="18dp" />
+                    android:textColor="?attr/colorOnSurface" />
+
+                <FrameLayout
+                    android:id="@+id/btn_help_scripts"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:contentDescription="Scripts Help"
+                    android:tooltipText="Termux scripts from ~/.shortcuts/ or custom commands. Tap to run or customize.">
+
+                    <ImageView
+                        android:id="@+id/img_help_scripts"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_lucide_circle_help"
+                        app:tint="?attr/colorOnSurfaceVariant" />
+                </FrameLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <FrameLayout
+                    android:id="@+id/btn_add_command"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bento_plus_button_bg"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:contentDescription="New Command"
+                    android:tooltipText="Add New Command">
+
+                    <ImageView
+                        android:id="@+id/img_add_command"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_lucide_plus"
+                        app:tint="?attr/colorOnPrimaryContainer" />
+                </FrameLayout>
             </LinearLayout>
 
             <!-- Shortcuts Container -->
@@ -247,55 +260,67 @@
                 android:orientation="vertical"
                 android:layout_marginBottom="12dp" />
 
-            <!-- TOGGLE SHORTCUTS SECTION (ON / OFF PAIRS) -->
+            <!-- Section Header: Toggles -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:layout_marginBottom="12dp"
-                android:layout_marginTop="4dp">
+                android:layout_marginTop="8dp">
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/header_toggles_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="TOGGLE SHORTCUTS"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="0.08"
-                        android:textColor="?attr/colorPrimary" />
-
-                    <TextView
-                        android:id="@+id/txt_toggles_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="Pair ON and OFF scripts into 1 interactive switch"
-                        android:textSize="12sp"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
-                </LinearLayout>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_add_toggle"
-                    style="@style/Widget.TermuxWidget.Button.Tonal"
+                <TextView
+                    android:id="@+id/txt_toggles_count"
                     android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:text="New Toggle"
-                    android:textSize="13sp"
+                    android:layout_height="wrap_content"
+                    android:text="Toggles : 0"
+                    android:textSize="18sp"
                     android:textStyle="bold"
-                    app:cornerRadius="16dp"
-                    app:backgroundTint="?attr/colorPrimaryContainer"
-                    android:textColor="?attr/colorOnPrimaryContainer"
-                    app:icon="@drawable/ic_lucide_plus"
-                    app:iconTint="?attr/colorOnPrimaryContainer"
-                    app:iconSize="18dp" />
+                    android:textColor="?attr/colorOnSurface" />
+
+                <FrameLayout
+                    android:id="@+id/btn_help_toggles"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:contentDescription="Toggles Help"
+                    android:tooltipText="Pair two scripts into a single ON/OFF switch for widgets and quick tiles.">
+
+                    <ImageView
+                        android:id="@+id/img_help_toggles"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_lucide_circle_help"
+                        app:tint="?attr/colorOnSurfaceVariant" />
+                </FrameLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <FrameLayout
+                    android:id="@+id/btn_add_toggle"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bento_plus_button_bg"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:contentDescription="New Toggle"
+                    android:tooltipText="Add New Toggle">
+
+                    <ImageView
+                        android:id="@+id/img_add_toggle"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_lucide_plus"
+                        app:tint="?attr/colorOnPrimaryContainer" />
+                </FrameLayout>
             </LinearLayout>
 
             <!-- Toggles Container -->

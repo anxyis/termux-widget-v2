@@ -57,7 +57,11 @@ import com.termux.widget.theme.ThemeManager;
 import com.termux.widget.tiles.TermuxTilePreferences;
 import com.termux.widget.toggle.TermuxTogglePreferences;
 import com.termux.widget.toggle.ToggleShortcut;
+import com.termux.widget.utils.BouncyAnimationHelper;
 import com.termux.widget.utils.ShortcutUtils;
+
+import android.view.animation.OvershootInterpolator;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -124,12 +128,32 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
 
         View headerTiles = findViewById(R.id.header_quick_tiles);
         if (headerTiles != null) {
+            BouncyAnimationHelper.applySpringPress(headerTiles, 0.98f);
             headerTiles.setOnClickListener(v -> toggleTilesExpansion());
         }
 
         View btnAddToggle = findViewById(R.id.btn_add_toggle);
         if (btnAddToggle != null) {
+            BouncyAnimationHelper.applySpringPress(btnAddToggle, 0.88f);
             btnAddToggle.setOnClickListener(v -> showAddEditToggleDialog(null));
+        }
+
+        View btnAddCmd = findViewById(R.id.btn_add_command);
+        if (btnAddCmd != null) {
+            BouncyAnimationHelper.applySpringPress(btnAddCmd, 0.88f);
+            btnAddCmd.setOnClickListener(v -> showAddEditCommandDialog(null));
+        }
+
+        View btnHelpScripts = findViewById(R.id.btn_help_scripts);
+        if (btnHelpScripts != null) {
+            BouncyAnimationHelper.applySpringPress(btnHelpScripts, 0.88f);
+            btnHelpScripts.setOnClickListener(v -> showScriptsHelpDialog());
+        }
+
+        View btnHelpToggles = findViewById(R.id.btn_help_toggles);
+        if (btnHelpToggles != null) {
+            BouncyAnimationHelper.applySpringPress(btnHelpToggles, 0.88f);
+            btnHelpToggles.setOnClickListener(v -> showTogglesHelpDialog());
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -138,20 +162,31 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
             }
         }
 
-        findViewById(R.id.btn_refresh_shortcuts).setOnClickListener(v -> {
-            TermuxShortcutSyncManager.syncShortcutsFromTermux(this, true);
-            Toast.makeText(this, "Refreshing shortcuts from Termux...", Toast.LENGTH_SHORT).show();
-            populateDashboard();
-        });
-        findViewById(R.id.button_refresh_all_widgets).setOnClickListener(v -> sendIntentToRefreshAllWidgets());
+        View btnRefreshSync = findViewById(R.id.btn_refresh_shortcuts);
+        if (btnRefreshSync != null) {
+            BouncyAnimationHelper.applySpringPress(btnRefreshSync, 0.97f);
+            btnRefreshSync.setOnClickListener(v -> {
+                TermuxShortcutSyncManager.syncShortcutsFromTermux(this, true);
+                Toast.makeText(this, "Refreshing shortcuts from Termux...", Toast.LENGTH_SHORT).show();
+                populateDashboard();
+            });
+        }
 
-        View btnAddCmd = findViewById(R.id.btn_add_command);
-        if (btnAddCmd != null) {
-            btnAddCmd.setOnClickListener(v -> showAddEditCommandDialog(null));
+        View btnRefreshWidgets = findViewById(R.id.button_refresh_all_widgets);
+        if (btnRefreshWidgets != null) {
+            BouncyAnimationHelper.applySpringPress(btnRefreshWidgets, 0.88f);
+            btnRefreshWidgets.setOnClickListener(v -> {
+                ImageView imgRefresh = findViewById(R.id.img_refresh_all_widgets);
+                if (imgRefresh != null) {
+                    imgRefresh.animate().rotationBy(360f).setDuration(400).setInterpolator(new FastOutSlowInInterpolator()).start();
+                }
+                sendIntentToRefreshAllWidgets(true);
+            });
         }
 
         View btnCopy = findViewById(R.id.btn_copy_setup_command);
         if (btnCopy != null) {
+            BouncyAnimationHelper.applySpringPress(btnCopy, 0.97f);
             btnCopy.setOnClickListener(v -> {
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("Termux Setup", "echo \"allow-external-apps = true\" >> ~/.termux/termux.properties && termux-reload-settings");
@@ -164,6 +199,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
 
         View btnSettings = findViewById(R.id.btn_open_app_settings);
         if (btnSettings != null) {
+            BouncyAnimationHelper.applySpringPress(btnSettings, 0.97f);
             btnSettings.setOnClickListener(v -> {
                 Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                 intent.setData(Uri.parse("package:" + getPackageName()));
@@ -171,7 +207,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
             });
         }
 
-        sendIntentToRefreshAllWidgets();
+        sendIntentToRefreshAllWidgets(false);
     }
 
     private void toggleTilesExpansion() {
@@ -266,27 +302,27 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         if (imgAmoledMoon != null) imgAmoledMoon.setColorFilter(Color.WHITE);
 
         // Section Headers
-        TextView headerScripts = findViewById(R.id.header_scripts_dir_title);
-        if (headerScripts != null) headerScripts.setTextColor(Color.WHITE);
-        if (mTxtShortcutsCount != null) mTxtShortcutsCount.setTextColor(Color.parseColor("#9E9E9E"));
+        if (mTxtShortcutsCount != null) mTxtShortcutsCount.setTextColor(Color.WHITE);
+        if (mTxtTogglesCount != null) mTxtTogglesCount.setTextColor(Color.WHITE);
 
-        TextView headerToggles = findViewById(R.id.header_toggles_title);
-        if (headerToggles != null) headerToggles.setTextColor(Color.WHITE);
-        if (mTxtTogglesCount != null) mTxtTogglesCount.setTextColor(Color.parseColor("#9E9E9E"));
+        ImageView imgHelpScripts = findViewById(R.id.img_help_scripts);
+        if (imgHelpScripts != null) imgHelpScripts.setColorFilter(Color.WHITE);
+        ImageView imgHelpToggles = findViewById(R.id.img_help_toggles);
+        if (imgHelpToggles != null) imgHelpToggles.setColorFilter(Color.WHITE);
 
-        MaterialButton btnAddCmd = findViewById(R.id.btn_add_command);
+        View btnAddCmd = findViewById(R.id.btn_add_command);
         if (btnAddCmd != null) {
-            btnAddCmd.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
-            btnAddCmd.setTextColor(Color.BLACK);
-            btnAddCmd.setIconTint(ColorStateList.valueOf(Color.BLACK));
+            btnAddCmd.setBackgroundResource(R.drawable.bento_plus_button_amoled_bg);
         }
+        ImageView imgAddCmd = findViewById(R.id.img_add_command);
+        if (imgAddCmd != null) imgAddCmd.setColorFilter(Color.BLACK);
 
-        MaterialButton btnAddToggle = findViewById(R.id.btn_add_toggle);
+        View btnAddToggle = findViewById(R.id.btn_add_toggle);
         if (btnAddToggle != null) {
-            btnAddToggle.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
-            btnAddToggle.setTextColor(Color.BLACK);
-            btnAddToggle.setIconTint(ColorStateList.valueOf(Color.BLACK));
+            btnAddToggle.setBackgroundResource(R.drawable.bento_plus_button_amoled_bg);
         }
+        ImageView imgAddToggle = findViewById(R.id.img_add_toggle);
+        if (imgAddToggle != null) imgAddToggle.setColorFilter(Color.BLACK);
 
         // Quick Tiles Card
         MaterialCardView tilesCard = findViewById(R.id.card_tiles_section);
@@ -397,6 +433,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
                 imgIcon.setColorFilter(Color.WHITE);
             }
 
+            BouncyAnimationHelper.applySpringPress(slotView, 0.95f);
             slotView.setOnClickListener(v -> {
                 Intent intent = new Intent(this, TermuxTileConfigActivity.class);
                 intent.putExtra(TermuxTileConfigActivity.EXTRA_SLOT_INDEX, slotIndex);
@@ -426,7 +463,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         }
 
         if (mTxtShortcutsCount != null) {
-            mTxtShortcutsCount.setText(files.size() + " script" + (files.size() == 1 ? "" : "s") + " detected • Tap to run or view options");
+            mTxtShortcutsCount.setText("Scripts : " + files.size());
         }
 
         if (files.isEmpty()) {
@@ -482,11 +519,13 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
             int defaultIcon = isTask ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
             IconHelper.applyToImageView(imgIcon, imgCustom, sf.mIconId, defaultIcon);
 
+            BouncyAnimationHelper.applySpringPress(btnRun, 0.88f);
             btnRun.setOnClickListener(v -> {
                 TermuxWidgetProvider.sendExecutionIntentToTermuxService(this, sf.getPath(), LOG_TAG);
                 Toast.makeText(this, "Executing: " + sf.getLabel(), Toast.LENGTH_SHORT).show();
             });
 
+            BouncyAnimationHelper.applySpringPress(row, 0.97f);
             row.setOnClickListener(v -> {
                 ScriptInfoBottomSheet sheet = ScriptInfoBottomSheet.newInstance(sf);
                 sheet.setScriptActionListener(new ScriptInfoBottomSheet.ScriptActionListener() {
@@ -510,7 +549,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
                                      .setPositiveButton("Delete", (d, w) -> {
                                          TermuxCustomCommandPreferences.deleteCustomCommand(TermuxWidgetMainActivity.this, cmd.id);
                                          populateDashboard();
-                                         sendIntentToRefreshAllWidgets();
+                                         sendIntentToRefreshAllWidgets(false);
                                          Toast.makeText(TermuxWidgetMainActivity.this, "Command deleted", Toast.LENGTH_SHORT).show();
                                      })
                                      .setNegativeButton("Cancel", null)
@@ -552,12 +591,12 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
 
         List<ToggleShortcut> toggles = TermuxTogglePreferences.getToggles(this);
         if (mTxtTogglesCount != null) {
-            mTxtTogglesCount.setText(toggles.size() + " toggle shortcut" + (toggles.size() == 1 ? "" : "s") + " configured • Tap for options");
+            mTxtTogglesCount.setText("Toggles : " + toggles.size());
         }
 
         if (toggles.isEmpty()) {
             TextView emptyText = new TextView(this);
-            emptyText.setText("No toggles configured yet. Tap '+ New Toggle' to pair 2 scripts.");
+            emptyText.setText("No toggles configured yet. Tap (+) to pair 2 scripts.");
             emptyText.setTextSize(12);
             emptyText.setTextColor(getResources().getColor(R.color.m3_on_surface_variant));
             emptyText.setPadding(8, 12, 8, 12);
@@ -572,11 +611,10 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
 
             TextView txtTitle = row.findViewById(R.id.txt_toggle_title);
             TextView txtScripts = row.findViewById(R.id.txt_toggle_scripts);
-            TextView txtStatusPill = row.findViewById(R.id.txt_toggle_status_pill);
             ImageView imgIcon = row.findViewById(R.id.img_toggle_icon);
             ImageView imgCustom = row.findViewById(R.id.img_toggle_custom_image);
             MaterialSwitch switchState = row.findViewById(R.id.switch_toggle_state);
-            View badgeFrame = row.findViewById(R.id.toggle_badge_frame);
+            MaterialCardView card = row.findViewById(R.id.card_toggle_row);
 
             txtTitle.setText(toggle.label);
 
@@ -586,61 +624,176 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
 
             IconHelper.applyToImageView(imgIcon, imgCustom, toggle.iconId, R.drawable.ic_lucide_power);
 
-            MaterialCardView card = row.findViewById(R.id.card_toggle_row);
-            if (isAmoled) {
-                if (toggle.isOn) {
-                    card.setCardBackgroundColor(Color.WHITE);
-                    card.setStrokeColor(Color.WHITE);
-                    txtTitle.setTextColor(Color.BLACK);
-                    txtScripts.setTextColor(Color.BLACK);
-                    txtStatusPill.setText("ON");
-                    txtStatusPill.setBackgroundResource(R.drawable.widget_toggle_badge_amoled_on_bg);
-                    txtStatusPill.setTextColor(Color.WHITE);
-                    badgeFrame.setBackgroundResource(R.drawable.widget_toggle_badge_amoled_on_bg);
-                    imgIcon.setColorFilter(Color.WHITE);
-                } else {
-                    card.setCardBackgroundColor(Color.parseColor("#0A0A0A"));
-                    card.setStrokeColor(Color.parseColor("#262626"));
-                    txtTitle.setTextColor(Color.WHITE);
-                    txtScripts.setTextColor(Color.parseColor("#9E9E9E"));
-                    txtStatusPill.setText("OFF");
-                    txtStatusPill.setBackgroundResource(R.drawable.widget_pill_badge_amoled_bg);
-                    txtStatusPill.setTextColor(Color.WHITE);
-                    badgeFrame.setBackgroundResource(R.drawable.widget_icon_badge_amoled_bg);
-                    imgIcon.setColorFilter(Color.WHITE);
-                }
-            } else {
-                if (toggle.isOn) {
-                    card.setCardBackgroundColor(getResources().getColor(R.color.m3_primary));
-                    txtTitle.setTextColor(getResources().getColor(R.color.m3_on_primary));
-                    txtScripts.setTextColor(getResources().getColor(R.color.m3_on_primary));
-                    txtStatusPill.setText("ON");
-                    txtStatusPill.setBackgroundResource(R.drawable.widget_toggle_badge_on_bg);
-                    txtStatusPill.setTextColor(getResources().getColor(R.color.m3_primary));
-                    badgeFrame.setBackgroundResource(R.drawable.widget_toggle_badge_on_bg);
-                    imgIcon.setColorFilter(getResources().getColor(R.color.m3_primary));
-                } else {
-                    card.setCardBackgroundColor(getResources().getColor(R.color.m3_surface_container));
-                    txtTitle.setTextColor(getResources().getColor(R.color.m3_on_surface));
-                    txtScripts.setTextColor(getResources().getColor(R.color.m3_on_surface_variant));
-                    txtStatusPill.setText("OFF");
-                    txtStatusPill.setBackgroundResource(R.drawable.widget_pill_session_bg);
-                    txtStatusPill.setTextColor(getResources().getColor(R.color.badge_session_text));
-                    badgeFrame.setBackgroundResource(R.drawable.widget_icon_badge_bg);
-                    imgIcon.setColorFilter(getResources().getColor(R.color.m3_primary));
-                }
-            }
+            applyToggleVisualState(row, toggle.isOn, isAmoled);
 
             switchState.setChecked(toggle.isOn);
             switchState.setOnClickListener(v -> {
+                boolean isNowOn = switchState.isChecked();
+                toggle.isOn = isNowOn;
                 TermuxTogglePreferences.toggleState(this, toggle.id);
-                populateDashboard();
+                animateToggleRow(row, toggle, isNowOn, isAmoled);
+                sendIntentToRefreshAllWidgets(false);
             });
 
+            BouncyAnimationHelper.applySpringPress(card, 0.97f);
             row.setOnClickListener(v -> showToggleOptionsDialog(toggle));
 
             mContainerToggleShortcuts.addView(row);
         }
+    }
+
+    private void applyToggleVisualState(@NonNull View row, boolean isOn, boolean isAmoled) {
+        MaterialCardView card = row.findViewById(R.id.card_toggle_row);
+        TextView txtTitle = row.findViewById(R.id.txt_toggle_title);
+        TextView txtScripts = row.findViewById(R.id.txt_toggle_scripts);
+        TextView txtStatusPill = row.findViewById(R.id.txt_toggle_status_pill);
+        ImageView imgIcon = row.findViewById(R.id.img_toggle_icon);
+        View badgeFrame = row.findViewById(R.id.toggle_badge_frame);
+
+        if (isAmoled) {
+            if (isOn) {
+                card.setCardBackgroundColor(Color.WHITE);
+                card.setStrokeColor(Color.WHITE);
+                txtTitle.setTextColor(Color.BLACK);
+                txtScripts.setTextColor(Color.parseColor("#333333"));
+                txtStatusPill.setText("ON");
+                txtStatusPill.setBackgroundResource(R.drawable.widget_toggle_badge_amoled_on_bg);
+                txtStatusPill.setTextColor(Color.WHITE);
+                badgeFrame.setBackgroundResource(R.drawable.widget_toggle_badge_amoled_on_bg);
+                imgIcon.setColorFilter(Color.WHITE);
+            } else {
+                card.setCardBackgroundColor(Color.parseColor("#0A0A0A"));
+                card.setStrokeColor(Color.parseColor("#262626"));
+                txtTitle.setTextColor(Color.WHITE);
+                txtScripts.setTextColor(Color.parseColor("#9E9E9E"));
+                txtStatusPill.setText("OFF");
+                txtStatusPill.setBackgroundResource(R.drawable.widget_pill_badge_amoled_bg);
+                txtStatusPill.setTextColor(Color.WHITE);
+                badgeFrame.setBackgroundResource(R.drawable.widget_icon_badge_amoled_bg);
+                imgIcon.setColorFilter(Color.WHITE);
+            }
+        } else {
+            if (isOn) {
+                card.setCardBackgroundColor(getResources().getColor(R.color.m3_primary));
+                txtTitle.setTextColor(getResources().getColor(R.color.m3_on_primary));
+                txtScripts.setTextColor(getResources().getColor(R.color.m3_on_primary));
+                txtStatusPill.setText("ON");
+                txtStatusPill.setBackgroundResource(R.drawable.widget_toggle_badge_on_bg);
+                txtStatusPill.setTextColor(getResources().getColor(R.color.m3_primary));
+                badgeFrame.setBackgroundResource(R.drawable.widget_toggle_badge_on_bg);
+                imgIcon.setColorFilter(getResources().getColor(R.color.m3_primary));
+            } else {
+                card.setCardBackgroundColor(getResources().getColor(R.color.m3_surface_container));
+                txtTitle.setTextColor(getResources().getColor(R.color.m3_on_surface));
+                txtScripts.setTextColor(getResources().getColor(R.color.m3_on_surface_variant));
+                txtStatusPill.setText("OFF");
+                txtStatusPill.setBackgroundResource(R.drawable.widget_pill_session_bg);
+                txtStatusPill.setTextColor(getResources().getColor(R.color.badge_session_text));
+                badgeFrame.setBackgroundResource(R.drawable.widget_icon_badge_bg);
+                imgIcon.setColorFilter(getResources().getColor(R.color.m3_primary));
+            }
+        }
+    }
+
+    private void animateToggleRow(@NonNull View row, @NonNull ToggleShortcut toggle, boolean isOn, boolean isAmoled) {
+        MaterialCardView card = row.findViewById(R.id.card_toggle_row);
+        TextView txtTitle = row.findViewById(R.id.txt_toggle_title);
+        TextView txtScripts = row.findViewById(R.id.txt_toggle_scripts);
+        TextView txtStatusPill = row.findViewById(R.id.txt_toggle_status_pill);
+        ImageView imgIcon = row.findViewById(R.id.img_toggle_icon);
+        View badgeFrame = row.findViewById(R.id.toggle_badge_frame);
+
+        int fromBgColor, toBgColor;
+        int fromTextColor, toTextColor;
+        int fromSubColor, toSubColor;
+
+        if (isAmoled) {
+            fromBgColor = isOn ? Color.parseColor("#0A0A0A") : Color.WHITE;
+            toBgColor = isOn ? Color.WHITE : Color.parseColor("#0A0A0A");
+            fromTextColor = isOn ? Color.WHITE : Color.BLACK;
+            toTextColor = isOn ? Color.BLACK : Color.WHITE;
+            fromSubColor = isOn ? Color.parseColor("#9E9E9E") : Color.parseColor("#333333");
+            toSubColor = isOn ? Color.parseColor("#333333") : Color.parseColor("#9E9E9E");
+            int strokeColor = isOn ? Color.WHITE : Color.parseColor("#262626");
+            card.setStrokeColor(strokeColor);
+        } else {
+            fromBgColor = isOn ? getResources().getColor(R.color.m3_surface_container) : getResources().getColor(R.color.m3_primary);
+            toBgColor = isOn ? getResources().getColor(R.color.m3_primary) : getResources().getColor(R.color.m3_surface_container);
+            fromTextColor = isOn ? getResources().getColor(R.color.m3_on_surface) : getResources().getColor(R.color.m3_on_primary);
+            toTextColor = isOn ? getResources().getColor(R.color.m3_on_primary) : getResources().getColor(R.color.m3_on_surface);
+            fromSubColor = isOn ? getResources().getColor(R.color.m3_on_surface_variant) : getResources().getColor(R.color.m3_on_primary);
+            toSubColor = isOn ? getResources().getColor(R.color.m3_on_primary) : getResources().getColor(R.color.m3_on_surface_variant);
+        }
+
+        // Animate background color smoothly
+        BouncyAnimationHelper.animateColor(fromBgColor, toBgColor, 220, anim -> {
+            int c = (int) anim.getAnimatedValue();
+            card.setCardBackgroundColor(c);
+        });
+
+        // Animate text colors smoothly
+        BouncyAnimationHelper.animateColor(fromTextColor, toTextColor, 200, anim -> {
+            int c = (int) anim.getAnimatedValue();
+            txtTitle.setTextColor(c);
+        });
+
+        BouncyAnimationHelper.animateColor(fromSubColor, toSubColor, 200, anim -> {
+            int c = (int) anim.getAnimatedValue();
+            txtScripts.setTextColor(c);
+        });
+
+        // Bouncy status pill transition
+        txtStatusPill.animate()
+                .scaleX(0.7f)
+                .scaleY(0.7f)
+                .setDuration(70)
+                .withEndAction(() -> {
+                    if (isAmoled) {
+                        txtStatusPill.setText(isOn ? "ON" : "OFF");
+                        txtStatusPill.setBackgroundResource(isOn ? R.drawable.widget_toggle_badge_amoled_on_bg : R.drawable.widget_pill_badge_amoled_bg);
+                        txtStatusPill.setTextColor(Color.WHITE);
+                        badgeFrame.setBackgroundResource(isOn ? R.drawable.widget_toggle_badge_amoled_on_bg : R.drawable.widget_icon_badge_amoled_bg);
+                        imgIcon.setColorFilter(Color.WHITE);
+                    } else {
+                        txtStatusPill.setText(isOn ? "ON" : "OFF");
+                        txtStatusPill.setBackgroundResource(isOn ? R.drawable.widget_toggle_badge_on_bg : R.drawable.widget_pill_session_bg);
+                        txtStatusPill.setTextColor(getResources().getColor(isOn ? R.color.m3_primary : R.color.badge_session_text));
+                        badgeFrame.setBackgroundResource(isOn ? R.drawable.widget_toggle_badge_on_bg : R.drawable.widget_icon_badge_bg);
+                        imgIcon.setColorFilter(getResources().getColor(R.color.m3_primary));
+                    }
+                    txtStatusPill.animate()
+                            .scaleX(1.0f)
+                            .scaleY(1.0f)
+                            .setDuration(160)
+                            .setInterpolator(new OvershootInterpolator(2.4f))
+                            .start();
+                })
+                .start();
+
+        // Subtle physical card bounce
+        BouncyAnimationHelper.popBounce(card);
+    }
+
+    private void showScriptsHelpDialog() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Scripts & Commands")
+                .setMessage("Scripts are shell scripts loaded directly from ~/.shortcuts/ in Termux, or custom commands created in this app using the (+) button.\n\n" +
+                        "• Tap any script to run it immediately.\n" +
+                        "• Tap a script card to view its path, assign custom icons, or map it to Quick Settings tiles.\n" +
+                        "• Tap (+) to create a new custom command.")
+                .setPositiveButton("Got it", null)
+                .show();
+    }
+
+    private void showTogglesHelpDialog() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Toggle Shortcuts")
+                .setMessage("Toggles let you pair two existing scripts (one for 'ON' and one for 'OFF') into a single smart toggle switch without modifying your scripts.\n\n" +
+                        "• Tap (+) to pair an ON script with an OFF script.\n" +
+                        "• Tapping the switch executes the corresponding script and smoothly updates the state.\n" +
+                        "• Works seamlessly in home screen widgets and Quick Settings tiles with inverted active indicators.")
+                .setPositiveButton("Got it", null)
+                .show();
     }
 
     private void showToggleOptionsDialog(@NonNull ToggleShortcut toggle) {
@@ -901,8 +1054,14 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
     }
 
     public void sendIntentToRefreshAllWidgets() {
+        sendIntentToRefreshAllWidgets(false);
+    }
+
+    public void sendIntentToRefreshAllWidgets(boolean showToast) {
         TermuxWidgetProvider.sendIntentToRefreshAllWidgets(this, LOG_TAG);
-        Toast.makeText(this, "Widgets Refreshed", Toast.LENGTH_SHORT).show();
+        if (showToast) {
+            Toast.makeText(this, "Widgets Refreshed", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.N_MR1)
