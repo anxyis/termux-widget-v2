@@ -6,3 +6,5 @@ release/
 
 local.properties
 github.properties
+*.apk
+termux-widget-app*/
