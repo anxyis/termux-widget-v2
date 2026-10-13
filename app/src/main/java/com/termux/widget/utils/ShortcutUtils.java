@@ -16,6 +16,7 @@ import com.termux.widget.NaturalOrderComparator;
 import com.termux.widget.R;
 import com.termux.widget.ShortcutFile;
 import com.termux.widget.TermuxCustomCommandPreferences;
+import com.termux.widget.TermuxShortcutSyncManager;
 import com.termux.widget.TermuxWidgetApplication;
 
 import java.io.File;
