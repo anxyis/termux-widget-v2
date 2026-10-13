@@ -129,7 +129,6 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
             });
         }
 
-        setDynamicShortcutsButtons();
         sendIntentToRefreshAllWidgets();
     }
 
@@ -365,21 +364,6 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
-    }
-
-    private void setDynamicShortcutsButtons() {
-        MaterialButton createBtn = findViewById(R.id.button_create_dynamic_shortcuts);
-        MaterialButton removeBtn = findViewById(R.id.button_remove_dynamic_shortcuts);
-
-        if (createBtn != null && removeBtn != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-                createBtn.setOnClickListener(v -> createDynamicShortcuts(this));
-                removeBtn.setOnClickListener(v -> removeDynamicShortcuts(this));
-            } else {
-                createBtn.setVisibility(View.GONE);
-                removeBtn.setVisibility(View.GONE);
-            }
-        }
     }
 
     public void sendIntentToRefreshAllWidgets() {
