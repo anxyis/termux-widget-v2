@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_grid_item_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/widget_grid_item_bg"
+    android:padding="10dp"
+    android:layout_margin="4dp">
+
+    <ImageView
+        android:id="@+id/widget_grid_item_icon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@drawable/widget_pill_badge_bg"
+        android:padding="6dp"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_lucide_terminal" />
+
+    <TextView
+        android:id="@+id/widget_grid_item_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="@color/m3_on_surface"
+        android:gravity="center"
+        android:maxLines="2"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/widget_grid_item_badge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:background="@drawable/widget_pill_badge_bg"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        android:paddingTop="1dp"
+        android:paddingBottom="1dp"
+        android:textSize="9sp"
+        android:textStyle="bold"
+        android:textColor="@color/badge_session_text" />
+
+</LinearLayout>

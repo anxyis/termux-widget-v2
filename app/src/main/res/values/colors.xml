@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Material 3 Light Color Roles -->
+    <color name="m3_primary">#006877</color>
+    <color name="m3_on_primary">#FFFFFF</color>
+    <color name="m3_primary_container">#A1EFFF</color>
+    <color name="m3_on_primary_container">#001F25</color>
+
+    <color name="m3_secondary">#4A6268</color>
+    <color name="m3_on_secondary">#FFFFFF</color>
+    <color name="m3_secondary_container">#CDE7EC</color>
+    <color name="m3_on_secondary_container">#051F23</color>
+
+    <color name="m3_tertiary">#535E7E</color>
+    <color name="m3_on_tertiary">#FFFFFF</color>
+    <color name="m3_tertiary_container">#DBE1FF</color>
+    <color name="m3_on_tertiary_container">#0F1B37</color>
+
+    <color name="m3_surface">#F5FAFA</color>
+    <color name="m3_on_surface">#171D1E</color>
+    <color name="m3_surface_variant">#DBE4E6</color>
+    <color name="m3_on_surface_variant">#3F484A</color>
+
+    <color name="m3_surface_container_lowest">#FFFFFF</color>
+    <color name="m3_surface_container_low">#EFF5F5</color>
+    <color name="m3_surface_container">#E9EFF0</color>
+    <color name="m3_surface_container_high">#E3E9EA</color>
+    <color name="m3_surface_container_highest">#DDE4E4</color>
+
+    <color name="m3_outline">#6F797B</color>
+    <color name="m3_outline_variant">#BFC8CA</color>
+
+    <!-- Semantic Status & Task Badges -->
+    <color name="badge_task_bg">#E8DEF8</color>
+    <color name="badge_task_text">#1D192B</color>
+    <color name="badge_session_bg">#CDE7EC</color>
+    <color name="badge_session_text">#051F23</color>
+    <color name="badge_group_bg">#ECEEF0</color>
+    <color name="badge_group_text">#2B3133</color>
+
+    <!-- Widget Specific High-Contrast Elements -->
+    <color name="widget_card_bg">#FFFFFF</color>
+    <color name="widget_container_bg">#EFF5F5</color>
+    <color name="widget_ripple">#20006877</color>
+</resources>

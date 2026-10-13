@@ -20,12 +20,13 @@ import com.termux.shared.file.FileUtils;
 import com.termux.shared.file.filesystem.FileType;
 import com.termux.shared.logger.Logger;
 import com.termux.shared.shell.ShellUtils;
-import com.termux.shared.termux.TermuxConstants.TERMUX_APP.TERMUX_SERVICE;
-import com.termux.shared.termux.TermuxConstants.TERMUX_WIDGET_APP.TERMUX_WIDGET_PROVIDER;
-import com.termux.shared.termux.TermuxConstants.TERMUX_WIDGET_APP;
 import com.termux.shared.termux.TermuxConstants;
+import com.termux.shared.termux.TermuxConstants.TERMUX_APP.TERMUX_SERVICE;
+import com.termux.shared.termux.TermuxConstants.TERMUX_WIDGET_APP;
+import com.termux.shared.termux.TermuxConstants.TERMUX_WIDGET_APP.TERMUX_WIDGET_PROVIDER;
 import com.termux.shared.termux.file.TermuxFileUtils;
 import com.termux.shared.termux.settings.preferences.TermuxWidgetAppSharedPreferences;
+import com.termux.widget.icons.IconRegistry;
 import com.termux.widget.utils.ShortcutUtils;
 
 import java.io.File;
@@ -36,6 +37,10 @@ public final class ShortcutFile {
 
     public final String mPath;
     public String mLabel;
+    public boolean mIsHeader = false;
+    public String mGroup;
+    public int mGroupCount = 0;
+    public String mIconId;
 
     public ShortcutFile(@NonNull String path) {
         this(path, null);
@@ -53,6 +58,56 @@ public final class ShortcutFile {
     public ShortcutFile(@NonNull String path, @Nullable String defaultLabel) {
         mPath = path;
         mLabel = getLabelForShortcut(defaultLabel);
+    }
+
+    /** Creates a virtual header item for grouping inside collection widgets. */
+    public static ShortcutFile createGroupHeader(@NonNull String groupName, int count) {
+        ShortcutFile header = new ShortcutFile("HEADER:" + groupName, groupName);
+        header.mIsHeader = true;
+        header.mGroup = groupName;
+        header.mGroupCount = count;
+        return header;
+    }
+
+    public boolean isHeader() {
+        return mIsHeader;
+    }
+
+    public boolean isTask() {
+        if (mPath == null) return false;
+        File file = new File(mPath);
+        File parent = file.getParentFile();
+        while (parent != null) {
+            if (parent.getName().equals(TermuxConstants.TERMUX_SHORTCUT_TASKS_SCRIPTS_DIR_BASENAME)) {
+                return true;
+            }
+            parent = parent.getParentFile();
+        }
+        return false;
+    }
+
+    @NonNull
+    public String getGroupName() {
+        if (mGroup != null) return mGroup;
+        if (isTask()) return "Tasks";
+        if (mPath == null) return "General";
+        File file = new File(mPath);
+        File parent = file.getParentFile();
+        if (parent != null && !parent.getAbsolutePath().equals(TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR_PATH)) {
+            return parent.getName();
+        }
+        return "General";
+    }
+
+    @NonNull
+    public String getSubtitle() {
+        if (mPath == null) return "";
+        File file = new File(mPath);
+        File parent = file.getParentFile();
+        if (parent != null) {
+            return parent.getName();
+        }
+        return "shortcuts";
     }
 
     @NonNull
@@ -98,12 +153,15 @@ public final class ShortcutFile {
         builder.setIntent(getExecutionIntent(context));
         builder.setShortLabel(getLabel());
 
-        // Set icon if existent.
         File shortcutIconFile = getIconFile(context, showToastForIconUsed);
-        if (shortcutIconFile != null)
+        if (shortcutIconFile != null) {
             builder.setIcon(Icon.createWithBitmap(((BitmapDrawable) Drawable.createFromPath(shortcutIconFile.getAbsolutePath())).getBitmap()));
-        else
+        } else if (mIconId != null) {
+            int resId = IconRegistry.getDrawableResId(mIconId, R.drawable.ic_launcher);
+            builder.setIcon(Icon.createWithResource(context, resId));
+        } else {
             builder.setIcon(Icon.createWithResource(context, R.drawable.ic_launcher));
+        }
 
         return builder.build();
     }
@@ -113,7 +171,6 @@ public final class ShortcutFile {
         intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, getExecutionIntent(context));
         intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getLabel());
 
-        // Set icon if existent.
         File shortcutIconFile = getIconFile(context, true);
         if (shortcutIconFile != null)
             intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, ((BitmapDrawable) Drawable.createFromPath(shortcutIconFile.getAbsolutePath())).getBitmap());
@@ -124,51 +181,61 @@ public final class ShortcutFile {
     }
 
     public RemoteViews getListWidgetView(Context context) {
-        // Position will always range from 0 to getCount() - 1.
-        // Construct remote views item based on the item xml file and set text based on position.
+        if (mIsHeader) {
+            RemoteViews headerViews = new RemoteViews(context.getPackageName(), R.layout.widget_group_header);
+            headerViews.setTextViewText(R.id.widget_group_header_title, getLabel());
+            headerViews.setTextViewText(R.id.widget_group_header_count, String.valueOf(mGroupCount));
+            return headerViews;
+        }
+
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_item);
         remoteViews.setTextViewText(R.id.widget_item, getLabel());
+        remoteViews.setTextViewText(R.id.widget_item_subtitle, getSubtitle());
 
-        // Next, we set a fill-intent which will be used to fill-in the pending intent template
-        // which is set on the collection view in TermuxAppWidgetProvider.
+        boolean isTaskScript = isTask();
+        remoteViews.setTextViewText(R.id.widget_item_badge, isTaskScript ? "TASK" : "TERM");
+
+        int defaultIcon = isTaskScript ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
+        int iconRes = mIconId != null ? IconRegistry.getDrawableResId(mIconId, defaultIcon) : defaultIcon;
+        remoteViews.setImageViewResource(R.id.widget_item_icon, iconRes);
+
         Intent fillInIntent = new Intent().putExtra(TERMUX_WIDGET_PROVIDER.EXTRA_FILE_CLICKED, getPath());
         remoteViews.setOnClickFillInIntent(R.id.widget_item_layout, fillInIntent);
 
         return remoteViews;
     }
 
+    public RemoteViews getGridWidgetView(Context context) {
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_grid_item);
+        remoteViews.setTextViewText(R.id.widget_grid_item_label, getLabel());
+
+        boolean isTaskScript = isTask();
+        remoteViews.setTextViewText(R.id.widget_grid_item_badge, isTaskScript ? "TASK" : "TERM");
+
+        int defaultIcon = isTaskScript ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
+        int iconRes = mIconId != null ? IconRegistry.getDrawableResId(mIconId, defaultIcon) : defaultIcon;
+        remoteViews.setImageViewResource(R.id.widget_grid_item_icon, iconRes);
+
+        Intent fillInIntent = new Intent().putExtra(TERMUX_WIDGET_PROVIDER.EXTRA_FILE_CLICKED, getPath());
+        remoteViews.setOnClickFillInIntent(R.id.widget_grid_item_layout, fillInIntent);
+
+        return remoteViews;
+    }
+
     @Nullable
     private File getIconFile(Context context, boolean showToastForIconUsed) {
-        String errmsg;
         String shortcutIconFilePath = TermuxConstants.TERMUX_SHORTCUT_SCRIPT_ICONS_DIR_PATH +
                 "/" + ShellUtils.getExecutableBasename(getPath()) + ".png";
 
         FileType fileType = FileUtils.getFileType(shortcutIconFilePath, true);
-        //  Ensure file or symlink points to a regular file that exists
         if (fileType != FileType.REGULAR) {
-            if (fileType != FileType.NO_EXIST) {
-                errmsg = context.getString(R.string.error_icon_not_a_regular_file, fileType.getName()) +
-                        "\n" + context.getString(R.string.msg_icon_absolute_path, shortcutIconFilePath);
-                Logger.logErrorAndShowToast(context, LOG_TAG, errmsg);
-            }
             return null;
         }
 
-        // Do not allow shortcut icons files not under SHORTCUT_ICONS_FILES_ALLOWED_PATHS_LIST
         if (!FileUtils.isPathInDirPaths(shortcutIconFilePath, ShortcutUtils.SHORTCUT_ICONS_FILES_ALLOWED_PATHS_LIST, true)) {
-            errmsg = context.getString(R.string.error_icon_not_under_shortcut_icons_directories,
-                    Joiner.on(", ").skipNulls().join(TermuxFileUtils.getUnExpandedTermuxPaths(ShortcutUtils.SHORTCUT_ICONS_FILES_ALLOWED_PATHS_LIST))) +
-                    "\n" + context.getString(R.string.msg_icon_absolute_path, shortcutIconFilePath);
-            Logger.logErrorAndShowToast(context, LOG_TAG, errmsg);
             return null;
-        }
-
-        Logger.logInfo(LOG_TAG, "Using file at \"" + shortcutIconFilePath + "\" as shortcut icon file");
-        if (showToastForIconUsed) {
-            Logger.showToast(context, context.getString(R.string.msg_shortcut_icon_file_used, shortcutIconFilePath), true);
         }
 
         return new File(shortcutIconFilePath);
     }
-
 }

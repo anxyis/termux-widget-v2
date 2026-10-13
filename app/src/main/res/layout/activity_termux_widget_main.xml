@@ -6,185 +6,281 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/m3_surface"
     tools:context=".activities.TermuxWidgetMainActivity">
 
-    <include
-        layout="@layout/partial_primary_toolbar"
-        android:id="@+id/partial_primary_toolbar"/>
-
-    <ScrollView
+    <!-- Material 3 Top App Bar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/main_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/m3_surface"
+        app:title="@string/title_termux_shortcuts"
+        app:titleTextColor="@color/m3_on_surface"
+        app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/textview_plugin_info"
+            <!-- System Status Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_status_banner"
+                style="@style/Widget.TermuxWidget.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:gravity="start|center_vertical"
-                android:textSize="14sp"
-                android:textStyle="normal"
-                android:textColor="?android:textColorPrimary"
-                android:textColorLink="?android:textColorLink"
-                android:textIsSelectable="true"
-                android:autoLink="web"/>
-
-
-
-            <LinearLayout
-                android:id="@+id/linearlayout_max_shortcuts_limit_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <View style="@style/ViewDivider"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/textview_max_shortcuts_limit_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/activity_vertical_margin"
-                    android:paddingBottom="@dimen/activity_vertical_margin"
-                    android:gravity="start|center_vertical"
-                    android:textSize="14sp"
-                    android:textStyle="normal"
-                    android:textColor="?android:textColorPrimary"
-                    android:textColorLink="?android:textColorLink"
-                    android:autoLink="web"/>
-
-            </LinearLayout>
-
-
-
-            <View style="@style/ViewDivider"/>
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/textview_change_launcher_activity_state_details"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:gravity="start|center_vertical"
-                android:textSize="14sp"
-                android:textStyle="normal"
-                android:textColor="?android:textColorPrimary"
-                android:textColorLink="?android:textColorLink"
-                android:textIsSelectable="true"
-                android:autoLink="web"/>
-
-            <com.google.android.material.button.MaterialButton
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:id="@+id/button_change_launcher_activity_state"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:gravity="center"
-                android:textSize="12sp"
-                android:textColor="?android:textColorPrimary"
-                app:strokeColor="?android:textColorPrimary"
-                app:strokeWidth="2dp"/>
-
-
-
-            <LinearLayout
-                android:id="@+id/linearlayout_dynamic_shortcuts"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <View style="@style/ViewDivider"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/textview_dynamic_shortcuts_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/activity_vertical_margin"
-                    android:gravity="start|center_vertical"
-                    android:textSize="14sp"
-                    android:textStyle="normal"
-                    android:textColor="?android:textColorPrimary"
-                    android:textColorLink="?android:textColorLink"
-                    android:textIsSelectable="true"
-                    android:autoLink="web"/>
+                android:layout_marginBottom="20dp"
+                app:cardBackgroundColor="@color/m3_primary_container">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
 
-                    <com.google.android.material.button.MaterialButton
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:id="@+id/button_remove_dynamic_shortcuts"
+                    <ImageView
+                        android:id="@+id/img_status_icon"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:src="@drawable/ic_lucide_terminal"
+                        android:layout_marginEnd="14dp"
+                        app:tint="@color/m3_on_primary_container" />
+
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:layout_marginStart="@dimen/content_padding_half"
-                        android:layout_marginEnd="@dimen/content_padding_half"
-                        android:text="@string/action_remove_dynamic_shortcuts"
-                        android:textSize="12sp"
-                        android:textColor="?android:textColorPrimary"
-                        app:strokeColor="?android:textColorPrimary"
-                        app:strokeWidth="2dp"/>
+                        android:orientation="vertical">
 
-                    <com.google.android.material.button.MaterialButton
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:id="@+id/button_create_dynamic_shortcuts"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:layout_marginStart="@dimen/content_padding_half"
-                        android:layout_marginEnd="@dimen/content_padding_half"
-                        android:text="@string/action_create_dynamic_shortcuts"
-                        android:textSize="12sp"
-                        android:textColor="?android:textColorPrimary"
-                        app:strokeColor="?android:textColorPrimary"
-                        app:strokeWidth="2dp"/>
+                        <TextView
+                            android:id="@+id/txt_status_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Termux Connected"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/m3_on_primary_container" />
+
+                        <TextView
+                            android:id="@+id/txt_status_subtitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0 shortcuts detected in ~/.shortcuts/"
+                            android:textSize="12sp"
+                            android:textColor="@color/m3_on_primary_container" />
+                    </LinearLayout>
                 </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-            </LinearLayout>
-
-
-
-            <View style="@style/ViewDivider"/>
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/textview_refresh_all_widgets"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:gravity="start|center_vertical"
-                android:text="@string/msg_refresh_all_widgets_info"
-                android:textSize="14sp"
-                android:textStyle="normal"
-                android:textColor="?android:textColorPrimary"
-                android:textColorLink="?android:textColorLink"
-                android:textIsSelectable="true"
-                android:autoLink="web"/>
-
-            <com.google.android.material.button.MaterialButton
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:id="@+id/button_refresh_all_widgets"
+            <!-- Quick Settings Tiles Section -->
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:gravity="center"
-                android:text="@string/action_refresh_all_widgets"
+                android:text="@string/section_quick_tiles"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/m3_primary"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/section_quick_tiles_desc"
                 android:textSize="12sp"
-                android:textColor="?android:textColorPrimary"
-                app:strokeColor="?android:textColorPrimary"
-                app:strokeWidth="2dp"/>
+                android:textColor="@color/m3_on_surface_variant"
+                android:layout_marginBottom="12dp" />
+
+            <GridLayout
+                android:id="@+id/grid_quick_tiles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="2"
+                android:rowCount="4"
+                android:layout_marginBottom="24dp">
+                <!-- Tile slot cards populated dynamically in Java -->
+            </GridLayout>
+
+            <!-- Detected Shortcuts Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/section_shortcuts"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/m3_primary"
+                    android:textAllCaps="true"
+                    android:letterSpacing="0.05" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_refresh_shortcuts"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:icon="@drawable/ic_hero_arrow_path"
+                    app:iconTint="@color/m3_primary" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/container_detected_shortcuts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
+                <!-- Shortcut cards populated in Java -->
+            </LinearLayout>
+
+            <!-- Widget Varieties Showcase -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/section_widgets"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/m3_primary"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:layout_marginBottom="8dp" />
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.TermuxWidget.Card.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1. List Widget (Dynamic Sizing)"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/m3_on_surface" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Scrollable list with group dividers, task badges, and real-time script counts."
+                        android:textSize="12sp"
+                        android:textColor="@color/m3_on_surface_variant"
+                        android:layout_marginBottom="12dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2. Grid Widget (Squircle Icons)"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/m3_on_surface" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Modern card grid with centered icons, perfect for square 2x2 home screen slots."
+                        android:textSize="12sp"
+                        android:textColor="@color/m3_on_surface_variant"
+                        android:layout_marginBottom="12dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3. Button Widget (Single Direct Action)"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/m3_on_surface" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dedicated one-tap button with custom Lucide / Phosphor / Heroicon icon."
+                        android:textSize="12sp"
+                        android:textColor="@color/m3_on_surface_variant" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Tools & Maintenance Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tools &amp; Management"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/m3_primary"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:layout_marginBottom="12dp" />
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.TermuxWidget.Card.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_refresh_all_widgets"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/action_refresh_all_widgets"
+                        app:icon="@drawable/ic_hero_arrow_path"
+                        app:cornerRadius="14dp"
+                        android:layout_marginBottom="12dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/button_create_dynamic_shortcuts"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/action_create_dynamic_shortcuts"
+                            android:textSize="11sp"
+                            app:cornerRadius="14dp"
+                            android:layout_marginEnd="6dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/button_remove_dynamic_shortcuts"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/action_remove_dynamic_shortcuts"
+                            android:textSize="11sp"
+                            app:cornerRadius="14dp"
+                            android:layout_marginStart="6dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
-
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>

@@ -94,4 +94,52 @@
     <string name="error_create_pinned_shortcut_failed">Failed to create pinned shortcut for \"%1$s\"</string>
     <string name="error_create_static_shortcut_failed">Failed to create static shortcut for \"%1$s\"</string>
 
+    <!-- Quick Settings Tiles -->
+    <string name="title_quick_tile_1">Termux Tile 1</string>
+    <string name="title_quick_tile_2">Termux Tile 2</string>
+    <string name="title_quick_tile_3">Termux Tile 3</string>
+    <string name="title_quick_tile_4">Termux Tile 4</string>
+    <string name="title_quick_tile_5">Termux Tile 5</string>
+    <string name="title_quick_tile_6">Termux Tile 6</string>
+    <string name="title_quick_tile_7">Termux Tile 7</string>
+    <string name="title_quick_tile_8">Termux Tile 8</string>
+    <string name="quick_tile_tap_to_configure">Tap to configure</string>
+    <string name="quick_tile_ready">Ready</string>
+    <string name="quick_tile_running">Running…</string>
+    <string name="quick_tile_config_title">Configure Quick Tile %1$d</string>
+    <string name="quick_tile_select_shortcut">Select Shortcut</string>
+    <string name="quick_tile_choose_icon">Choose Icon</string>
+    <string name="quick_tile_label">Custom Tile Label</string>
+    <string name="quick_tile_clear">Clear Assignment</string>
+    <string name="quick_tile_test_run">Test Run</string>
+    <string name="quick_tile_save">Save Tile</string>
+
+    <!-- Widget Varieties & Descriptions -->
+    <string name="title_grid_widget_name">&TERMUX_APP_NAME; Grid</string>
+    <string name="title_button_widget_name">&TERMUX_APP_NAME; Button</string>
+    <string name="widget_list_description">Scrollable list of Termux shortcuts with group categories and task badges.</string>
+    <string name="widget_grid_description">Material 3 squircle grid of Termux shortcuts.</string>
+    <string name="widget_button_description">Single direct action button for a Termux shortcut.</string>
+    <string name="widget_configure_button_title">Choose Button Shortcut</string>
+
+    <!-- Icon Picker -->
+    <string name="title_icon_picker">Select Icon</string>
+    <string name="search_icons_hint">Search icons (e.g. terminal, server, play)...</string>
+    <string name="icon_cat_all">All</string>
+    <string name="icon_cat_dev">Developer</string>
+    <string name="icon_cat_servers">Servers &amp; Cloud</string>
+    <string name="icon_cat_power">Actions &amp; Power</string>
+    <string name="icon_cat_system">System &amp; Network</string>
+    <string name="icon_custom_image">Pick custom image</string>
+
+    <!-- Groups & Badges -->
+    <string name="group_general">General</string>
+    <string name="group_tasks">Background Tasks</string>
+    <string name="badge_task">TASK</string>
+    <string name="badge_session">TERM</string>
+    <string name="shortcut_count_format">%1$d shortcuts</string>
+    <string name="section_quick_tiles">Quick Settings Tiles</string>
+    <string name="section_quick_tiles_desc">Add up to 8 customizable shortcuts to your Android Control Center.</string>
+    <string name="section_shortcuts">Detected Shortcuts</string>
+    <string name="section_widgets">Widget Varieties</string>
 </resources>

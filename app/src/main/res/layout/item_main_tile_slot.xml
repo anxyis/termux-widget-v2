@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_tile_slot"
+    style="@style/Widget.TermuxWidget.Card.Outlined"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_columnWeight="1"
+    android:layout_margin="4dp"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:id="@+id/slot_tile_icon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:background="@drawable/widget_pill_badge_bg"
+                android:padding="6dp"
+                android:src="@drawable/ic_lucide_terminal"
+                app:tint="@color/m3_primary"
+                android:contentDescription="@null" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/slot_number_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TILE 1"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:textColor="@color/m3_on_surface_variant"
+                android:background="@drawable/widget_pill_badge_bg"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/slot_tile_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Unassigned"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textColor="@color/m3_on_surface"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/slot_tile_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tap to setup"
+            android:textSize="11sp"
+            android:textColor="@color/m3_on_surface_variant"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

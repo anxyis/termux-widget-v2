@@ -6,13 +6,15 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import com.termux.shared.data.IntentUtils;
 import com.termux.shared.logger.Logger;
 import com.termux.shared.termux.TermuxConstants;
 import com.termux.widget.utils.ShortcutUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class TermuxWidgetService extends RemoteViewsService {
 
@@ -21,17 +23,14 @@ public final class TermuxWidgetService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-        Logger.logDebug(LOG_TAG, "onGetViewFactory(): " + appWidgetId);
-        Logger.logVerbose(LOG_TAG, "Intent Received\n" + IntentUtils.getIntentString(intent));
-
         return new ListRemoteViewsFactory(getApplicationContext(), appWidgetId);
     }
 
     public static class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
-        private final List<ShortcutFile> shortcutFiles = new ArrayList<>();
+        private final List<ShortcutFile> displayList = new ArrayList<>();
         private final Context mContext;
-        private final  int mAppWidgetId;
+        private final int mAppWidgetId;
 
         public ListRemoteViewsFactory(Context context, int appWidgetId) {
             mContext = context;
@@ -46,30 +45,28 @@ public final class TermuxWidgetService extends RemoteViewsService {
         @Override
         public void onDestroy() {
             Logger.logDebug(LOG_TAG, "onDestroy(): " + mAppWidgetId);
-            shortcutFiles.clear();
+            displayList.clear();
         }
 
         @Override
         public int getCount() {
-            return shortcutFiles.size();
+            return displayList.size();
         }
 
         @Override
         public RemoteViews getViewAt(int position) {
-            // Position will always range from 0 to getCount() - 1.
-            return shortcutFiles.get(position).getListWidgetView(mContext);
+            if (position < 0 || position >= displayList.size()) return null;
+            return displayList.get(position).getListWidgetView(mContext);
         }
 
         @Override
         public RemoteViews getLoadingView() {
-            // You can create a custom loading view (for instance when getViewAt() is slow.) If you
-            // return null here, you will get the default loading view.
             return null;
         }
 
         @Override
         public int getViewTypeCount() {
-            return 1;
+            return 2; // Type 0: header, Type 1: item
         }
 
         @Override
@@ -79,25 +76,36 @@ public final class TermuxWidgetService extends RemoteViewsService {
 
         @Override
         public boolean hasStableIds() {
-            return true;
+            return false;
         }
 
         @Override
         public void onDataSetChanged() {
             Logger.logDebug(LOG_TAG, "onDataSetChanged(): " + mAppWidgetId);
 
-            // This is triggered when you call AppWidgetManager notifyAppWidgetViewDataChanged
-            // on the collection view corresponding to this factory. You can do heaving lifting in
-            // here, synchronously. For example, if you need to process an image, fetch something
-            // from the network, etc., it is ok to do it here, synchronously. The widget will remain
-            // in its current state while work is being done here, so you don't need to worry about
-            // locking up the widget.
-            shortcutFiles.clear();
-            // Create directory if necessary so user more easily finds where to put shortcuts:
+            displayList.clear();
             TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR.mkdirs();
 
-            ShortcutUtils.enumerateShortcutFiles(shortcutFiles, true);
+            List<ShortcutFile> rawFiles = new ArrayList<>();
+            ShortcutUtils.enumerateShortcutFiles(rawFiles, true);
+
+            // Group files by category/directory
+            Map<String, List<ShortcutFile>> groups = new LinkedHashMap<>();
+            for (ShortcutFile sf : rawFiles) {
+                String group = sf.getGroupName();
+                List<ShortcutFile> list = groups.computeIfAbsent(group, k -> new ArrayList<>());
+                list.add(sf);
+            }
+
+            // If we have multiple groups or tasks, insert group headers
+            boolean showHeaders = groups.size() > 1 || (groups.size() == 1 && !groups.containsKey("General"));
+
+            for (Map.Entry<String, List<ShortcutFile>> entry : groups.entrySet()) {
+                if (showHeaders) {
+                    displayList.add(ShortcutFile.createGroupHeader(entry.getKey(), entry.getValue().size()));
+                }
+                displayList.addAll(entry.getValue());
+            }
         }
     }
-
 }

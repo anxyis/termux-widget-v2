@@ -12,13 +12,14 @@
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.BaseActivity.DayNight.DarkActionBar"
+        android:theme="@style/Theme.TermuxWidget.Material3"
         tools:ignore="GoogleAppIndexingWarning">
 
+        <!-- 1. List Widget Provider -->
         <receiver
             android:name=".TermuxWidgetProvider"
             android:exported="false"
-            android:label="@string/title_shortcut_widget_name" >
+            android:label="@string/title_shortcut_widget_name">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -27,12 +28,39 @@
                 android:resource="@xml/termux_appwidget_info" />
         </receiver>
 
+        <!-- 2. Grid Widget Provider -->
+        <receiver
+            android:name=".TermuxGridWidgetProvider"
+            android:exported="false"
+            android:label="@string/title_grid_widget_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/termux_grid_appwidget_info" />
+        </receiver>
+
+        <!-- 3. Button Widget Provider -->
+        <receiver
+            android:name=".TermuxButtonWidgetProvider"
+            android:exported="false"
+            android:label="@string/title_button_widget_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/termux_button_appwidget_info" />
+        </receiver>
+
         <receiver android:name=".TermuxWidgetControlExecutorReceiver" />
 
+        <!-- Activities -->
         <activity
             android:name=".activities.TermuxWidgetMainActivity"
             android:exported="true"
-            android:theme="@style/Theme.BaseActivity.DayNight.NoActionBar">
+            android:theme="@style/Theme.TermuxWidget.Material3">
         </activity>
 
         <activity-alias
@@ -46,10 +74,24 @@
         </activity-alias>
 
         <activity
+            android:name=".activities.TermuxButtonWidgetConfigureActivity"
+            android:exported="true"
+            android:theme="@style/Theme.TermuxWidget.Material3">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activities.TermuxTileConfigActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TermuxWidget.Material3" />
+
+        <activity
             android:name=".TermuxCreateShortcutActivity"
             android:exported="true"
             android:label="@string/title_single_shortcut_name"
-            android:theme="@style/Theme.BaseActivity.DayNight.NoActionBar">
+            android:theme="@style/Theme.TermuxWidget.Material3">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -64,13 +106,11 @@
             android:taskAffinity=".TermuxLaunchShortcutActivity"
             android:theme="@android:style/Theme.NoDisplay" />
 
-        <!-- If you see "Unresolved package" errors for ReportActivity with manifest placeholder,
-             ignore it. Android Studio linter is broken and correct package name will be used at build time. -->
         <activity
             android:name="${TERMUX_PACKAGE_NAME}.shared.activities.ReportActivity"
             android:exported="false"
             android:documentLaunchMode="intoExisting"
-            android:theme="@style/Theme.MarkdownViewActivity.DayNight"
+            android:theme="@style/Theme.TermuxWidget.Material3"
             tools:ignore="MissingClass" />
 
         <receiver
@@ -83,11 +123,18 @@
             </intent-filter>
         </receiver>
 
+        <!-- RemoteViews Services -->
         <service
             android:name=".TermuxWidgetService"
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
+        <service
+            android:name=".TermuxGridWidgetService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <!-- Android 11+ Power Menu Device Controls -->
         <service
             android:name=".TermuxWidgetControlsProviderService"
             android:exported="true"
@@ -96,6 +143,95 @@
             tools:targetApi="r">
             <intent-filter>
                 <action android:name="android.service.controls.ControlsProviderService" />
+            </intent-filter>
+        </service>
+
+        <!-- Quick Settings Tiles (HyperOS, ColorOS, Stock Android) -->
+        <service
+            android:name=".tiles.TermuxQuickTileServices$TermuxQuickTileService1"
+            android:icon="@drawable/ic_lucide_terminal"
+            android:label="@string/title_quick_tile_1"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".tiles.TermuxQuickTileServices$TermuxQuickTileService2"
+            android:icon="@drawable/ic_lucide_terminal"
+            android:label="@string/title_quick_tile_2"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".tiles.TermuxQuickTileServices$TermuxQuickTileService3"
+            android:icon="@drawable/ic_lucide_terminal"
+            android:label="@string/title_quick_tile_3"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".tiles.TermuxQuickTileServices$TermuxQuickTileService4"
+            android:icon="@drawable/ic_lucide_terminal"
+            android:label="@string/title_quick_tile_4"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".tiles.TermuxQuickTileServices$TermuxQuickTileService5"
+            android:icon="@drawable/ic_lucide_terminal"
+            android:label="@string/title_quick_tile_5"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".tiles.TermuxQuickTileServices$TermuxQuickTileService6"
+            android:icon="@drawable/ic_lucide_terminal"
+            android:label="@string/title_quick_tile_6"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".tiles.TermuxQuickTileServices$TermuxQuickTileService7"
+            android:icon="@drawable/ic_lucide_terminal"
+            android:label="@string/title_quick_tile_7"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".tiles.TermuxQuickTileServices$TermuxQuickTileService8"
+            android:icon="@drawable/ic_lucide_terminal"
+            android:label="@string/title_quick_tile_8"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
         </service>
 
