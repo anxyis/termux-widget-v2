@@ -29,6 +29,11 @@ public final class ThemeManager {
         if (activity == null) return;
         if (isAmoledMode(activity)) {
             activity.setTheme(R.style.Theme_TermuxWidget_Material3_Amoled);
+            if (activity.getWindow() != null) {
+                activity.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.BLACK));
+                activity.getWindow().setStatusBarColor(android.graphics.Color.BLACK);
+                activity.getWindow().setNavigationBarColor(android.graphics.Color.BLACK);
+            }
         } else {
             activity.setTheme(R.style.Theme_TermuxWidget_Material3);
         }

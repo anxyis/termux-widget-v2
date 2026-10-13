@@ -9,6 +9,8 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,6 +32,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.color.DynamicColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.materialswitch.MaterialSwitch;
@@ -103,6 +106,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
             switchAmoled.setChecked(ThemeManager.isAmoledMode(this));
             switchAmoled.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 ThemeManager.setAmoledMode(this, isChecked);
+                sendIntentToRefreshAllWidgets();
                 recreate();
             });
         }
@@ -208,10 +212,129 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
     }
 
     private void populateDashboard() {
+        applyAmoledThemeIfNeeded();
         checkTermuxStatus();
         populateQuickTiles();
         populateDetectedShortcuts();
         populateToggleShortcuts();
+    }
+
+    private void applyAmoledThemeIfNeeded() {
+        if (!ThemeManager.isAmoledMode(this)) return;
+
+        View root = findViewById(R.id.main_root_layout);
+        if (root != null) root.setBackgroundColor(Color.BLACK);
+
+        MaterialToolbar toolbar = findViewById(R.id.main_toolbar);
+        if (toolbar != null) {
+            toolbar.setBackgroundColor(Color.BLACK);
+            toolbar.setTitleTextColor(Color.WHITE);
+        }
+
+        // Status Card
+        MaterialCardView statusCard = findViewById(R.id.card_status_banner);
+        if (statusCard != null) {
+            statusCard.setCardBackgroundColor(Color.parseColor("#0A0A0A"));
+            statusCard.setStrokeColor(Color.parseColor("#262626"));
+        }
+        View statusBadge = findViewById(R.id.status_badge_frame);
+        if (statusBadge != null) statusBadge.setBackgroundResource(R.drawable.widget_icon_badge_amoled_bg);
+        ImageView imgStatus = findViewById(R.id.img_status_icon);
+        if (imgStatus != null) imgStatus.setColorFilter(Color.WHITE);
+        if (mTxtStatusTitle != null) mTxtStatusTitle.setTextColor(Color.WHITE);
+        if (mTxtStatusSubtitle != null) mTxtStatusSubtitle.setTextColor(Color.parseColor("#9E9E9E"));
+
+        View btnRefreshWidgets = findViewById(R.id.button_refresh_all_widgets);
+        if (btnRefreshWidgets != null) btnRefreshWidgets.setBackgroundResource(R.drawable.circle_refresh_button_amoled_bg);
+        ImageView imgRefresh = findViewById(R.id.img_refresh_all_widgets);
+        if (imgRefresh != null) imgRefresh.setColorFilter(Color.WHITE);
+
+        MaterialButton btnSync = findViewById(R.id.btn_refresh_shortcuts);
+        if (btnSync != null) {
+            btnSync.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#141416")));
+            btnSync.setTextColor(Color.WHITE);
+            btnSync.setIconTint(ColorStateList.valueOf(Color.WHITE));
+            btnSync.setStrokeColor(ColorStateList.valueOf(Color.parseColor("#2E2E32")));
+            btnSync.setStrokeWidth(3);
+        }
+
+        TextView txtAmoledTitle = findViewById(R.id.txt_amoled_title);
+        if (txtAmoledTitle != null) txtAmoledTitle.setTextColor(Color.WHITE);
+        TextView txtAmoledSub = findViewById(R.id.txt_amoled_subtitle);
+        if (txtAmoledSub != null) txtAmoledSub.setTextColor(Color.parseColor("#9E9E9E"));
+        ImageView imgAmoledMoon = findViewById(R.id.img_amoled_moon);
+        if (imgAmoledMoon != null) imgAmoledMoon.setColorFilter(Color.WHITE);
+
+        // Section Headers
+        TextView headerScripts = findViewById(R.id.header_scripts_dir_title);
+        if (headerScripts != null) headerScripts.setTextColor(Color.WHITE);
+        if (mTxtShortcutsCount != null) mTxtShortcutsCount.setTextColor(Color.parseColor("#9E9E9E"));
+
+        TextView headerToggles = findViewById(R.id.header_toggles_title);
+        if (headerToggles != null) headerToggles.setTextColor(Color.WHITE);
+        if (mTxtTogglesCount != null) mTxtTogglesCount.setTextColor(Color.parseColor("#9E9E9E"));
+
+        MaterialButton btnAddCmd = findViewById(R.id.btn_add_command);
+        if (btnAddCmd != null) {
+            btnAddCmd.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
+            btnAddCmd.setTextColor(Color.BLACK);
+            btnAddCmd.setIconTint(ColorStateList.valueOf(Color.BLACK));
+        }
+
+        MaterialButton btnAddToggle = findViewById(R.id.btn_add_toggle);
+        if (btnAddToggle != null) {
+            btnAddToggle.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
+            btnAddToggle.setTextColor(Color.BLACK);
+            btnAddToggle.setIconTint(ColorStateList.valueOf(Color.BLACK));
+        }
+
+        // Quick Tiles Card
+        MaterialCardView tilesCard = findViewById(R.id.card_tiles_section);
+        if (tilesCard != null) {
+            tilesCard.setCardBackgroundColor(Color.parseColor("#0A0A0A"));
+            tilesCard.setStrokeColor(Color.parseColor("#262626"));
+        }
+        View tilesBadge = findViewById(R.id.tiles_badge_frame);
+        if (tilesBadge != null) tilesBadge.setBackgroundResource(R.drawable.widget_icon_badge_amoled_bg);
+        ImageView imgTiles = findViewById(R.id.img_tiles_icon);
+        if (imgTiles != null) imgTiles.setColorFilter(Color.WHITE);
+        TextView txtTilesTitle = findViewById(R.id.txt_tiles_title);
+        if (txtTilesTitle != null) txtTilesTitle.setTextColor(Color.WHITE);
+        if (mTxtTilesSummary != null) mTxtTilesSummary.setTextColor(Color.parseColor("#9E9E9E"));
+        if (mImgTilesExpandIcon != null) mImgTilesExpandIcon.setColorFilter(Color.parseColor("#9E9E9E"));
+
+        // Setup Guide Card
+        MaterialCardView setupCard = findViewById(R.id.card_setup_guide);
+        if (setupCard != null) {
+            setupCard.setCardBackgroundColor(Color.parseColor("#0A0A0A"));
+            setupCard.setStrokeColor(Color.parseColor("#262626"));
+        }
+        View setupBadge = findViewById(R.id.setup_badge_frame);
+        if (setupBadge != null) setupBadge.setBackgroundResource(R.drawable.widget_icon_badge_amoled_bg);
+        ImageView imgSetup = findViewById(R.id.img_setup_icon);
+        if (imgSetup != null) imgSetup.setColorFilter(Color.WHITE);
+        TextView txtSetupTitle = findViewById(R.id.txt_setup_title);
+        if (txtSetupTitle != null) txtSetupTitle.setTextColor(Color.WHITE);
+        TextView txtSetupSub = findViewById(R.id.txt_setup_subtitle);
+        if (txtSetupSub != null) txtSetupSub.setTextColor(Color.parseColor("#9E9E9E"));
+
+        MaterialButton btnCopy = findViewById(R.id.btn_copy_setup_command);
+        if (btnCopy != null) {
+            btnCopy.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#141416")));
+            btnCopy.setTextColor(Color.WHITE);
+            btnCopy.setIconTint(ColorStateList.valueOf(Color.WHITE));
+            btnCopy.setStrokeColor(ColorStateList.valueOf(Color.parseColor("#2E2E32")));
+            btnCopy.setStrokeWidth(3);
+        }
+
+        MaterialButton btnSettings = findViewById(R.id.btn_open_app_settings);
+        if (btnSettings != null) {
+            btnSettings.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#141416")));
+            btnSettings.setTextColor(Color.WHITE);
+            btnSettings.setIconTint(ColorStateList.valueOf(Color.WHITE));
+            btnSettings.setStrokeColor(ColorStateList.valueOf(Color.parseColor("#2E2E32")));
+            btnSettings.setStrokeWidth(3);
+        }
     }
 
     private void checkTermuxStatus() {
@@ -233,6 +356,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         mGridQuickTiles.removeAllViews();
 
         int configuredCount = 0;
+        boolean isAmoled = ThemeManager.isAmoledMode(this);
         LayoutInflater inflater = LayoutInflater.from(this);
         for (int slot = 1; slot <= 8; slot++) {
             final int slotIndex = slot;
@@ -258,6 +382,19 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
                 txtLabel.setText("Unassigned");
                 txtStatus.setText("Tap to setup");
                 imgIcon.setImageResource(R.drawable.ic_lucide_terminal);
+            }
+
+            if (isAmoled) {
+                MaterialCardView card = (MaterialCardView) slotView;
+                card.setCardBackgroundColor(Color.parseColor("#0A0A0A"));
+                card.setStrokeColor(Color.parseColor("#262626"));
+                txtLabel.setTextColor(Color.WHITE);
+                txtStatus.setTextColor(Color.parseColor("#9E9E9E"));
+                txtSlotNum.setBackgroundResource(R.drawable.widget_pill_badge_amoled_bg);
+                txtSlotNum.setTextColor(Color.WHITE);
+                View badgeFrame = slotView.findViewById(R.id.slot_badge_frame);
+                if (badgeFrame != null) badgeFrame.setBackgroundResource(R.drawable.widget_icon_badge_amoled_bg);
+                imgIcon.setColorFilter(Color.WHITE);
             }
 
             slotView.setOnClickListener(v -> {
@@ -302,6 +439,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         }
 
         LayoutInflater inflater = LayoutInflater.from(this);
+        boolean isAmoled = ThemeManager.isAmoledMode(this);
         for (ShortcutFile sf : files) {
             View row = inflater.inflate(R.layout.item_main_shortcut_row, mContainerDetectedShortcuts, false);
 
@@ -310,15 +448,36 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
             TextView txtBadge = row.findViewById(R.id.row_shortcut_badge);
             ImageView imgIcon = row.findViewById(R.id.row_shortcut_icon);
             ImageView imgCustom = row.findViewById(R.id.row_shortcut_custom_image);
-            MaterialButton btnRun = row.findViewById(R.id.row_btn_run);
+            View btnRun = row.findViewById(R.id.row_btn_run);
+            ImageView imgRun = row.findViewById(R.id.img_row_btn_run);
 
             txtTitle.setText(sf.getLabel());
             txtPath.setText(sf.getUnExpandedPath());
 
             boolean isTask = sf.isTask();
             txtBadge.setText(isTask ? "TASK" : "TERM");
-            txtBadge.setBackgroundResource(isTask ? R.drawable.widget_pill_badge_bg : R.drawable.widget_pill_session_bg);
-            txtBadge.setTextColor(getResources().getColor(isTask ? R.color.badge_task_text : R.color.badge_session_text));
+
+            if (isAmoled) {
+                MaterialCardView card = (MaterialCardView) row;
+                card.setCardBackgroundColor(Color.parseColor("#0A0A0A"));
+                card.setStrokeColor(Color.parseColor("#262626"));
+                txtTitle.setTextColor(Color.WHITE);
+                txtPath.setTextColor(Color.parseColor("#9E9E9E"));
+                txtBadge.setBackgroundResource(R.drawable.widget_pill_badge_amoled_bg);
+                txtBadge.setTextColor(Color.WHITE);
+                View badgeFrame = row.findViewById(R.id.row_shortcut_icon_badge);
+                if (badgeFrame != null) badgeFrame.setBackgroundResource(R.drawable.widget_icon_badge_amoled_bg);
+                imgIcon.setColorFilter(Color.WHITE);
+
+                btnRun.setBackgroundResource(R.drawable.circle_run_button_amoled_bg);
+                if (imgRun != null) imgRun.setColorFilter(Color.BLACK);
+            } else {
+                txtBadge.setBackgroundResource(isTask ? R.drawable.widget_pill_badge_bg : R.drawable.widget_pill_session_bg);
+                txtBadge.setTextColor(getResources().getColor(isTask ? R.color.badge_task_text : R.color.badge_session_text));
+
+                btnRun.setBackgroundResource(R.drawable.circle_run_button_bg);
+                if (imgRun != null) imgRun.setColorFilter(getColor(R.color.m3_on_primary));
+            }
 
             int defaultIcon = isTask ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
             IconHelper.applyToImageView(imgIcon, imgCustom, sf.mIconId, defaultIcon);
@@ -346,16 +505,16 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
                         CustomCommand cmd = TermuxCustomCommandPreferences.getCommandById(TermuxWidgetMainActivity.this, cmdId);
                         if (cmd != null) {
                             new MaterialAlertDialogBuilder(TermuxWidgetMainActivity.this)
-                                    .setTitle("Delete Command")
-                                    .setMessage("Are you sure you want to delete '" + cmd.name + "'?")
-                                    .setPositiveButton("Delete", (d, w) -> {
-                                        TermuxCustomCommandPreferences.deleteCustomCommand(TermuxWidgetMainActivity.this, cmd.id);
-                                        populateDashboard();
-                                        sendIntentToRefreshAllWidgets();
-                                        Toast.makeText(TermuxWidgetMainActivity.this, "Command deleted", Toast.LENGTH_SHORT).show();
-                                    })
-                                    .setNegativeButton("Cancel", null)
-                                    .show();
+                                     .setTitle("Delete Command")
+                                     .setMessage("Are you sure you want to delete '" + cmd.name + "'?")
+                                     .setPositiveButton("Delete", (d, w) -> {
+                                         TermuxCustomCommandPreferences.deleteCustomCommand(TermuxWidgetMainActivity.this, cmd.id);
+                                         populateDashboard();
+                                         sendIntentToRefreshAllWidgets();
+                                         Toast.makeText(TermuxWidgetMainActivity.this, "Command deleted", Toast.LENGTH_SHORT).show();
+                                     })
+                                     .setNegativeButton("Cancel", null)
+                                     .show();
                         }
                     }
 
@@ -407,6 +566,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         }
 
         LayoutInflater inflater = LayoutInflater.from(this);
+        boolean isAmoled = ThemeManager.isAmoledMode(this);
         for (ToggleShortcut toggle : toggles) {
             View row = inflater.inflate(R.layout.item_main_toggle_row, mContainerToggleShortcuts, false);
 
@@ -426,25 +586,49 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
 
             IconHelper.applyToImageView(imgIcon, imgCustom, toggle.iconId, R.drawable.ic_lucide_power);
 
-            com.google.android.material.card.MaterialCardView card = row.findViewById(R.id.card_toggle_row);
-            if (toggle.isOn) {
-                card.setCardBackgroundColor(getResources().getColor(R.color.m3_primary));
-                txtTitle.setTextColor(getResources().getColor(R.color.m3_on_primary));
-                txtScripts.setTextColor(getResources().getColor(R.color.m3_on_primary));
-                txtStatusPill.setText("ON");
-                txtStatusPill.setBackgroundResource(R.drawable.widget_toggle_badge_on_bg);
-                txtStatusPill.setTextColor(getResources().getColor(R.color.m3_primary));
-                badgeFrame.setBackgroundResource(R.drawable.widget_toggle_badge_on_bg);
-                imgIcon.setColorFilter(getResources().getColor(R.color.m3_primary));
+            MaterialCardView card = row.findViewById(R.id.card_toggle_row);
+            if (isAmoled) {
+                if (toggle.isOn) {
+                    card.setCardBackgroundColor(Color.WHITE);
+                    card.setStrokeColor(Color.WHITE);
+                    txtTitle.setTextColor(Color.BLACK);
+                    txtScripts.setTextColor(Color.BLACK);
+                    txtStatusPill.setText("ON");
+                    txtStatusPill.setBackgroundResource(R.drawable.widget_toggle_badge_amoled_on_bg);
+                    txtStatusPill.setTextColor(Color.WHITE);
+                    badgeFrame.setBackgroundResource(R.drawable.widget_toggle_badge_amoled_on_bg);
+                    imgIcon.setColorFilter(Color.WHITE);
+                } else {
+                    card.setCardBackgroundColor(Color.parseColor("#0A0A0A"));
+                    card.setStrokeColor(Color.parseColor("#262626"));
+                    txtTitle.setTextColor(Color.WHITE);
+                    txtScripts.setTextColor(Color.parseColor("#9E9E9E"));
+                    txtStatusPill.setText("OFF");
+                    txtStatusPill.setBackgroundResource(R.drawable.widget_pill_badge_amoled_bg);
+                    txtStatusPill.setTextColor(Color.WHITE);
+                    badgeFrame.setBackgroundResource(R.drawable.widget_icon_badge_amoled_bg);
+                    imgIcon.setColorFilter(Color.WHITE);
+                }
             } else {
-                card.setCardBackgroundColor(getResources().getColor(R.color.m3_surface_container));
-                txtTitle.setTextColor(getResources().getColor(R.color.m3_on_surface));
-                txtScripts.setTextColor(getResources().getColor(R.color.m3_on_surface_variant));
-                txtStatusPill.setText("OFF");
-                txtStatusPill.setBackgroundResource(R.drawable.widget_pill_session_bg);
-                txtStatusPill.setTextColor(getResources().getColor(R.color.badge_session_text));
-                badgeFrame.setBackgroundResource(R.drawable.widget_icon_badge_bg);
-                imgIcon.setColorFilter(getResources().getColor(R.color.m3_primary));
+                if (toggle.isOn) {
+                    card.setCardBackgroundColor(getResources().getColor(R.color.m3_primary));
+                    txtTitle.setTextColor(getResources().getColor(R.color.m3_on_primary));
+                    txtScripts.setTextColor(getResources().getColor(R.color.m3_on_primary));
+                    txtStatusPill.setText("ON");
+                    txtStatusPill.setBackgroundResource(R.drawable.widget_toggle_badge_on_bg);
+                    txtStatusPill.setTextColor(getResources().getColor(R.color.m3_primary));
+                    badgeFrame.setBackgroundResource(R.drawable.widget_toggle_badge_on_bg);
+                    imgIcon.setColorFilter(getResources().getColor(R.color.m3_primary));
+                } else {
+                    card.setCardBackgroundColor(getResources().getColor(R.color.m3_surface_container));
+                    txtTitle.setTextColor(getResources().getColor(R.color.m3_on_surface));
+                    txtScripts.setTextColor(getResources().getColor(R.color.m3_on_surface_variant));
+                    txtStatusPill.setText("OFF");
+                    txtStatusPill.setBackgroundResource(R.drawable.widget_pill_session_bg);
+                    txtStatusPill.setTextColor(getResources().getColor(R.color.badge_session_text));
+                    badgeFrame.setBackgroundResource(R.drawable.widget_icon_badge_bg);
+                    imgIcon.setColorFilter(getResources().getColor(R.color.m3_primary));
+                }
             }
 
             switchState.setChecked(toggle.isOn);

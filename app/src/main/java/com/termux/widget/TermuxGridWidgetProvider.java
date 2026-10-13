@@ -7,6 +7,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.widget.RemoteViews;
 
@@ -16,6 +17,7 @@ import com.termux.shared.file.FileUtils;
 import com.termux.shared.file.filesystem.FileType;
 import com.termux.shared.logger.Logger;
 import com.termux.shared.termux.TermuxConstants.TERMUX_WIDGET_APP.TERMUX_WIDGET_PROVIDER;
+import com.termux.widget.theme.ThemeManager;
 import com.termux.widget.utils.ShortcutUtils;
 
 import java.util.Arrays;
@@ -65,6 +67,9 @@ public final class TermuxGridWidgetProvider extends AppWidgetProvider {
         int layoutId = singleColumn ? R.layout.widget_grid_layout_1col : R.layout.widget_grid_layout;
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), layoutId);
         remoteViews.setEmptyView(R.id.widget_grid, R.id.empty_view);
+        if (ThemeManager.isAmoledMode(context)) {
+            remoteViews.setTextColor(R.id.txt_empty_message, Color.WHITE);
+        }
 
         Intent intent = new Intent(context, TermuxGridWidgetService.class);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);

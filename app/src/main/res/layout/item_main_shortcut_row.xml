@@ -6,8 +6,10 @@
     style="@style/Widget.TermuxWidget.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
-    app:cardBackgroundColor="@color/m3_surface_container"
+    android:layout_marginBottom="10dp"
+    app:cardBackgroundColor="?attr/colorSurfaceContainer"
+    app:strokeWidth="1dp"
+    app:strokeColor="?attr/colorOutlineVariant"
     android:clickable="true"
     android:focusable="true">
 
@@ -16,31 +18,32 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp">
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp">
 
-        <!-- Leading Icon Badge (Subtle Dark Purple Container) -->
+        <!-- Leading Icon Badge (Oversized Bento Shape) -->
         <FrameLayout
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            android:id="@+id/row_shortcut_icon_badge"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
             android:background="@drawable/widget_icon_badge_bg"
-            android:layout_marginEnd="14dp">
+            android:layout_marginEnd="16dp">
 
             <ImageView
                 android:id="@+id/row_shortcut_icon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_lucide_terminal"
-                app:tint="@color/m3_primary"
+                app:tint="?attr/colorPrimary"
                 android:contentDescription="@null" />
 
             <ImageView
                 android:id="@+id/row_shortcut_custom_image"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_gravity="center"
                 android:scaleType="centerInside"
                 android:visibility="gone"
@@ -58,9 +61,9 @@
                 android:id="@+id/row_shortcut_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="@color/m3_on_surface"
+                android:textColor="?attr/colorOnSurface"
                 android:singleLine="true"
                 android:ellipsize="middle" />
 
@@ -68,9 +71,9 @@
                 android:id="@+id/row_shortcut_path"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:textSize="11sp"
-                android:textColor="@color/m3_on_surface_variant"
+                android:layout_marginTop="3dp"
+                android:textSize="13sp"
+                android:textColor="?attr/colorOnSurfaceVariant"
                 android:singleLine="true"
                 android:ellipsize="middle" />
         </LinearLayout>
@@ -81,33 +84,40 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginStart="8dp">
+            android:layout_marginStart="10dp">
 
             <TextView
                 android:id="@+id/row_shortcut_badge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/widget_pill_badge_bg"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp"
-                android:textSize="10sp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:textSize="11sp"
                 android:textStyle="bold"
                 android:textColor="@color/badge_task_text"
-                android:layout_marginEnd="8dp" />
+                android:layout_marginEnd="10dp" />
 
-            <!-- Primary Circular Run Button (Filled with Primary Color) -->
-            <com.google.android.material.button.MaterialButton
+            <!-- Primary Circular Run Button (Guaranteed Centered Play Icon) -->
+            <FrameLayout
                 android:id="@+id/row_btn_run"
-                style="@style/Widget.Material3.Button.IconButton.Filled"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                app:icon="@drawable/ic_lucide_play"
-                app:iconSize="18dp"
-                app:iconTint="@color/m3_on_primary"
-                app:backgroundTint="@color/m3_primary"
-                android:contentDescription="Run Script" />
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/circle_run_button_bg"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:id="@+id/img_row_btn_run"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_play_arrow_centered"
+                    app:tint="?attr/colorOnPrimary"
+                    android:contentDescription="Run Script" />
+            </FrameLayout>
         </LinearLayout>
     </LinearLayout>
 

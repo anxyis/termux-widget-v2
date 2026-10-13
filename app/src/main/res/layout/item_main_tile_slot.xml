@@ -7,8 +7,10 @@
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_columnWeight="1"
-    android:layout_margin="4dp"
-    app:cardBackgroundColor="@color/m3_surface_container"
+    android:layout_margin="5dp"
+    app:cardBackgroundColor="?attr/colorSurfaceContainer"
+    app:strokeWidth="1dp"
+    app:strokeColor="?attr/colorOutlineVariant"
     android:clickable="true"
     android:focusable="true">
 
@@ -16,27 +18,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="14dp">
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="12dp">
 
             <FrameLayout
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:id="@+id/slot_badge_frame"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
                 android:background="@drawable/widget_icon_badge_bg">
 
                 <ImageView
                     android:id="@+id/slot_tile_icon"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_lucide_terminal"
-                    app:tint="@color/m3_primary"
+                    app:tint="?attr/colorPrimary"
                     android:contentDescription="@null" />
             </FrameLayout>
 
@@ -50,14 +53,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="01"
-                android:textSize="10sp"
+                android:textSize="11sp"
                 android:textStyle="bold"
                 android:textColor="@color/badge_task_text"
                 android:background="@drawable/widget_pill_badge_bg"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp" />
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp" />
         </LinearLayout>
 
         <TextView
@@ -65,9 +68,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Unassigned"
-            android:textSize="14sp"
+            android:textSize="15sp"
             android:textStyle="bold"
-            android:textColor="@color/m3_on_surface"
+            android:textColor="?attr/colorOnSurface"
             android:maxLines="1"
             android:ellipsize="end" />
 
@@ -75,10 +78,10 @@
             android:id="@+id/slot_tile_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="3dp"
             android:text="Tap to setup"
-            android:textSize="11sp"
-            android:textColor="@color/m3_on_surface_variant"
+            android:textSize="12sp"
+            android:textColor="?attr/colorOnSurfaceVariant"
             android:maxLines="1"
             android:ellipsize="end" />
 

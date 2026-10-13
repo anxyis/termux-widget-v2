@@ -32,7 +32,7 @@
     </style>
 
     <!-- Bottom Sheet Dialog Theme -->
-    <style name="Theme.TermuxWidget.BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+    <style name="Theme.TermuxWidget.BottomSheetDialog" parent="Theme.Material3.DayNight.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/Widget.TermuxWidget.BottomSheetModal</item>
     </style>
 
@@ -40,19 +40,26 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
-    <!-- PixelPlayer Expressive Rounded Cards (24dp corners matching PixelPlayer large shape) -->
+    <!-- Toolbar Title Styling -->
+    <style name="TextAppearance.TermuxWidget.ToolbarTitle" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Bento Expressive Rounded Cards (28dp corners matching modern Bento shape) -->
     <style name="Widget.TermuxWidget.Card" parent="Widget.Material3.CardView.Elevated">
-        <item name="cardCornerRadius">24dp</item>
+        <item name="cardCornerRadius">28dp</item>
         <item name="cardElevation">0dp</item>
-        <item name="strokeWidth">0dp</item>
-        <item name="cardBackgroundColor">@color/m3_surface_container</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">?attr/colorOutlineVariant</item>
+        <item name="cardBackgroundColor">?attr/colorSurfaceContainer</item>
     </style>
 
     <style name="Widget.TermuxWidget.Card.Outlined" parent="Widget.Material3.CardView.Outlined">
-        <item name="cardCornerRadius">24dp</item>
-        <item name="strokeWidth">1dp</item>
-        <item name="strokeColor">@color/m3_outline_variant</item>
-        <item name="cardBackgroundColor">@color/m3_surface_container</item>
+        <item name="cardCornerRadius">28dp</item>
+        <item name="strokeWidth">1.5dp</item>
+        <item name="strokeColor">?attr/colorOutlineVariant</item>
+        <item name="cardBackgroundColor">?attr/colorSurfaceContainer</item>
     </style>
 
     <!-- PixelPlayer Expressive Capsule Buttons -->
@@ -68,18 +75,39 @@
         <item name="android:insetBottom">0dp</item>
     </style>
 
-    <!-- True Pure Black AMOLED Theme -->
-    <style name="Theme.TermuxWidget.Material3.Amoled" parent="Theme.TermuxWidget.Material3">
+    <!-- True Pure Black AMOLED Theme (100% Monochrome Black & White) -->
+    <style name="Theme.TermuxWidget.Material3.Amoled" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:colorBackground">#000000</item>
         <item name="colorSurface">#000000</item>
-        <item name="colorSurfaceContainer">#101012</item>
-        <item name="colorSurfaceContainerLow">#08080A</item>
-        <item name="colorSurfaceContainerHigh">#18191D</item>
-        <item name="colorSurfaceContainerHighest">#222329</item>
+        <item name="colorSurfaceContainer">#0A0A0A</item>
+        <item name="colorSurfaceContainerLow">#000000</item>
         <item name="colorSurfaceContainerLowest">#000000</item>
-        <item name="colorSurfaceVariant">#141518</item>
+        <item name="colorSurfaceContainerHigh">#141416</item>
+        <item name="colorSurfaceContainerHighest">#1E1F24</item>
+        <item name="colorSurfaceVariant">#101012</item>
+
+        <item name="colorPrimary">#FFFFFF</item>
+        <item name="colorOnPrimary">#000000</item>
+        <item name="colorPrimaryContainer">#202124</item>
+        <item name="colorOnPrimaryContainer">#FFFFFF</item>
+
+        <item name="colorSecondary">#FFFFFF</item>
+        <item name="colorOnSecondary">#000000</item>
+        <item name="colorSecondaryContainer">#202124</item>
+        <item name="colorOnSecondaryContainer">#FFFFFF</item>
+
+        <item name="colorTertiary">#FFFFFF</item>
+        <item name="colorOnTertiary">#000000</item>
+        <item name="colorTertiaryContainer">#202124</item>
+        <item name="colorOnTertiaryContainer">#FFFFFF</item>
+
+        <item name="colorOnSurface">#FFFFFF</item>
+        <item name="colorOnSurfaceVariant">#9E9E9E</item>
+        <item name="colorOutline">#555555</item>
+        <item name="colorOutlineVariant">#262626</item>
+
         <item name="android:statusBarColor">#000000</item>
         <item name="android:navigationBarColor">#000000</item>
-        <item name="colorOutlineVariant">#26282E</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>

@@ -8,6 +8,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.view.Gravity;
@@ -15,6 +16,8 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+
+import com.termux.widget.theme.ThemeManager;
 
 import com.termux.shared.data.DataUtils;
 import com.termux.shared.data.IntentUtils;
@@ -85,6 +88,9 @@ public final class TermuxWidgetProvider extends AppWidgetProvider {
         // of the collection view:
         remoteViews.setEmptyView(R.id.widget_list, R.id.empty_view);
         remoteViews.setTextViewText(R.id.txt_empty_message, context.getString(R.string.msg_no_shortcut_scripts));
+        if (ThemeManager.isAmoledMode(context)) {
+            remoteViews.setTextColor(R.id.txt_empty_message, Color.WHITE);
+        }
 
         // Setup intent which points to the TermuxWidgetService which will provide the views for this collection.
         Intent intent = new Intent(context, TermuxWidgetService.class);

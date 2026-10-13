@@ -3,6 +3,7 @@ package com.termux.widget;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ShortcutInfo;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
@@ -13,6 +14,8 @@ import android.widget.RemoteViews;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+
+import com.termux.widget.theme.ThemeManager;
 
 import com.termux.shared.data.DataUtils;
 import com.termux.shared.file.FileUtils;
@@ -288,10 +291,17 @@ public final class ShortcutFile {
 
     public RemoteViews getListWidgetView(Context context, int position, int count) {
         if (context != null) applyCustomMetadata(context);
+        boolean isAmoled = ThemeManager.isAmoledMode(context);
+
         if (mIsHeader) {
             RemoteViews headerViews = new RemoteViews(context.getPackageName(), R.layout.widget_group_header);
             headerViews.setTextViewText(R.id.widget_group_header_title, getLabel());
             headerViews.setTextViewText(R.id.widget_group_header_count, String.valueOf(mGroupCount));
+            if (isAmoled) {
+                headerViews.setTextColor(R.id.widget_group_header_title, Color.WHITE);
+                headerViews.setInt(R.id.widget_group_header_count, "setBackgroundResource", R.drawable.widget_pill_badge_amoled_bg);
+                headerViews.setTextColor(R.id.widget_group_header_count, Color.WHITE);
+            }
             return headerViews;
         }
 
@@ -301,22 +311,46 @@ public final class ShortcutFile {
         boolean isTaskScript = isTask();
         int defaultIcon = isTaskScript ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
 
-        if (mIsToggle) {
-            if (mToggleIsOn) {
-                remoteViews.setInt(R.id.widget_item_card_container, "setBackgroundResource", R.drawable.widget_toggle_card_on_bg);
-                remoteViews.setInt(R.id.widget_item_icon_badge, "setBackgroundResource", R.drawable.widget_toggle_badge_on_bg);
-                remoteViews.setTextColor(R.id.widget_item, context.getColor(R.color.widget_toggle_text_on));
-                IconHelper.applyToRemoteViews(remoteViews, R.id.widget_item_icon, R.id.widget_item_custom_image, mIconId, defaultIcon);
-                remoteViews.setInt(R.id.widget_item_icon, "setColorFilter", context.getColor(R.color.widget_toggle_icon_on));
+        if (isAmoled) {
+            if (mIsToggle) {
+                if (mToggleIsOn) {
+                    remoteViews.setInt(R.id.widget_item_card_container, "setBackgroundResource", R.drawable.widget_toggle_card_amoled_on_bg);
+                    remoteViews.setInt(R.id.widget_item_icon_badge, "setBackgroundResource", R.drawable.widget_toggle_badge_amoled_on_bg);
+                    remoteViews.setTextColor(R.id.widget_item, Color.BLACK);
+                    IconHelper.applyToRemoteViews(remoteViews, R.id.widget_item_icon, R.id.widget_item_custom_image, mIconId, defaultIcon);
+                    remoteViews.setInt(R.id.widget_item_icon, "setColorFilter", Color.WHITE);
+                } else {
+                    remoteViews.setInt(R.id.widget_item_card_container, "setBackgroundResource", R.drawable.widget_list_card_amoled_bg);
+                    remoteViews.setInt(R.id.widget_item_icon_badge, "setBackgroundResource", R.drawable.widget_list_circle_icon_amoled_bg);
+                    remoteViews.setTextColor(R.id.widget_item, Color.WHITE);
+                    IconHelper.applyToRemoteViews(remoteViews, R.id.widget_item_icon, R.id.widget_item_custom_image, mIconId, defaultIcon);
+                    remoteViews.setInt(R.id.widget_item_icon, "setColorFilter", Color.WHITE);
+                }
             } else {
-                remoteViews.setInt(R.id.widget_item_card_container, "setBackgroundResource", R.drawable.widget_list_card_bg);
-                remoteViews.setInt(R.id.widget_item_icon_badge, "setBackgroundResource", R.drawable.widget_list_circle_icon_bg);
-                remoteViews.setTextColor(R.id.widget_item, context.getColor(R.color.widget_text_color));
+                remoteViews.setInt(R.id.widget_item_card_container, "setBackgroundResource", R.drawable.widget_list_card_amoled_bg);
+                remoteViews.setInt(R.id.widget_item_icon_badge, "setBackgroundResource", R.drawable.widget_list_circle_icon_amoled_bg);
+                remoteViews.setTextColor(R.id.widget_item, Color.WHITE);
                 IconHelper.applyToRemoteViews(remoteViews, R.id.widget_item_icon, R.id.widget_item_custom_image, mIconId, defaultIcon);
-                remoteViews.setInt(R.id.widget_item_icon, "setColorFilter", context.getColor(R.color.widget_list_badge_icon));
+                remoteViews.setInt(R.id.widget_item_icon, "setColorFilter", Color.WHITE);
             }
         } else {
-            IconHelper.applyToRemoteViews(remoteViews, R.id.widget_item_icon, R.id.widget_item_custom_image, mIconId, defaultIcon);
+            if (mIsToggle) {
+                if (mToggleIsOn) {
+                    remoteViews.setInt(R.id.widget_item_card_container, "setBackgroundResource", R.drawable.widget_toggle_card_on_bg);
+                    remoteViews.setInt(R.id.widget_item_icon_badge, "setBackgroundResource", R.drawable.widget_toggle_badge_on_bg);
+                    remoteViews.setTextColor(R.id.widget_item, context.getColor(R.color.widget_toggle_text_on));
+                    IconHelper.applyToRemoteViews(remoteViews, R.id.widget_item_icon, R.id.widget_item_custom_image, mIconId, defaultIcon);
+                    remoteViews.setInt(R.id.widget_item_icon, "setColorFilter", context.getColor(R.color.widget_toggle_icon_on));
+                } else {
+                    remoteViews.setInt(R.id.widget_item_card_container, "setBackgroundResource", R.drawable.widget_list_card_bg);
+                    remoteViews.setInt(R.id.widget_item_icon_badge, "setBackgroundResource", R.drawable.widget_list_circle_icon_bg);
+                    remoteViews.setTextColor(R.id.widget_item, context.getColor(R.color.widget_text_color));
+                    IconHelper.applyToRemoteViews(remoteViews, R.id.widget_item_icon, R.id.widget_item_custom_image, mIconId, defaultIcon);
+                    remoteViews.setInt(R.id.widget_item_icon, "setColorFilter", context.getColor(R.color.widget_list_badge_icon));
+                }
+            } else {
+                IconHelper.applyToRemoteViews(remoteViews, R.id.widget_item_icon, R.id.widget_item_custom_image, mIconId, defaultIcon);
+            }
         }
 
         Intent fillInIntent = new Intent().putExtra(TERMUX_WIDGET_PROVIDER.EXTRA_FILE_CLICKED, getPath());
@@ -327,22 +361,45 @@ public final class ShortcutFile {
 
     public RemoteViews getGridWidgetView(Context context) {
         if (context != null) applyCustomMetadata(context);
+        boolean isAmoled = ThemeManager.isAmoledMode(context);
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_grid_item);
         remoteViews.setTextViewText(R.id.widget_grid_item_label, getLabel());
 
         boolean isTaskScript = isTask();
         int defaultIcon = isTaskScript ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
 
-        if (mIsToggle) {
-            if (mToggleIsOn) {
-                remoteViews.setInt(R.id.widget_grid_item_layout, "setBackgroundResource", R.drawable.widget_toggle_grid_card_on_bg);
-                remoteViews.setTextColor(R.id.widget_grid_item_label, context.getColor(R.color.widget_toggle_text_on));
+        if (isAmoled) {
+            if (mIsToggle) {
+                if (mToggleIsOn) {
+                    remoteViews.setInt(R.id.widget_grid_item_layout, "setBackgroundResource", R.drawable.widget_toggle_grid_card_amoled_on_bg);
+                    remoteViews.setInt(R.id.widget_grid_item_icon_badge, "setBackgroundResource", R.drawable.widget_toggle_badge_amoled_on_bg);
+                    remoteViews.setTextColor(R.id.widget_grid_item_label, Color.BLACK);
+                    remoteViews.setInt(R.id.widget_grid_item_icon, "setColorFilter", Color.WHITE);
+                } else {
+                    remoteViews.setInt(R.id.widget_grid_item_layout, "setBackgroundResource", R.drawable.widget_grid_card_amoled_bg);
+                    remoteViews.setInt(R.id.widget_grid_item_icon_badge, "setBackgroundResource", R.drawable.widget_grid_circle_amoled_bg);
+                    remoteViews.setTextColor(R.id.widget_grid_item_label, Color.WHITE);
+                    remoteViews.setInt(R.id.widget_grid_item_icon, "setColorFilter", Color.BLACK);
+                }
             } else {
-                remoteViews.setInt(R.id.widget_grid_item_layout, "setBackgroundResource", R.drawable.widget_grid_card_bg);
-                remoteViews.setTextColor(R.id.widget_grid_item_label, context.getColor(R.color.widget_text_color));
+                remoteViews.setInt(R.id.widget_grid_item_layout, "setBackgroundResource", R.drawable.widget_grid_card_amoled_bg);
+                remoteViews.setInt(R.id.widget_grid_item_icon_badge, "setBackgroundResource", R.drawable.widget_grid_circle_amoled_bg);
+                remoteViews.setTextColor(R.id.widget_grid_item_label, Color.WHITE);
+                remoteViews.setInt(R.id.widget_grid_item_icon, "setColorFilter", Color.BLACK);
             }
+            IconHelper.applyToRemoteViews(remoteViews, R.id.widget_grid_item_icon, R.id.widget_grid_item_custom_image, mIconId, defaultIcon);
+        } else {
+            if (mIsToggle) {
+                if (mToggleIsOn) {
+                    remoteViews.setInt(R.id.widget_grid_item_layout, "setBackgroundResource", R.drawable.widget_toggle_grid_card_on_bg);
+                    remoteViews.setTextColor(R.id.widget_grid_item_label, context.getColor(R.color.widget_toggle_text_on));
+                } else {
+                    remoteViews.setInt(R.id.widget_grid_item_layout, "setBackgroundResource", R.drawable.widget_grid_card_bg);
+                    remoteViews.setTextColor(R.id.widget_grid_item_label, context.getColor(R.color.widget_text_color));
+                }
+            }
+            IconHelper.applyToRemoteViews(remoteViews, R.id.widget_grid_item_icon, R.id.widget_grid_item_custom_image, mIconId, defaultIcon);
         }
-        IconHelper.applyToRemoteViews(remoteViews, R.id.widget_grid_item_icon, R.id.widget_grid_item_custom_image, mIconId, defaultIcon);
 
         Intent fillInIntent = new Intent().putExtra(TERMUX_WIDGET_PROVIDER.EXTRA_FILE_CLICKED, getPath());
         remoteViews.setOnClickFillInIntent(R.id.widget_grid_item_layout, fillInIntent);
