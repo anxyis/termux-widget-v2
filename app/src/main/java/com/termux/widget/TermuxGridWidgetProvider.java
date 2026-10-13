@@ -71,16 +71,6 @@ public final class TermuxGridWidgetProvider extends AppWidgetProvider {
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
         remoteViews.setRemoteAdapter(R.id.widget_grid, intent);
 
-        // Setup refresh button
-        Intent refreshIntent = new Intent(context, TermuxGridWidgetProvider.class);
-        refreshIntent.setAction(TERMUX_WIDGET_PROVIDER.ACTION_REFRESH_WIDGET);
-        refreshIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        refreshIntent.setData(Uri.parse(refreshIntent.toUri(Intent.URI_INTENT_SCHEME)));
-        @SuppressLint("UnspecifiedImmutableFlag")
-        PendingIntent refreshPendingIntent = PendingIntent.getBroadcast(context, 0, refreshIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.refresh_button, refreshPendingIntent);
-
         // Setup pending intent template for grid items
         Intent clickIntent = new Intent(context, TermuxGridWidgetProvider.class);
         clickIntent.setAction(TERMUX_WIDGET_PROVIDER.ACTION_WIDGET_ITEM_CLICKED);

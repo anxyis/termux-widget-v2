@@ -1,100 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@android:color/transparent"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:padding="2dp">
 
-    <!-- Compact Header Row for 1x1 size -->
-    <LinearLayout
-        android:id="@+id/top_row"
+    <GridView
+        android:id="@+id/widget_grid"
         android:layout_width="match_parent"
-        android:layout_height="22dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingStart="8dp"
-        android:paddingEnd="4dp"
-        android:layout_marginBottom="2dp">
-
-        <ImageView
-            android:layout_width="6dp"
-            android:layout_height="6dp"
-            android:layout_marginEnd="6dp"
-            android:contentDescription="@null"
-            android:src="@drawable/ic_status_dot" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Shortcuts"
-            android:textSize="11sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:singleLine="true"
-            android:ellipsize="end" />
-
-        <ImageButton
-            android:id="@+id/refresh_button"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_hero_arrow_path"
-            android:tint="#A0A0A0"
-            android:contentDescription="@string/action_refresh"
-            android:padding="2dp" />
-    </LinearLayout>
-
-    <!-- Single Column Grid View (Floating Tiles Matching User's Image 1) -->
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:numColumns="1"
+        android:verticalSpacing="8dp"
+        android:horizontalSpacing="0dp"
+        android:stretchMode="columnWidth"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:padding="2dp">
+        android:scrollbars="vertical" />
 
-        <GridView
-            android:id="@+id/widget_grid"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:numColumns="1"
-            android:verticalSpacing="12dp"
-            android:horizontalSpacing="0dp"
-            android:stretchMode="columnWidth"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-            android:scrollbars="vertical" />
+    <!-- Empty State View -->
+    <LinearLayout
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="16dp">
 
-        <!-- Empty State View -->
-        <LinearLayout
-            android:id="@+id/empty_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginBottom="6dp"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_lucide_folder"
+            android:tint="@color/widget_list_badge_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/msg_no_shortcut_scripts"
             android:gravity="center"
-            android:padding="16dp">
+            android:textSize="11sp"
+            android:textColor="@color/widget_text_color" />
+    </LinearLayout>
 
-            <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_marginBottom="6dp"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_lucide_folder"
-                android:tint="#A0A0A0" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/msg_no_shortcut_scripts"
-                android:gravity="center"
-                android:textSize="11sp"
-                android:textColor="#A0A0A0" />
-        </LinearLayout>
-    </FrameLayout>
-
-</LinearLayout>
+</FrameLayout>

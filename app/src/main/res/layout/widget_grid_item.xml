@@ -2,21 +2,21 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="68dp"
     android:clipChildren="false"
     android:clipToPadding="false">
 
-    <!-- Dark Charcoal Card with Rounded Corners (Image 1) -->
+    <!-- Material You Card with Rounded Corners -->
     <LinearLayout
         android:id="@+id/widget_grid_item_layout"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_marginTop="14dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/widget_grid_card_bg"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingTop="14dp"
-        android:paddingBottom="8dp"
+        android:paddingTop="18dp"
+        android:paddingBottom="6dp"
         android:paddingStart="8dp"
         android:paddingEnd="8dp">
 
@@ -26,27 +26,27 @@
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/widget_text_color"
             android:gravity="center"
             android:singleLine="true"
             android:ellipsize="middle" />
     </LinearLayout>
 
-    <!-- Vibrant Purple Circle Badge Overlapping the Top Edge (Image 1) -->
+    <!-- Material You Dynamic Accent Circle Badge Overlapping Top Edge -->
     <FrameLayout
-        android:layout_width="34dp"
-        android:layout_height="34dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:background="@drawable/widget_grid_purple_circle_bg">
 
         <ImageView
             android:id="@+id/widget_grid_item_icon"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_hero_bolt"
-            android:tint="#FFFFFF"
+            android:tint="@color/widget_accent_circle_icon"
             android:contentDescription="@null" />
     </FrameLayout>
 

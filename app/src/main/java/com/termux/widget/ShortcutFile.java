@@ -268,23 +268,6 @@ public final class ShortcutFile {
         int iconRes = mIconId != null ? IconRegistry.getDrawableResId(mIconId, defaultIcon) : defaultIcon;
         remoteViews.setImageViewResource(R.id.widget_item_icon, iconRes);
 
-        // Adjust card background to form a connected rounded container matching user's design
-        int bgRes;
-        if (count <= 1) {
-            bgRes = R.drawable.widget_list_card_bg_single;
-        } else if (position == 0) {
-            bgRes = R.drawable.widget_list_card_bg_top;
-        } else if (position == count - 1) {
-            bgRes = R.drawable.widget_list_card_bg_bottom;
-        } else {
-            bgRes = R.drawable.widget_list_card_bg_middle;
-        }
-        remoteViews.setInt(R.id.widget_item_card_container, "setBackgroundResource", bgRes);
-
-        // Show divider line between stacked items except the last item
-        boolean showDivider = (position < count - 1);
-        remoteViews.setViewVisibility(R.id.widget_item_divider, showDivider ? android.view.View.VISIBLE : android.view.View.GONE);
-
         Intent fillInIntent = new Intent().putExtra(TERMUX_WIDGET_PROVIDER.EXTRA_FILE_CLICKED, getPath());
         remoteViews.setOnClickFillInIntent(R.id.widget_item_layout, fillInIntent);
 

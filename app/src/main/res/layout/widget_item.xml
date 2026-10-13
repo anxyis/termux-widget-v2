@@ -8,11 +8,11 @@
     android:gravity="center_vertical"
     android:paddingStart="4dp"
     android:paddingEnd="4dp"
-    android:paddingTop="2dp"
-    android:paddingBottom="2dp"
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp"
     android:background="@drawable/ripple_mask">
 
-    <!-- Left: Independent Circular Dark Gray Icon Badge -->
+    <!-- Left: Independent Circular Icon Badge -->
     <FrameLayout
         android:id="@+id/widget_item_icon_badge"
         android:layout_width="38dp"
@@ -26,18 +26,18 @@
             android:layout_height="18dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_hero_bolt"
-            android:tint="#FFFFFF"
+            android:tint="@color/widget_list_badge_icon"
             android:contentDescription="@null" />
     </FrameLayout>
 
-    <!-- Right: Dark Charcoal Card (Connected Container in List Stack) -->
+    <!-- Right: Material You Rounded Card Container -->
     <LinearLayout
         android:id="@+id/widget_item_card_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:background="@drawable/widget_list_card_bg_single">
+        android:background="@drawable/widget_list_card_bg">
 
         <TextView
             android:id="@+id/widget_item"
@@ -48,16 +48,9 @@
             android:paddingEnd="16dp"
             android:textSize="13sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/widget_text_color"
             android:ellipsize="middle"
             android:singleLine="true" />
-
-        <View
-            android:id="@+id/widget_item_divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#3E3E3E"
-            android:visibility="gone" />
 
     </LinearLayout>
 

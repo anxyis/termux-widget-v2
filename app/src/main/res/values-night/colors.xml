@@ -48,8 +48,13 @@
     <color name="status_disconnected_dim">#5C1D1D</color>
 
     <!-- Widget Specific Canonical Colors -->
-    <!-- PixelPlay widget background: #2C1D4D -->
-    <color name="widget_card_bg">#352458</color>
+    <color name="widget_card_bg">@color/m3_surface_container</color>
+    <color name="widget_accent_circle_bg">@color/m3_primary</color>
+    <color name="widget_accent_circle_icon">@color/m3_on_primary</color>
+    <color name="widget_list_badge_bg">@color/m3_surface_container_highest</color>
+    <color name="widget_list_badge_icon">@color/m3_on_surface</color>
+    <color name="widget_text_color">@color/m3_on_surface</color>
+    <color name="widget_divider_color">@color/m3_outline_variant</color>
     <color name="widget_container_bg">#251742</color>
     <color name="widget_ripple">#35BA68C8</color>
 </resources>

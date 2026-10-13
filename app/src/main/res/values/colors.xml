@@ -43,8 +43,14 @@
     <color name="status_disconnected">#D32F2F</color>
     <color name="status_disconnected_dim">#FFCDD2</color>
 
-    <!-- Widget Specific High-Contrast Elements -->
-    <color name="widget_card_bg">#EFE6FD</color>
+    <!-- Widget Specific Dynamic Elements (Material You / M3) -->
+    <color name="widget_card_bg">@color/m3_surface_container</color>
+    <color name="widget_accent_circle_bg">@color/m3_primary</color>
+    <color name="widget_accent_circle_icon">@color/m3_on_primary</color>
+    <color name="widget_list_badge_bg">@color/m3_surface_container_highest</color>
+    <color name="widget_list_badge_icon">@color/m3_on_surface</color>
+    <color name="widget_text_color">@color/m3_on_surface</color>
+    <color name="widget_divider_color">@color/m3_outline_variant</color>
     <color name="widget_container_bg">#FFFFFF</color>
     <color name="widget_ripple">#256C4FF5</color>
 </resources>

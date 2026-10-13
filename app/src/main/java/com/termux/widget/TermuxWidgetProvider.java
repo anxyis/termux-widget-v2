@@ -86,10 +86,6 @@ public final class TermuxWidgetProvider extends AppWidgetProvider {
         remoteViews.setEmptyView(R.id.widget_list, R.id.empty_view);
         remoteViews.setTextViewText(R.id.txt_empty_message, context.getString(R.string.msg_no_shortcut_scripts));
 
-        List<ShortcutFile> shortcutCountList = new ArrayList<>();
-        ShortcutUtils.enumerateShortcutFiles(context, shortcutCountList, false);
-        remoteViews.setTextViewText(R.id.txt_widget_count, String.format("[%02d]", shortcutCountList.size()));
-
         // Setup intent which points to the TermuxWidgetService which will provide the views for this collection.
         Intent intent = new Intent(context, TermuxWidgetService.class);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
@@ -97,16 +93,6 @@ public final class TermuxWidgetProvider extends AppWidgetProvider {
         // into the data so that the extras will not be ignored.
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
         remoteViews.setRemoteAdapter(R.id.widget_list, intent);
-
-        // Setup refresh button:
-        Intent refreshIntent = new Intent(context, TermuxWidgetProvider.class);
-        refreshIntent.setAction(TERMUX_WIDGET_PROVIDER.ACTION_REFRESH_WIDGET);
-        refreshIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        refreshIntent.setData(Uri.parse(refreshIntent.toUri(Intent.URI_INTENT_SCHEME)));
-        @SuppressLint("UnspecifiedImmutableFlag") // Must be mutable
-        PendingIntent refreshPendingIntent = PendingIntent.getBroadcast(context, 0, refreshIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.refresh_button, refreshPendingIntent);
 
         // Here we setup the a pending intent template. Individuals items of a collection
         // cannot setup their own pending intents, instead, the collection as a whole can
