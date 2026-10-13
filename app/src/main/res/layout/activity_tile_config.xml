@@ -14,27 +14,35 @@
         android:background="@color/m3_surface"
         app:title="@string/quick_tile_config_title"
         app:titleTextColor="@color/m3_on_surface"
+        app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge"
         app:navigationIcon="@drawable/ic_lucide_chevron_right" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="16dp">
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="24dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Control Center Tile Preview -->
+            <!-- Section 1: Live Interactive Preview Card -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Control Center Preview"
-                android:textSize="12sp"
+                android:text="QUICK TILE PREVIEW"
+                android:textSize="11sp"
                 android:textStyle="bold"
+                android:letterSpacing="0.08"
                 android:textColor="@color/m3_primary"
+                android:layout_marginStart="4dp"
                 android:layout_marginBottom="8dp" />
 
             <com.google.android.material.card.MaterialCardView
@@ -42,163 +50,241 @@
                 android:layout_height="wrap_content"
                 style="@style/Widget.TermuxWidget.Card"
                 android:layout_marginBottom="20dp"
-                app:cardElevation="2dp">
+                app:cardBackgroundColor="@color/m3_surface_container">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="16dp">
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-                    <ImageView
-                        android:id="@+id/preview_tile_icon"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:background="@drawable/widget_pill_badge_bg"
-                        android:padding="8dp"
-                        android:src="@drawable/ic_lucide_terminal"
-                        android:layout_marginEnd="14dp"
-                        app:tint="@color/m3_primary" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Control Center Appearance"
+                        android:textSize="12sp"
+                        android:textColor="@color/m3_on_surface_variant"
+                        android:layout_marginBottom="14dp" />
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/widget_card_item_bg"
+                        android:padding="16dp">
 
-                        <TextView
-                            android:id="@+id/preview_tile_label"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Termux Tile"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/m3_on_surface" />
+                        <FrameLayout
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/widget_icon_badge_bg"
+                            android:layout_marginEnd="14dp">
 
-                        <TextView
-                            android:id="@+id/preview_tile_sublabel"
-                            android:layout_width="wrap_content"
+                            <ImageView
+                                android:id="@+id/preview_tile_icon"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_lucide_terminal"
+                                app:tint="@color/m3_primary"
+                                android:contentDescription="@null" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="@string/quick_tile_ready"
-                            android:textSize="12sp"
-                            android:textColor="@color/m3_on_surface_variant" />
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/preview_tile_label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Termux Tile"
+                                android:textSize="15sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/m3_on_surface"
+                                android:singleLine="true"
+                                android:ellipsize="middle" />
+
+                            <TextView
+                                android:id="@+id/preview_tile_sublabel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/quick_tile_ready"
+                                android:textSize="12sp"
+                                android:textColor="@color/m3_on_surface_variant" />
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Script Selection Card -->
+            <!-- Section 2: Grouped Configuration Block -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TILE CONFIGURATION"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08"
+                android:textColor="@color/m3_on_surface_variant"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="8dp" />
+
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_tile_select_script"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Widget.TermuxWidget.Card.Outlined"
-                android:clickable="true"
-                android:focusable="true"
-                android:layout_marginBottom="12dp">
+                style="@style/Widget.TermuxWidget.Card"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/m3_surface_container">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="16dp">
+                    android:orientation="vertical">
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_lucide_code"
-                        android:layout_marginEnd="12dp"
-                        app:tint="@color/m3_primary" />
-
+                    <!-- Script Selection Row -->
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:id="@+id/card_tile_select_script"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="16dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/quick_tile_select_shortcut"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/m3_on_surface" />
+                        <FrameLayout
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/widget_icon_badge_bg"
+                            android:layout_marginEnd="14dp">
 
-                        <TextView
-                            android:id="@+id/txt_tile_selected_script"
-                            android:layout_width="wrap_content"
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_lucide_code"
+                                app:tint="@color/m3_primary"
+                                android:contentDescription="@null" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="Tap to choose script"
-                            android:textSize="12sp"
-                            android:textColor="@color/m3_on_surface_variant" />
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/quick_tile_select_shortcut"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/m3_on_surface" />
+
+                            <TextView
+                                android:id="@+id/txt_tile_selected_script"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Tap to select script"
+                                android:textSize="12sp"
+                                android:textColor="@color/m3_on_surface_variant"
+                                android:ellipsize="middle"
+                                android:singleLine="true" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_lucide_chevron_right"
+                            app:tint="@color/m3_on_surface_variant"
+                            android:contentDescription="@null" />
                     </LinearLayout>
 
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_lucide_chevron_right"
-                        app:tint="@color/m3_on_surface_variant" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/m3_outline_variant" />
+
+                    <!-- Icon Selection Row -->
+                    <LinearLayout
+                        android:id="@+id/card_tile_select_icon"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="16dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <FrameLayout
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/widget_icon_badge_bg"
+                            android:layout_marginEnd="14dp">
+
+                            <ImageView
+                                android:id="@+id/img_tile_chosen_icon"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_lucide_terminal"
+                                app:tint="@color/m3_primary"
+                                android:contentDescription="@null" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/quick_tile_choose_icon"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/m3_on_surface" />
+
+                            <TextView
+                                android:id="@+id/txt_tile_chosen_icon_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Terminal (Lucide)"
+                                android:textSize="12sp"
+                                android:textColor="@color/m3_on_surface_variant" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_lucide_chevron_right"
+                            app:tint="@color/m3_on_surface_variant"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Icon Selection Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_tile_select_icon"
-                android:layout_width="match_parent"
+            <!-- Section 3: Custom Display Name -->
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/Widget.TermuxWidget.Card.Outlined"
-                android:clickable="true"
-                android:focusable="true"
-                android:layout_marginBottom="16dp">
+                android:text="DISPLAY LABEL"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08"
+                android:textColor="@color/m3_on_surface_variant"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="8dp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:id="@+id/img_tile_chosen_icon"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:src="@drawable/ic_lucide_terminal"
-                        android:layout_marginEnd="12dp"
-                        app:tint="@color/m3_primary" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/quick_tile_choose_icon"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/m3_on_surface" />
-
-                        <TextView
-                            android:id="@+id/txt_tile_chosen_icon_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Terminal (Lucide)"
-                            android:textSize="12sp"
-                            android:textColor="@color/m3_on_surface_variant" />
-                    </LinearLayout>
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_lucide_chevron_right"
-                        app:tint="@color/m3_on_surface_variant" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Custom Label Input -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_tile_label"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
@@ -209,46 +295,68 @@
                 app:boxCornerRadiusTopEnd="16dp"
                 app:boxCornerRadiusBottomStart="16dp"
                 app:boxCornerRadiusBottomEnd="16dp"
-                android:hint="@string/quick_tile_label">
+                android:hint="@string/quick_tile_label"
+                app:helperText="Optional custom label displayed in Android Quick Settings">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_tile_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textCapWords"
                     android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Save Action Button -->
+            <!-- Spacer -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <!-- Primary Action: Save Tile -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_save_tile"
+                style="@style/Widget.TermuxWidget.Button.Capsule"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:text="@string/quick_tile_save"
-                android:textSize="14sp"
-                app:cornerRadius="16dp"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:icon="@drawable/ic_lucide_check"
+                app:iconGravity="textStart"
+                app:iconSize="20dp"
+                app:backgroundTint="@color/m3_primary"
+                android:textColor="@color/m3_on_primary"
+                app:iconTint="@color/m3_on_primary"
                 android:layout_marginBottom="10dp" />
 
-            <!-- Test Run Action Button -->
+            <!-- Secondary Action: Test Run -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_test_run_tile"
-                style="@style/Widget.Material3.Button.TonalButton"
+                style="@style/Widget.TermuxWidget.Button.Tonal"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="46dp"
                 android:text="@string/quick_tile_test_run"
+                android:textSize="13sp"
+                android:textStyle="bold"
                 app:icon="@drawable/ic_lucide_play"
-                app:cornerRadius="16dp"
-                android:layout_marginBottom="10dp" />
+                app:iconGravity="textStart"
+                app:iconSize="16dp"
+                app:backgroundTint="@color/m3_surface_container_high"
+                android:textColor="@color/m3_on_surface"
+                app:iconTint="@color/m3_primary"
+                android:layout_marginBottom="8dp" />
 
-            <!-- Clear Action Button -->
+            <!-- Tertiary Action: Clear Tile -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_clear_tile"
                 style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:text="@string/quick_tile_clear"
-                android:textColor="@color/m3_outline"
+                android:textColor="@color/status_disconnected"
                 app:icon="@drawable/ic_lucide_trash"
-                app:iconTint="@color/m3_outline" />
+                app:iconTint="@color/status_disconnected"
+                app:iconSize="16dp" />
 
         </LinearLayout>
     </ScrollView>

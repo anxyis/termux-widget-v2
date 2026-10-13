@@ -65,6 +65,11 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
     private LinearLayout mContainerDetectedShortcuts;
     private TextView mTxtStatusTitle;
     private TextView mTxtStatusSubtitle;
+    private TextView mTxtShortcutsCount;
+    private TextView mTxtTilesSummary;
+    private LinearLayout mContainerTilesExpandable;
+    private ImageView mImgTilesExpandIcon;
+    private boolean mTilesExpanded = false;
 
     private final BroadcastReceiver mSyncReceiver = new BroadcastReceiver() {
         @Override
@@ -90,6 +95,15 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         mContainerDetectedShortcuts = findViewById(R.id.container_detected_shortcuts);
         mTxtStatusTitle = findViewById(R.id.txt_status_title);
         mTxtStatusSubtitle = findViewById(R.id.txt_status_subtitle);
+        mTxtShortcutsCount = findViewById(R.id.txt_shortcuts_count);
+        mTxtTilesSummary = findViewById(R.id.txt_tiles_summary);
+        mContainerTilesExpandable = findViewById(R.id.container_tiles_expandable);
+        mImgTilesExpandIcon = findViewById(R.id.img_tiles_expand_icon);
+
+        View headerTiles = findViewById(R.id.header_quick_tiles);
+        if (headerTiles != null) {
+            headerTiles.setOnClickListener(v -> toggleTilesExpansion());
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission("com.termux.permission.RUN_COMMAND") != PackageManager.PERMISSION_GRANTED) {
@@ -131,6 +145,17 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         }
 
         sendIntentToRefreshAllWidgets();
+    }
+
+    private void toggleTilesExpansion() {
+        mTilesExpanded = !mTilesExpanded;
+        if (mContainerTilesExpandable != null) {
+            mContainerTilesExpandable.setVisibility(mTilesExpanded ? View.VISIBLE : View.GONE);
+        }
+        if (mImgTilesExpandIcon != null) {
+            mImgTilesExpandIcon.setRotation(mTilesExpanded ? 90f : 0f);
+        }
+        populateQuickTiles();
     }
 
     @Override
@@ -183,6 +208,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         if (mGridQuickTiles == null) return;
         mGridQuickTiles.removeAllViews();
 
+        int configuredCount = 0;
         LayoutInflater inflater = LayoutInflater.from(this);
         for (int slot = 1; slot <= 8; slot++) {
             final int slotIndex = slot;
@@ -200,6 +226,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
             String iconId = TermuxTilePreferences.getIconId(this, slot);
 
             if (scriptPath != null && !scriptPath.isEmpty()) {
+                configuredCount++;
                 txtLabel.setText(label != null ? label : ("Tile " + slot));
                 txtStatus.setText("Ready");
                 int iconRes = IconRegistry.getDrawableResId(iconId, R.drawable.ic_lucide_terminal);
@@ -218,6 +245,10 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
 
             mGridQuickTiles.addView(slotView);
         }
+
+        if (mTxtTilesSummary != null) {
+            mTxtTilesSummary.setText(configuredCount + " of 8 tiles configured • Tap to " + (mTilesExpanded ? "collapse" : "view & edit"));
+        }
     }
 
     private void populateDetectedShortcuts() {
@@ -226,6 +257,10 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
 
         List<ShortcutFile> files = new ArrayList<>();
         ShortcutUtils.enumerateShortcutFiles(this, files, true);
+
+        if (mTxtShortcutsCount != null) {
+            mTxtShortcutsCount.setText(files.size() + " script" + (files.size() == 1 ? "" : "s") + " detected • Tap to run or view options");
+        }
 
         if (files.isEmpty()) {
             TextView emptyText = new TextView(this);
