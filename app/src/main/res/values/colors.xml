@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- PixelPlayer Expressive Palette (Light Mode) -->
-    <color name="m3_primary">#7C3AED</color>
+    <!-- PixelPlayer Canonical Light Palette -->
+    <color name="m3_primary">#6C4FF5</color>
     <color name="m3_on_primary">#FFFFFF</color>
-    <color name="m3_primary_container">#EDE9FE</color>
-    <color name="m3_on_primary_container">#2E1065</color>
+    <color name="m3_primary_container">#E3DBFF</color>
+    <color name="m3_on_primary_container">#23005C</color>
 
-    <color name="m3_secondary">#DB2777</color>
+    <color name="m3_secondary">#F06292</color>
     <color name="m3_on_secondary">#FFFFFF</color>
-    <color name="m3_secondary_container">#FCE7F3</color>
-    <color name="m3_on_secondary_container">#831843</color>
+    <color name="m3_secondary_container">#FCE4EC</color>
+    <color name="m3_on_secondary_container">#880E4F</color>
 
-    <color name="m3_tertiary">#0284C7</color>
-    <color name="m3_on_tertiary">#FFFFFF</color>
-    <color name="m3_tertiary_container">#E0F2FE</color>
-    <color name="m3_on_tertiary_container">#03496E</color>
+    <color name="m3_tertiary">#FF8A65</color>
+    <color name="m3_on_tertiary">#000000</color>
+    <color name="m3_tertiary_container">#FBE9E7</color>
+    <color name="m3_on_tertiary_container">#BF360C</color>
 
-    <color name="m3_surface">#FAF8FE</color>
-    <color name="m3_on_surface">#1E1438</color>
-    <color name="m3_surface_variant">#F1EBFC</color>
-    <color name="m3_on_surface_variant">#6B5E87</color>
+    <color name="m3_surface">#F7F2FF</color>
+    <color name="m3_on_surface">#1E1237</color>
+    <color name="m3_surface_variant">#E8DEF9</color>
+    <color name="m3_on_surface_variant">#4D4165</color>
 
     <color name="m3_surface_container_lowest">#FFFFFF</color>
-    <color name="m3_surface_container_low">#F7F4FD</color>
-    <color name="m3_surface_container">#F3ECFD</color>
-    <color name="m3_surface_container_high">#EAE1FA</color>
-    <color name="m3_surface_container_highest">#E1D4F7</color>
+    <color name="m3_surface_container_low">#F5EFFE</color>
+    <color name="m3_surface_container">#EFE6FD</color>
+    <color name="m3_surface_container_high">#E8DCFB</color>
+    <color name="m3_surface_container_highest">#E1D3F8</color>
 
-    <color name="m3_outline">#D8CEEE</color>
-    <color name="m3_outline_variant">#E9E2F7</color>
+    <color name="m3_outline">#78659A</color>
+    <color name="m3_outline_variant">#D6CBE8</color>
 
     <!-- Semantic Status & Task Badges -->
-    <color name="badge_task_bg">#EDE9FE</color>
-    <color name="badge_task_text">#7C3AED</color>
-    <color name="badge_session_bg">#E2E8F0</color>
-    <color name="badge_session_text">#334155</color>
-    <color name="badge_group_bg">#F1EBFC</color>
-    <color name="badge_group_text">#1E1438</color>
+    <color name="badge_task_bg">#E3DBFF</color>
+    <color name="badge_task_text">#6C4FF5</color>
+    <color name="badge_session_bg">#E8DEF9</color>
+    <color name="badge_session_text">#4D4165</color>
+    <color name="badge_group_bg">#EFE6FD</color>
+    <color name="badge_group_text">#1E1237</color>
 
-    <color name="status_connected">#10B981</color>
-    <color name="status_connected_dim">#D1FAE5</color>
-    <color name="status_disconnected">#EF4444</color>
-    <color name="status_disconnected_dim">#FEE2E2</color>
+    <color name="status_connected">#2E7D32</color>
+    <color name="status_connected_dim">#C8E6C9</color>
+    <color name="status_disconnected">#D32F2F</color>
+    <color name="status_disconnected_dim">#FFCDD2</color>
 
     <!-- Widget Specific High-Contrast Elements -->
-    <color name="widget_card_bg">#F4EEFD</color>
+    <color name="widget_card_bg">#EFE6FD</color>
     <color name="widget_container_bg">#FFFFFF</color>
-    <color name="widget_ripple">#207C3AED</color>
+    <color name="widget_ripple">#256C4FF5</color>
 </resources>

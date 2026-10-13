@@ -16,13 +16,17 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="12dp">
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp">
 
+        <!-- Leading Icon Badge (Subtle Dark Purple Container) -->
         <FrameLayout
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
             android:background="@drawable/widget_icon_badge_bg"
-            android:layout_marginEnd="12dp">
+            android:layout_marginEnd="14dp">
 
             <ImageView
                 android:id="@+id/row_shortcut_icon"
@@ -34,6 +38,7 @@
                 android:contentDescription="@null" />
         </FrameLayout>
 
+        <!-- Center Details (Name & Path) -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -61,30 +66,40 @@
                 android:ellipsize="middle" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/row_shortcut_badge"
+        <!-- Badge & Action Group -->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/widget_pill_badge_bg"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"
-            android:textSize="9sp"
-            android:textStyle="bold"
-            android:textColor="@color/badge_task_text"
-            android:layout_marginEnd="10dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginStart="8dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/row_btn_run"
-            style="@style/Widget.Material3.Button.IconButton.Filled"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            app:icon="@drawable/ic_lucide_play"
-            app:iconSize="16dp"
-            app:iconTint="@color/m3_primary"
-            app:backgroundTint="@color/m3_primary_container"
-            android:contentDescription="Run Script" />
+            <TextView
+                android:id="@+id/row_shortcut_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/widget_pill_badge_bg"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textColor="@color/badge_task_text"
+                android:layout_marginEnd="8dp" />
+
+            <!-- Primary Circular Run Button (Filled with Primary Color) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/row_btn_run"
+                style="@style/Widget.Material3.Button.IconButton.Filled"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:icon="@drawable/ic_lucide_play"
+                app:iconSize="18dp"
+                app:iconTint="@color/m3_on_primary"
+                app:backgroundTint="@color/m3_primary"
+                android:contentDescription="Run Script" />
+        </LinearLayout>
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

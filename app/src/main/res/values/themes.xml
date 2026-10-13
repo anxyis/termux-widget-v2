@@ -40,17 +40,16 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
-    <!-- PixelPlayer Expressive Rounded Cards -->
+    <!-- PixelPlayer Expressive Rounded Cards (24dp corners matching PixelPlayer large shape) -->
     <style name="Widget.TermuxWidget.Card" parent="Widget.Material3.CardView.Elevated">
-        <item name="cardCornerRadius">20dp</item>
+        <item name="cardCornerRadius">24dp</item>
         <item name="cardElevation">0dp</item>
-        <item name="strokeWidth">1dp</item>
-        <item name="strokeColor">@color/m3_outline_variant</item>
+        <item name="strokeWidth">0dp</item>
         <item name="cardBackgroundColor">@color/m3_surface_container</item>
     </style>
 
     <style name="Widget.TermuxWidget.Card.Outlined" parent="Widget.Material3.CardView.Outlined">
-        <item name="cardCornerRadius">18dp</item>
+        <item name="cardCornerRadius">24dp</item>
         <item name="strokeWidth">1dp</item>
         <item name="strokeColor">@color/m3_outline_variant</item>
         <item name="cardBackgroundColor">@color/m3_surface_container</item>
@@ -58,11 +57,15 @@
 
     <!-- PixelPlayer Expressive Capsule Buttons -->
     <style name="Widget.TermuxWidget.Button.Tonal" parent="Widget.Material3.Button.TonalButton">
-        <item name="cornerRadius">20dp</item>
+        <item name="cornerRadius">24dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
     </style>
 
     <style name="Widget.TermuxWidget.Button.Capsule" parent="Widget.Material3.Button">
-        <item name="cornerRadius">24dp</item>
+        <item name="cornerRadius">28dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
     </style>
 
 </resources>

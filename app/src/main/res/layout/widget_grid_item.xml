@@ -7,17 +7,17 @@
     android:orientation="vertical"
     android:gravity="center"
     android:background="@drawable/widget_grid_item_bg"
-    android:paddingStart="8dp"
-    android:paddingEnd="8dp"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp">
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp"
+    android:paddingTop="14dp"
+    android:paddingBottom="14dp">
 
     <ImageView
         android:id="@+id/widget_grid_item_icon"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:background="@drawable/widget_pill_badge_bg"
-        android:padding="5dp"
+        android:padding="6dp"
         android:contentDescription="@null"
         android:src="@drawable/ic_lucide_terminal" />
 
@@ -25,8 +25,8 @@
         android:id="@+id/widget_grid_item_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:textSize="11sp"
+        android:layout_marginTop="8dp"
+        android:textSize="12sp"
         android:textStyle="bold"
         android:textColor="@color/m3_on_surface"
         android:gravity="center"
@@ -37,13 +37,13 @@
         android:id="@+id/widget_grid_item_badge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="4dp"
         android:background="@drawable/widget_pill_badge_bg"
-        android:paddingStart="6dp"
-        android:paddingEnd="6dp"
-        android:paddingTop="1dp"
-        android:paddingBottom="1dp"
-        android:textSize="8sp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:textSize="9sp"
         android:textStyle="bold"
         android:textColor="@color/badge_task_text" />
 
