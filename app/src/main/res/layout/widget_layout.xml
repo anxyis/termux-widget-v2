@@ -31,7 +31,7 @@
             android:layout_weight="1"
             android:text="@string/title_termux_shortcuts"
             android:textSize="13sp"
-            android:fontFamily="sans-serif-medium"
+            android:textStyle="bold"
             android:textColor="@color/m3_on_surface"
             android:singleLine="true"
             android:ellipsize="end" />
@@ -54,11 +54,12 @@
             android:padding="5dp" />
     </LinearLayout>
 
-    <!-- Header Divider -->
-    <View
+    <!-- Header Divider (ImageView is allowed in RemoteViews, View is not) -->
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/m3_outline_variant" />
+        android:layout_height="1dp"
+        android:contentDescription="@null"
+        android:src="@color/m3_outline_variant" />
 
     <!-- Scrollable Shortcuts Collection -->
     <FrameLayout

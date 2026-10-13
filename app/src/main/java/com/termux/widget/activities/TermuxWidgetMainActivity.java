@@ -145,7 +145,9 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
                 registerReceiver(mSyncReceiver, new IntentFilter("com.termux.widget.v2.SHORTCUTS_UPDATED"));
             }
         } catch (Exception ignored) {}
-        TermuxShortcutSyncManager.syncShortcutsFromTermux(this, false);
+        if (TermuxShortcutSyncManager.getSyncedPaths(this).isEmpty()) {
+            TermuxShortcutSyncManager.syncShortcutsFromTermux(this, false);
+        }
         populateDashboard();
     }
 

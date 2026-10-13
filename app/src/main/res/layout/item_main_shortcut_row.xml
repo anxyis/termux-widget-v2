@@ -6,23 +6,23 @@
     style="@style/Widget.TermuxWidget.Card.Outlined"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp">
+    android:layout_marginBottom="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="12dp">
+        android:padding="8dp">
 
         <ImageView
             android:id="@+id/row_shortcut_icon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:background="@drawable/widget_pill_badge_bg"
-            android:padding="6dp"
+            android:padding="4dp"
             android:src="@drawable/ic_lucide_terminal"
-            android:layout_marginEnd="12dp"
+            android:layout_marginEnd="10dp"
             app:tint="@color/m3_primary"
             android:contentDescription="@null" />
 
@@ -36,7 +36,7 @@
                 android:id="@+id/row_shortcut_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:textStyle="bold"
                 android:textColor="@color/m3_on_surface"
                 android:singleLine="true"
@@ -57,11 +57,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/widget_pill_badge_bg"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
-            android:textSize="10sp"
+            android:textSize="9sp"
             android:textStyle="bold"
             android:textColor="@color/badge_session_text"
             android:layout_marginEnd="8dp" />
@@ -69,9 +69,10 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/row_btn_run"
             style="@style/Widget.Material3.Button.IconButton.Filled"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             app:icon="@drawable/ic_lucide_play"
+            app:iconSize="16dp"
             app:iconTint="@color/m3_on_primary"
             app:backgroundTint="@color/m3_primary"
             android:contentDescription="Run Script" />

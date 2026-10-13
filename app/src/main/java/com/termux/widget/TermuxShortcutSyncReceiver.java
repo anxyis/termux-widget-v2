@@ -40,10 +40,13 @@ public class TermuxShortcutSyncReceiver extends BroadcastReceiver {
                         paths.add(trimmed);
                     }
                 }
-                Logger.logDebug(LOG_TAG, "Synced " + paths.size() + " shortcut paths from Termux");
-                TermuxShortcutSyncManager.saveSyncedPaths(context, paths);
-                TermuxWidgetProvider.sendIntentToRefreshAllWidgets(context, LOG_TAG);
-                context.sendBroadcast(new Intent("com.termux.widget.v2.SHORTCUTS_UPDATED"));
+                List<String> oldPaths = TermuxShortcutSyncManager.getSyncedPaths(context);
+                if (!paths.equals(oldPaths)) {
+                    Logger.logDebug(LOG_TAG, "Synced " + paths.size() + " shortcut paths from Termux");
+                    TermuxShortcutSyncManager.saveSyncedPaths(context, paths);
+                    TermuxWidgetProvider.sendIntentToRefreshAllWidgets(context, LOG_TAG);
+                    context.sendBroadcast(new Intent("com.termux.widget.v2.SHORTCUTS_UPDATED"));
+                }
             }
         }
     }

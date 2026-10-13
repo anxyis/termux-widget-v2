@@ -11,8 +11,8 @@ android {
         applicationId "com.termux.widget.v2"
         minSdk project.properties.minSdkVersion.toInteger()
         targetSdk project.properties.targetSdkVersion.toInteger()
-        versionCode 2002
-        versionName "2.0.2"
+        versionCode 2003
+        versionName "2.0.3"
 
         if (appVersionName) versionName = appVersionName
         validateVersionName(versionName)
@@ -34,13 +34,16 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            shrinkResources false // Reproducible builds
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
         debug {
             signingConfig signingConfigs.debug
             zipAlignEnabled true
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -59,8 +62,9 @@ android {
     }
 
     packagingOptions {
-        // Remove terminal-emulator JNI libs added via termux-shared dependency
+        // Exclude terminal-emulator JNI libs added via termux-shared
         exclude 'lib/*/libtermux.so'
+        exclude 'lib/*/liblocal-socket.so'
     }
 }
 

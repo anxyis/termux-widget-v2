@@ -55,9 +55,6 @@ public class ShortcutUtils {
     };
 
     public static void enumerateShortcutFiles(@NonNull Context context, @NonNull List<ShortcutFile> files, boolean sorted) {
-        // Trigger background sync query to Termux
-        TermuxShortcutSyncManager.syncShortcutsFromTermux(context);
-
         List<ShortcutFile> tempList = new ArrayList<>();
 
         // 1. Synced paths from Termux ~/.shortcuts (populated via RUN_COMMAND query)
