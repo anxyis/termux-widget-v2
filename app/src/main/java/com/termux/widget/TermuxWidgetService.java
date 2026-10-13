@@ -56,7 +56,7 @@ public final class TermuxWidgetService extends RemoteViewsService {
         @Override
         public RemoteViews getViewAt(int position) {
             if (position < 0 || position >= displayList.size()) return null;
-            return displayList.get(position).getListWidgetView(mContext);
+            return displayList.get(position).getListWidgetView(mContext, position, displayList.size());
         }
 
         @Override

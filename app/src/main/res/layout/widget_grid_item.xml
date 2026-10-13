@@ -1,50 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/widget_grid_item_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:background="@drawable/widget_grid_item_bg"
-    android:paddingStart="8dp"
-    android:paddingEnd="8dp"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp">
+    android:layout_height="80dp"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
-    <ImageView
-        android:id="@+id/widget_grid_item_icon"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:background="@drawable/widget_pill_badge_bg"
-        android:padding="5dp"
-        android:contentDescription="@null"
-        android:src="@drawable/ic_lucide_terminal" />
-
-    <TextView
-        android:id="@+id/widget_grid_item_label"
+    <!-- Dark Charcoal Card with Rounded Corners (Image 1) -->
+    <LinearLayout
+        android:id="@+id/widget_grid_item_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        android:textColor="@color/m3_on_surface"
+        android:layout_height="64dp"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/widget_grid_card_bg"
         android:gravity="center"
-        android:singleLine="true"
-        android:ellipsize="middle" />
+        android:orientation="vertical"
+        android:paddingTop="14dp"
+        android:paddingBottom="8dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp">
 
-    <TextView
-        android:id="@+id/widget_grid_item_badge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:background="@drawable/widget_pill_badge_bg"
-        android:paddingStart="6dp"
-        android:paddingEnd="6dp"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
-        android:textSize="8sp"
-        android:textStyle="bold"
-        android:textColor="@color/badge_task_text" />
+        <TextView
+            android:id="@+id/widget_grid_item_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:singleLine="true"
+            android:ellipsize="middle" />
+    </LinearLayout>
 
-</LinearLayout>
+    <!-- Vibrant Purple Circle Badge Overlapping the Top Edge (Image 1) -->
+    <FrameLayout
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/widget_grid_purple_circle_bg">
+
+        <ImageView
+            android:id="@+id/widget_grid_item_icon"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_hero_bolt"
+            android:tint="#FFFFFF"
+            android:contentDescription="@null" />
+    </FrameLayout>
+
+</RelativeLayout>

@@ -3,30 +3,62 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_item_layout"
     android:layout_width="match_parent"
-    android:layout_height="44dp"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp"
+    android:paddingStart="4dp"
+    android:paddingEnd="4dp"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp"
     android:background="@drawable/ripple_mask">
 
-    <ImageView
-        android:id="@+id/widget_item_icon"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
-        android:layout_marginEnd="12dp"
-        android:contentDescription="@null"
-        android:src="@drawable/ic_hero_bolt" />
+    <!-- Left: Independent Circular Dark Gray Icon Badge -->
+    <FrameLayout
+        android:id="@+id/widget_item_icon_badge"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:background="@drawable/widget_list_circle_icon_bg"
+        android:layout_marginEnd="10dp">
 
-    <TextView
-        android:id="@+id/widget_item"
+        <ImageView
+            android:id="@+id/widget_item_icon"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_hero_bolt"
+            android:tint="#FFFFFF"
+            android:contentDescription="@null" />
+    </FrameLayout>
+
+    <!-- Right: Dark Charcoal Card (Connected Container in List Stack) -->
+    <LinearLayout
+        android:id="@+id/widget_item_card_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textSize="13sp"
-        android:textStyle="normal"
-        android:textColor="@color/m3_on_surface"
-        android:ellipsize="middle"
-        android:singleLine="true" />
+        android:orientation="vertical"
+        android:background="@drawable/widget_list_card_bg_single">
+
+        <TextView
+            android:id="@+id/widget_item"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:gravity="center_vertical|start"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:ellipsize="middle"
+            android:singleLine="true" />
+
+        <View
+            android:id="@+id/widget_item_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#3E3E3E"
+            android:visibility="gone" />
+
+    </LinearLayout>
 
 </LinearLayout>

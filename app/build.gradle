@@ -11,8 +11,8 @@ android {
         applicationId "com.termux.widget.v2"
         minSdk project.properties.minSdkVersion.toInteger()
         targetSdk project.properties.targetSdkVersion.toInteger()
-        versionCode 2008
-        versionName "2.2.3"
+        versionCode 2009
+        versionName "2.2.4"
 
         if (appVersionName) versionName = appVersionName
         validateVersionName(versionName)

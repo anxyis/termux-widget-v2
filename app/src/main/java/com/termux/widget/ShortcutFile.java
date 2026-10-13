@@ -248,6 +248,10 @@ public final class ShortcutFile {
     }
 
     public RemoteViews getListWidgetView(Context context) {
+        return getListWidgetView(context, 0, 1);
+    }
+
+    public RemoteViews getListWidgetView(Context context, int position, int count) {
         if (context != null) applyCustomMetadata(context);
         if (mIsHeader) {
             RemoteViews headerViews = new RemoteViews(context.getPackageName(), R.layout.widget_group_header);
@@ -264,6 +268,23 @@ public final class ShortcutFile {
         int iconRes = mIconId != null ? IconRegistry.getDrawableResId(mIconId, defaultIcon) : defaultIcon;
         remoteViews.setImageViewResource(R.id.widget_item_icon, iconRes);
 
+        // Adjust card background to form a connected rounded container matching user's design
+        int bgRes;
+        if (count <= 1) {
+            bgRes = R.drawable.widget_list_card_bg_single;
+        } else if (position == 0) {
+            bgRes = R.drawable.widget_list_card_bg_top;
+        } else if (position == count - 1) {
+            bgRes = R.drawable.widget_list_card_bg_bottom;
+        } else {
+            bgRes = R.drawable.widget_list_card_bg_middle;
+        }
+        remoteViews.setInt(R.id.widget_item_card_container, "setBackgroundResource", bgRes);
+
+        // Show divider line between stacked items except the last item
+        boolean showDivider = (position < count - 1);
+        remoteViews.setViewVisibility(R.id.widget_item_divider, showDivider ? android.view.View.VISIBLE : android.view.View.GONE);
+
         Intent fillInIntent = new Intent().putExtra(TERMUX_WIDGET_PROVIDER.EXTRA_FILE_CLICKED, getPath());
         remoteViews.setOnClickFillInIntent(R.id.widget_item_layout, fillInIntent);
 
@@ -276,7 +297,6 @@ public final class ShortcutFile {
         remoteViews.setTextViewText(R.id.widget_grid_item_label, getLabel());
 
         boolean isTaskScript = isTask();
-        remoteViews.setTextViewText(R.id.widget_grid_item_badge, isTaskScript ? "TASK" : "TERM");
 
         int defaultIcon = isTaskScript ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
         int iconRes = mIconId != null ? IconRegistry.getDrawableResId(mIconId, defaultIcon) : defaultIcon;
