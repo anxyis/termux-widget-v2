@@ -25,6 +25,7 @@ import com.termux.shared.termux.TermuxConstants.TERMUX_WIDGET_APP;
 import com.termux.shared.termux.TermuxConstants.TERMUX_WIDGET_APP.TERMUX_WIDGET_PROVIDER;
 import com.termux.shared.termux.file.TermuxFileUtils;
 import com.termux.shared.termux.settings.preferences.TermuxWidgetAppSharedPreferences;
+import com.termux.widget.icons.IconHelper;
 import com.termux.widget.icons.IconRegistry;
 import com.termux.widget.utils.ShortcutUtils;
 
@@ -223,6 +224,13 @@ public final class ShortcutFile {
         File shortcutIconFile = getIconFile(context, showToastForIconUsed);
         if (shortcutIconFile != null) {
             builder.setIcon(Icon.createWithBitmap(((BitmapDrawable) Drawable.createFromPath(shortcutIconFile.getAbsolutePath())).getBitmap()));
+        } else if (IconHelper.isCustomFile(mIconId)) {
+            android.graphics.Bitmap bmp = IconHelper.loadCustomBitmap(mIconId);
+            if (bmp != null) {
+                builder.setIcon(Icon.createWithBitmap(bmp));
+            } else {
+                builder.setIcon(Icon.createWithResource(context, R.drawable.ic_launcher));
+            }
         } else if (mIconId != null) {
             int resId = IconRegistry.getDrawableResId(mIconId, R.drawable.ic_launcher);
             builder.setIcon(Icon.createWithResource(context, resId));
@@ -239,10 +247,18 @@ public final class ShortcutFile {
         intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getLabel());
 
         File shortcutIconFile = getIconFile(context, true);
-        if (shortcutIconFile != null)
+        if (shortcutIconFile != null) {
             intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, ((BitmapDrawable) Drawable.createFromPath(shortcutIconFile.getAbsolutePath())).getBitmap());
-        else
+        } else if (IconHelper.isCustomFile(mIconId)) {
+            android.graphics.Bitmap bmp = IconHelper.loadCustomBitmap(mIconId);
+            if (bmp != null) {
+                intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, bmp);
+            } else {
+                intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(context, R.drawable.ic_launcher));
+            }
+        } else {
             intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(context, R.drawable.ic_launcher));
+        }
 
         return intent;
     }
@@ -265,8 +281,7 @@ public final class ShortcutFile {
 
         boolean isTaskScript = isTask();
         int defaultIcon = isTaskScript ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
-        int iconRes = mIconId != null ? IconRegistry.getDrawableResId(mIconId, defaultIcon) : defaultIcon;
-        remoteViews.setImageViewResource(R.id.widget_item_icon, iconRes);
+        IconHelper.applyToRemoteViews(remoteViews, R.id.widget_item_icon, R.id.widget_item_custom_image, mIconId, defaultIcon);
 
         Intent fillInIntent = new Intent().putExtra(TERMUX_WIDGET_PROVIDER.EXTRA_FILE_CLICKED, getPath());
         remoteViews.setOnClickFillInIntent(R.id.widget_item_layout, fillInIntent);
@@ -280,10 +295,8 @@ public final class ShortcutFile {
         remoteViews.setTextViewText(R.id.widget_grid_item_label, getLabel());
 
         boolean isTaskScript = isTask();
-
         int defaultIcon = isTaskScript ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
-        int iconRes = mIconId != null ? IconRegistry.getDrawableResId(mIconId, defaultIcon) : defaultIcon;
-        remoteViews.setImageViewResource(R.id.widget_grid_item_icon, iconRes);
+        IconHelper.applyToRemoteViews(remoteViews, R.id.widget_grid_item_icon, R.id.widget_grid_item_custom_image, mIconId, defaultIcon);
 
         Intent fillInIntent = new Intent().putExtra(TERMUX_WIDGET_PROVIDER.EXTRA_FILE_CLICKED, getPath());
         remoteViews.setOnClickFillInIntent(R.id.widget_grid_item_layout, fillInIntent);

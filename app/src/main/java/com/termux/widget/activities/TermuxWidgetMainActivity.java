@@ -46,6 +46,7 @@ import com.termux.widget.TermuxCustomCommandPreferences.CustomCommand;
 import com.termux.widget.TermuxShortcutSyncManager;
 import com.termux.widget.TermuxWidgetApplication;
 import com.termux.widget.TermuxWidgetProvider;
+import com.termux.widget.icons.IconHelper;
 import com.termux.widget.icons.IconPickerBottomSheet;
 import com.termux.widget.icons.IconRegistry;
 import com.termux.widget.tiles.TermuxTilePreferences;
@@ -230,8 +231,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
                 configuredCount++;
                 txtLabel.setText(label != null ? label : ("Tile " + slot));
                 txtStatus.setText("Ready");
-                int iconRes = IconRegistry.getDrawableResId(iconId, R.drawable.ic_lucide_terminal);
-                imgIcon.setImageResource(iconRes);
+                IconHelper.applyToImageView(imgIcon, null, iconId, R.drawable.ic_lucide_terminal);
             } else {
                 txtLabel.setText("Unassigned");
                 txtStatus.setText("Tap to setup");
@@ -280,6 +280,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
             TextView txtPath = row.findViewById(R.id.row_shortcut_path);
             TextView txtBadge = row.findViewById(R.id.row_shortcut_badge);
             ImageView imgIcon = row.findViewById(R.id.row_shortcut_icon);
+            ImageView imgCustom = row.findViewById(R.id.row_shortcut_custom_image);
             MaterialButton btnRun = row.findViewById(R.id.row_btn_run);
 
             txtTitle.setText(sf.getLabel());
@@ -291,8 +292,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
             txtBadge.setTextColor(getResources().getColor(isTask ? R.color.badge_task_text : R.color.badge_session_text));
 
             int defaultIcon = isTask ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
-            int iconRes = sf.mIconId != null ? IconRegistry.getDrawableResId(sf.mIconId, defaultIcon) : defaultIcon;
-            imgIcon.setImageResource(iconRes);
+            IconHelper.applyToImageView(imgIcon, imgCustom, sf.mIconId, defaultIcon);
 
             btnRun.setOnClickListener(v -> {
                 TermuxWidgetProvider.sendExecutionIntentToTermuxService(this, sf.getPath(), LOG_TAG);
@@ -416,16 +416,25 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
 
         final String[] selectedIconId = new String[]{existingCmd != null ? existingCmd.iconId : "lucide_terminal"};
         MaterialButton btnPickIcon = new MaterialButton(this);
-        btnPickIcon.setText("Select Icon: " + selectedIconId[0]);
-        btnPickIcon.setIconResource(IconRegistry.getDrawableResId(selectedIconId[0], R.drawable.ic_lucide_terminal));
+        if (IconHelper.isCustomFile(selectedIconId[0])) {
+            btnPickIcon.setText("Custom Image");
+        } else {
+            btnPickIcon.setText("Select Icon: " + selectedIconId[0]);
+            btnPickIcon.setIconResource(IconRegistry.getDrawableResId(selectedIconId[0], R.drawable.ic_lucide_terminal));
+        }
         btnPickIcon.setOnClickListener(v -> {
             IconPickerBottomSheet picker = IconPickerBottomSheet.newInstance();
             picker.setOnIconSelectedListener(iconId -> {
                 selectedIconId[0] = iconId;
-                IconRegistry.IconItem item = IconRegistry.getIcon(iconId);
-                String iconName = item != null ? item.name : iconId;
-                btnPickIcon.setText("Select Icon: " + iconName);
-                btnPickIcon.setIconResource(IconRegistry.getDrawableResId(iconId, R.drawable.ic_lucide_terminal));
+                if (IconHelper.isCustomFile(iconId)) {
+                    btnPickIcon.setText("Custom Image");
+                    btnPickIcon.setIcon(null);
+                } else {
+                    IconRegistry.IconItem item = IconRegistry.getIcon(iconId);
+                    String iconName = item != null ? item.name : iconId;
+                    btnPickIcon.setText("Select Icon: " + iconName);
+                    btnPickIcon.setIconResource(IconRegistry.getDrawableResId(iconId, R.drawable.ic_lucide_terminal));
+                }
             });
             picker.show(getSupportFragmentManager(), "command_icon_picker");
         });

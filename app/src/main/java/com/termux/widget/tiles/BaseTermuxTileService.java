@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi;
 import com.termux.widget.R;
 import com.termux.widget.TermuxWidgetProvider;
 import com.termux.widget.activities.TermuxTileConfigActivity;
+import com.termux.widget.icons.IconHelper;
 import com.termux.widget.icons.IconRegistry;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
@@ -41,8 +42,17 @@ public abstract class BaseTermuxTileService extends TileService {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 tile.setSubtitle(getString(R.string.quick_tile_ready));
             }
-            int iconRes = IconRegistry.getDrawableResId(iconId, R.drawable.ic_lucide_terminal);
-            tile.setIcon(Icon.createWithResource(this, iconRes));
+            if (IconHelper.isCustomFile(iconId)) {
+                android.graphics.Bitmap bmp = IconHelper.loadCustomBitmap(iconId);
+                if (bmp != null) {
+                    tile.setIcon(Icon.createWithBitmap(bmp));
+                } else {
+                    tile.setIcon(Icon.createWithResource(this, R.drawable.ic_lucide_terminal));
+                }
+            } else {
+                int iconRes = IconRegistry.getDrawableResId(iconId, R.drawable.ic_lucide_terminal);
+                tile.setIcon(Icon.createWithResource(this, iconRes));
+            }
             tile.setState(Tile.STATE_INACTIVE);
         } else {
             tile.setLabel("Termux Tile " + slot);

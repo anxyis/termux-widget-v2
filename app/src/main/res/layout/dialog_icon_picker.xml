@@ -28,9 +28,23 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select from over 300+ vector icons across all categories"
+        android:text="Choose from 480+ icons across Homelab, Study &amp; Dev, or upload custom PNG"
         android:textSize="12sp"
         android:textColor="@color/m3_on_surface_variant"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Pick Custom Image / PNG Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_pick_custom_image"
+        style="@style/Widget.Material3.Button.TonalButton"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="Choose Custom Image / PNG"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:icon="@drawable/ic_lucide_image"
+        app:iconGravity="textStart"
+        app:cornerRadius="16dp"
         android:layout_marginBottom="12dp" />
 
     <!-- Search Input -->
@@ -78,6 +92,20 @@
                 android:text="@string/icon_cat_all" />
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/chip_cat_selfhosted"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/icon_cat_selfhosted" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_cat_study"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/icon_cat_study" />
+
+            <com.google.android.material.chip.Chip
                 android:id="@+id/chip_cat_dev"
                 style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
@@ -90,13 +118,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/icon_cat_servers" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip_cat_selfhosted"
-                style="@style/Widget.Material3.Chip.Filter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/icon_cat_selfhosted" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_cat_power"

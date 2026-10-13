@@ -129,6 +129,7 @@
     <string name="icon_cat_dev">Developer</string>
     <string name="icon_cat_servers">Servers &amp; Cloud</string>
     <string name="icon_cat_selfhosted">Self-Hosted &amp; Homelab</string>
+    <string name="icon_cat_study">Study &amp; Casual</string>
     <string name="icon_cat_power">Actions &amp; Power</string>
     <string name="icon_cat_system">System &amp; Network</string>
     <string name="icon_cat_files">Files &amp; Storage</string>

@@ -36,6 +36,15 @@
                 android:src="@drawable/ic_lucide_terminal"
                 app:tint="@color/m3_primary"
                 android:contentDescription="@null" />
+
+            <ImageView
+                android:id="@+id/row_shortcut_custom_image"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_gravity="center"
+                android:scaleType="centerInside"
+                android:visibility="gone"
+                android:contentDescription="@null" />
         </FrameLayout>
 
         <!-- Center Details (Name & Path) -->

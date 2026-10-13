@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.termux.widget.icons.IconHelper;
 import com.termux.widget.icons.IconRegistry;
 import com.termux.widget.tiles.TermuxTilePreferences;
 
@@ -96,8 +97,7 @@ public class ScriptInfoBottomSheet extends BottomSheetDialogFragment {
         txtPath.setText(unexpandedPath);
 
         int defaultIcon = isTask ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
-        int iconRes = iconId != null ? IconRegistry.getDrawableResId(iconId, defaultIcon) : defaultIcon;
-        imgIcon.setImageResource(iconRes);
+        IconHelper.applyToImageView(imgIcon, null, iconId, defaultIcon);
 
         if (isCustom) {
             txtBadge.setText("CUSTOM COMMAND");
@@ -137,7 +137,7 @@ public class ScriptInfoBottomSheet extends BottomSheetDialogFragment {
                     txtTitle.setText(label);
                 }
                 int defIcon = isTask ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
-                imgIcon.setImageResource(newIconId != null ? IconRegistry.getDrawableResId(newIconId, defIcon) : defIcon);
+                IconHelper.applyToImageView(imgIcon, null, newIconId, defIcon);
                 if (mListener != null) {
                     mListener.onAppearanceChanged();
                 }

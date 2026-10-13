@@ -28,6 +28,15 @@
             android:src="@drawable/ic_hero_bolt"
             android:tint="@color/widget_list_badge_icon"
             android:contentDescription="@null" />
+
+        <ImageView
+            android:id="@+id/widget_item_custom_image"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_gravity="center"
+            android:scaleType="centerInside"
+            android:visibility="gone"
+            android:contentDescription="@null" />
     </FrameLayout>
 
     <!-- Right: Material You Rounded Card Container -->

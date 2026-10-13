@@ -17,6 +17,7 @@ import com.termux.shared.shell.ShellUtils;
 import com.termux.widget.R;
 import com.termux.widget.ShortcutFile;
 import com.termux.widget.TermuxWidgetProvider;
+import com.termux.widget.icons.IconHelper;
 import com.termux.widget.icons.IconPickerBottomSheet;
 import com.termux.widget.icons.IconRegistry;
 import com.termux.widget.tiles.TermuxTilePreferences;
@@ -106,13 +107,17 @@ public class TermuxTileConfigActivity extends AppCompatActivity {
                 (mSelectedScriptPath != null ? ShellUtils.getExecutableBasename(mSelectedScriptPath) : ("Tile " + mSlotIndex));
         mPreviewTileLabel.setText(label);
 
-        int iconRes = IconRegistry.getDrawableResId(mSelectedIconId, R.drawable.ic_lucide_terminal);
-        mPreviewTileIcon.setImageResource(iconRes);
-        mImgChosenIcon.setImageResource(iconRes);
+        int defaultIcon = R.drawable.ic_lucide_terminal;
+        IconHelper.applyToImageView(mPreviewTileIcon, null, mSelectedIconId, defaultIcon);
+        IconHelper.applyToImageView(mImgChosenIcon, null, mSelectedIconId, defaultIcon);
 
-        IconRegistry.IconItem item = IconRegistry.getIcon(mSelectedIconId);
-        if (item != null) {
-            mTxtChosenIconName.setText(item.name + " (" + item.pack + ")");
+        if (IconHelper.isCustomFile(mSelectedIconId)) {
+            mTxtChosenIconName.setText("Custom Image");
+        } else {
+            IconRegistry.IconItem item = IconRegistry.getIcon(mSelectedIconId);
+            if (item != null) {
+                mTxtChosenIconName.setText(item.name + " (" + item.pack + ")");
+            }
         }
     }
 

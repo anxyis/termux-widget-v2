@@ -20,6 +20,7 @@ import com.termux.widget.R;
 import com.termux.widget.ShortcutFile;
 import com.termux.widget.TermuxButtonWidgetPreferences;
 import com.termux.widget.TermuxButtonWidgetProvider;
+import com.termux.widget.icons.IconHelper;
 import com.termux.widget.icons.IconPickerBottomSheet;
 import com.termux.widget.icons.IconRegistry;
 import com.termux.widget.utils.ShortcutUtils;
@@ -112,13 +113,17 @@ public class TermuxButtonWidgetConfigureActivity extends AppCompatActivity {
                 (mSelectedScriptPath != null ? ShellUtils.getExecutableBasename(mSelectedScriptPath) : "Shortcut Button");
         if (mPreviewLabel != null) mPreviewLabel.setText(label);
 
-        int iconRes = IconRegistry.getDrawableResId(mSelectedIconId, R.drawable.ic_lucide_terminal);
-        if (mPreviewIcon != null) mPreviewIcon.setImageResource(iconRes);
-        if (mImgChosenIcon != null) mImgChosenIcon.setImageResource(iconRes);
+        int defaultIcon = R.drawable.ic_lucide_terminal;
+        if (mPreviewIcon != null) IconHelper.applyToImageView(mPreviewIcon, null, mSelectedIconId, defaultIcon);
+        if (mImgChosenIcon != null) IconHelper.applyToImageView(mImgChosenIcon, null, mSelectedIconId, defaultIcon);
 
-        IconRegistry.IconItem item = IconRegistry.getIcon(mSelectedIconId);
-        if (item != null && mTxtChosenIconName != null) {
-            mTxtChosenIconName.setText(item.name + " (" + item.pack + ")");
+        if (IconHelper.isCustomFile(mSelectedIconId)) {
+            if (mTxtChosenIconName != null) mTxtChosenIconName.setText("Custom Image");
+        } else {
+            IconRegistry.IconItem item = IconRegistry.getIcon(mSelectedIconId);
+            if (item != null && mTxtChosenIconName != null) {
+                mTxtChosenIconName.setText(item.name + " (" + item.pack + ")");
+            }
         }
     }
 

@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
+import com.termux.widget.icons.IconHelper;
 import com.termux.widget.icons.IconPickerBottomSheet;
 import com.termux.widget.icons.IconRegistry;
 
@@ -41,6 +42,7 @@ public class ShortcutAppearanceBottomSheet extends BottomSheetDialogFragment {
     private OnAppearanceSavedListener mListener;
 
     private ImageView mPreviewIcon;
+    private ImageView mPreviewCustomImage;
     private TextView mPreviewTitle;
     private TextView mPreviewPath;
     private EditText mEdtLabel;
@@ -86,6 +88,7 @@ public class ShortcutAppearanceBottomSheet extends BottomSheetDialogFragment {
         mIsTask = args.getBoolean(ARG_IS_TASK, false);
 
         mPreviewIcon = view.findViewById(R.id.appearance_preview_icon);
+        mPreviewCustomImage = view.findViewById(R.id.appearance_preview_custom_image);
         mPreviewTitle = view.findViewById(R.id.appearance_preview_title);
         mPreviewPath = view.findViewById(R.id.appearance_preview_path);
         mEdtLabel = view.findViewById(R.id.edt_appearance_label);
@@ -154,7 +157,6 @@ public class ShortcutAppearanceBottomSheet extends BottomSheetDialogFragment {
     private void updateIconView() {
         if (mPreviewIcon == null) return;
         int defaultIcon = mIsTask ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
-        int iconRes = mSelectedIconId != null ? IconRegistry.getDrawableResId(mSelectedIconId, defaultIcon) : defaultIcon;
-        mPreviewIcon.setImageResource(iconRes);
+        IconHelper.applyToImageView(mPreviewIcon, mPreviewCustomImage, mSelectedIconId, defaultIcon);
     }
 }

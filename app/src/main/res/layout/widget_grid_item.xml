@@ -48,6 +48,15 @@
             android:src="@drawable/ic_hero_bolt"
             android:tint="@color/widget_accent_circle_icon"
             android:contentDescription="@null" />
+
+        <ImageView
+            android:id="@+id/widget_grid_item_custom_image"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:scaleType="centerInside"
+            android:visibility="gone"
+            android:contentDescription="@null" />
     </FrameLayout>
 
 </RelativeLayout>

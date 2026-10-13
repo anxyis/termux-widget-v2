@@ -12,6 +12,7 @@ import android.widget.RemoteViews;
 import androidx.annotation.NonNull;
 
 import com.termux.shared.logger.Logger;
+import com.termux.widget.icons.IconHelper;
 import com.termux.widget.icons.IconRegistry;
 
 public final class TermuxButtonWidgetProvider extends AppWidgetProvider {
@@ -43,8 +44,7 @@ public final class TermuxButtonWidgetProvider extends AppWidgetProvider {
             views.setTextViewText(R.id.widget_button_label, label != null ? label : "Shortcut");
             views.setTextViewText(R.id.widget_button_sublabel, "Tap to run");
 
-            int iconRes = IconRegistry.getDrawableResId(iconId, R.drawable.ic_lucide_terminal);
-            views.setImageViewResource(R.id.widget_button_icon, iconRes);
+            IconHelper.applyToRemoteViews(views, R.id.widget_button_icon, 0, iconId, R.drawable.ic_lucide_terminal);
 
             Intent clickIntent = new Intent(context, TermuxButtonWidgetProvider.class);
             clickIntent.setAction(ACTION_RUN_BUTTON_SHORTCUT);

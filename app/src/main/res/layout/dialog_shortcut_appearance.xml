@@ -70,6 +70,15 @@
                     android:src="@drawable/ic_lucide_terminal"
                     app:tint="@color/m3_primary"
                     android:contentDescription="@null" />
+
+                <ImageView
+                    android:id="@+id/appearance_preview_custom_image"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerInside"
+                    android:visibility="gone"
+                    android:contentDescription="@null" />
             </FrameLayout>
 
             <LinearLayout
