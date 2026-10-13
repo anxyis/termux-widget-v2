@@ -44,14 +44,18 @@ public final class ShortcutFile {
     public String mCustomCommand;
     public boolean mIsTask = false;
 
+    private String mDefaultLabel;
+
     public ShortcutFile(@NonNull TermuxCustomCommandPreferences.CustomCommand cmd) {
         mPath = "custom:" + cmd.id;
         mLabel = cmd.name;
+        mDefaultLabel = cmd.name;
         mGroup = cmd.group;
         mIconId = cmd.iconId;
         mIsTask = cmd.isTask;
         mCustomCommand = cmd.command;
         mIsCustomCommand = true;
+        applyStoredCustomMetadata();
     }
 
     public ShortcutFile(@NonNull String path) {
@@ -69,7 +73,33 @@ public final class ShortcutFile {
 
     public ShortcutFile(@NonNull String path, @Nullable String defaultLabel) {
         mPath = path;
-        mLabel = getLabelForShortcut(defaultLabel);
+        mDefaultLabel = getLabelForShortcut(defaultLabel);
+        mLabel = mDefaultLabel;
+        applyStoredCustomMetadata();
+    }
+
+    public void applyStoredCustomMetadata() {
+        Context context = TermuxWidgetApplication.getAppContext();
+        if (context != null) {
+            applyCustomMetadata(context);
+        }
+    }
+
+    public void applyCustomMetadata(@NonNull Context context) {
+        if (mPath == null) return;
+        String customLabel = TermuxShortcutMetadataPreferences.getCustomLabel(context, mPath);
+        if (customLabel != null && !customLabel.trim().isEmpty()) {
+            mLabel = customLabel.trim();
+        }
+        String customIconId = TermuxShortcutMetadataPreferences.getCustomIconId(context, mPath);
+        if (customIconId != null && !customIconId.trim().isEmpty()) {
+            mIconId = customIconId.trim();
+        }
+    }
+
+    @NonNull
+    public String getOriginalLabel() {
+        return mDefaultLabel != null ? mDefaultLabel : (mLabel != null ? mLabel : "");
     }
 
     /** Creates a virtual header item for grouping inside collection widgets. */
@@ -218,6 +248,7 @@ public final class ShortcutFile {
     }
 
     public RemoteViews getListWidgetView(Context context) {
+        if (context != null) applyCustomMetadata(context);
         if (mIsHeader) {
             RemoteViews headerViews = new RemoteViews(context.getPackageName(), R.layout.widget_group_header);
             headerViews.setTextViewText(R.id.widget_group_header_title, getLabel());
@@ -240,6 +271,7 @@ public final class ShortcutFile {
     }
 
     public RemoteViews getGridWidgetView(Context context) {
+        if (context != null) applyCustomMetadata(context);
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_grid_item);
         remoteViews.setTextViewText(R.id.widget_grid_item_label, getLabel());
 

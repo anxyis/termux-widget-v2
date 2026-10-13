@@ -39,6 +39,7 @@ import com.termux.shared.termux.TermuxConstants;
 import com.termux.shared.termux.file.TermuxFileUtils;
 import com.termux.widget.R;
 import com.termux.widget.ScriptInfoBottomSheet;
+import com.termux.widget.ShortcutAppearanceBottomSheet;
 import com.termux.widget.ShortcutFile;
 import com.termux.widget.TermuxCustomCommandPreferences;
 import com.termux.widget.TermuxCustomCommandPreferences.CustomCommand;
@@ -333,16 +334,25 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
                     public void onTileAssigned() {
                         populateQuickTiles();
                     }
+
+                    @Override
+                    public void onAppearanceChanged() {
+                        populateDashboard();
+                    }
                 });
                 sheet.show(getSupportFragmentManager(), "script_info_sheet");
             });
 
-            if (sf.mIsCustomCommand) {
-                row.setOnLongClickListener(v -> {
+            row.setOnLongClickListener(v -> {
+                if (sf.mIsCustomCommand) {
                     showCommandOptionsDialog(sf);
-                    return true;
-                });
-            }
+                } else {
+                    ShortcutAppearanceBottomSheet appearanceSheet = ShortcutAppearanceBottomSheet.newInstance(sf);
+                    appearanceSheet.setOnAppearanceSavedListener((p, newLabel, newIconId) -> populateDashboard());
+                    appearanceSheet.show(getSupportFragmentManager(), "shortcut_appearance");
+                }
+                return true;
+            });
 
             mContainerDetectedShortcuts.addView(row);
         }

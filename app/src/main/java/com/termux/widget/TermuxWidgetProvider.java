@@ -222,12 +222,30 @@ public final class TermuxWidgetProvider extends AppWidgetProvider {
     }
 
     public static void sendIntentToRefreshAllWidgets(@NonNull Context context, @NonNull String logTag) {
-        Intent intent = new Intent(TERMUX_WIDGET_PROVIDER.ACTION_REFRESH_WIDGET);
-        intent.setClass(context, TermuxWidgetProvider.class);
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         try {
             Logger.logDebug(logTag, "Sending intent to refresh all widgets");
-            context.sendBroadcast(intent);
+
+            // Refresh List Widgets
+            Intent listIntent = new Intent(TERMUX_WIDGET_PROVIDER.ACTION_REFRESH_WIDGET);
+            listIntent.setClass(context, TermuxWidgetProvider.class);
+            listIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+            context.sendBroadcast(listIntent);
+
+            // Refresh Grid Widgets
+            Intent gridIntent = new Intent(TERMUX_WIDGET_PROVIDER.ACTION_REFRESH_WIDGET);
+            gridIntent.setClass(context, TermuxGridWidgetProvider.class);
+            gridIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+            context.sendBroadcast(gridIntent);
+
+            // Refresh Button Widgets
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+            android.content.ComponentName btnComponent = new android.content.ComponentName(context, TermuxButtonWidgetProvider.class);
+            int[] btnIds = appWidgetManager.getAppWidgetIds(btnComponent);
+            if (btnIds != null && btnIds.length > 0) {
+                for (int btnId : btnIds) {
+                    TermuxButtonWidgetProvider.updateButtonWidget(context, appWidgetManager, btnId);
+                }
+            }
         } catch (Exception e) {
             Logger.showToast(context, e.getMessage(), true);
             Logger.logStackTraceWithMessage(LOG_TAG, "Failed to send intent to refresh all widgets", e);

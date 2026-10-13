@@ -23,23 +23,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
         android:paddingTop="4dp"
-        android:paddingBottom="24dp">
+        android:paddingBottom="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Compact Connection & Sync Strip -->
+            <!-- Compact Connection & Sync Strip (Bento Card) -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_status_banner"
                 style="@style/Widget.TermuxWidget.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="10dp"
                 app:cardBackgroundColor="@color/m3_surface_container">
 
                 <LinearLayout
@@ -99,30 +99,31 @@
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/button_refresh_all_widgets"
                             style="@style/Widget.Material3.Button.IconButton.Filled"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
                             app:icon="@drawable/ic_hero_arrow_path"
-                            app:iconSize="18dp"
+                            app:iconSize="20dp"
                             app:iconTint="@color/m3_primary"
                             app:backgroundTint="@color/m3_primary_container"
                             android:contentDescription="Refresh Widgets" />
                     </LinearLayout>
 
-                    <!-- Prominent Sync Pill Button -->
+                    <!-- Oversized Fat Sync Button -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_refresh_shortcuts"
                         style="@style/Widget.TermuxWidget.Button.Tonal"
                         android:layout_width="match_parent"
-                        android:layout_height="44dp"
+                        android:layout_height="52dp"
                         android:layout_marginTop="12dp"
                         android:text="Sync Scripts from Termux"
-                        android:textSize="13sp"
+                        android:textSize="14sp"
                         android:textStyle="bold"
+                        app:cornerRadius="16dp"
                         app:backgroundTint="@color/m3_surface_container_high"
                         android:textColor="@color/m3_primary"
                         app:icon="@drawable/ic_hero_arrow_path"
                         app:iconTint="@color/m3_primary"
-                        app:iconSize="16dp" />
+                        app:iconSize="18dp" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -164,10 +165,11 @@
                     android:id="@+id/btn_add_command"
                     style="@style/Widget.TermuxWidget.Button.Tonal"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_height="44dp"
                     android:text="New Command"
                     android:textSize="12sp"
                     android:textStyle="bold"
+                    app:cornerRadius="14dp"
                     app:backgroundTint="@color/m3_primary_container"
                     android:textColor="@color/m3_on_primary_container"
                     app:icon="@drawable/ic_lucide_plus"
@@ -181,7 +183,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="10dp" />
 
             <!-- SECONDARY SECTION: Quick Settings Tiles (Collapsible / Non-dominating) -->
             <com.google.android.material.card.MaterialCardView
@@ -189,7 +191,7 @@
                 style="@style/Widget.TermuxWidget.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="10dp"
                 app:cardBackgroundColor="@color/m3_surface_container">
 
                 <LinearLayout
@@ -275,65 +277,107 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- TERTIARY SECTION: Compact Setup Helper / Troubleshooting -->
+            <!-- TERTIARY SECTION: Bento Setup Guide & Permissions (Oversized Fat Buttons) -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_setup_guide"
-                style="@style/Widget.TermuxWidget.Card.Outlined"
+                style="@style/Widget.TermuxWidget.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="10dp"
                 app:cardBackgroundColor="@color/m3_surface_container">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="14dp">
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="14dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Termux Configuration"
-                            android:textSize="13sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/m3_on_surface" />
+                        <FrameLayout
+                            android:layout_width="42dp"
+                            android:layout_height="42dp"
+                            android:background="@drawable/widget_icon_badge_bg"
+                            android:layout_marginEnd="14dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_lucide_settings"
+                                app:tint="@color/m3_primary"
+                                android:contentDescription="@null" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="1dp"
-                            android:text="allow-external-apps=true"
-                            android:textSize="11sp"
-                            android:textColor="@color/m3_on_surface_variant" />
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Termux Configuration &amp; Permissions"
+                                android:textSize="15sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/m3_on_surface" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="allow-external-apps=true • Grant RUN_COMMAND"
+                                android:textSize="12sp"
+                                android:textColor="@color/m3_on_surface_variant" />
+                        </LinearLayout>
                     </LinearLayout>
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_copy_setup_command"
-                        style="@style/Widget.Material3.Button.TonalButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="36dp"
-                        android:text="Copy"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        app:cornerRadius="18dp"
-                        android:layout_marginEnd="8dp" />
+                    <!-- Oversized Bento Action Buttons -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_open_app_settings"
-                        style="@style/Widget.Material3.Button.TonalButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="36dp"
-                        android:text="Permissions"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        app:cornerRadius="18dp" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_copy_setup_command"
+                            style="@style/Widget.TermuxWidget.Button.Tonal"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="52dp"
+                            android:layout_marginEnd="8dp"
+                            android:text="Copy Setup"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="16dp"
+                            app:icon="@drawable/ic_lucide_copy"
+                            app:iconSize="18dp"
+                            app:iconTint="@color/m3_primary"
+                            android:textColor="@color/m3_primary"
+                            app:backgroundTint="@color/m3_surface_container_high" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_open_app_settings"
+                            style="@style/Widget.TermuxWidget.Button.Tonal"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="52dp"
+                            android:text="Permissions"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="16dp"
+                            app:icon="@drawable/ic_lucide_settings"
+                            app:iconSize="18dp"
+                            app:iconTint="@color/m3_primary"
+                            android:textColor="@color/m3_primary"
+                            app:backgroundTint="@color/m3_surface_container_high" />
+                    </LinearLayout>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

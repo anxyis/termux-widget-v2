@@ -37,6 +37,7 @@ public class ScriptInfoBottomSheet extends BottomSheetDialogFragment {
         void onEditCommand(@NonNull ShortcutFile shortcutFile);
         void onDeleteCommand(@NonNull ShortcutFile shortcutFile);
         void onTileAssigned();
+        void onAppearanceChanged();
     }
 
     private ScriptActionListener mListener;
@@ -118,6 +119,37 @@ public class ScriptInfoBottomSheet extends BottomSheetDialogFragment {
             Toast.makeText(context, "Executing: " + label, Toast.LENGTH_SHORT).show();
             dismiss();
         });
+
+        // Appearance customization (Cosmetic in-app & widgets)
+        View btnAppearance = view.findViewById(R.id.sheet_action_appearance);
+        View.OnClickListener openAppearanceCustomizer = v -> {
+            ShortcutFile sf = new ShortcutFile(path, label);
+            sf.mIconId = iconId;
+            sf.mIsTask = isTask;
+            sf.mIsCustomCommand = isCustom;
+            sf.mCustomCommand = customCommand;
+
+            ShortcutAppearanceBottomSheet appearanceSheet = ShortcutAppearanceBottomSheet.newInstance(sf);
+            appearanceSheet.setOnAppearanceSavedListener((p, newLabel, newIconId) -> {
+                if (newLabel != null && !newLabel.isEmpty()) {
+                    txtTitle.setText(newLabel);
+                } else {
+                    txtTitle.setText(label);
+                }
+                int defIcon = isTask ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
+                imgIcon.setImageResource(newIconId != null ? IconRegistry.getDrawableResId(newIconId, defIcon) : defIcon);
+                if (mListener != null) {
+                    mListener.onAppearanceChanged();
+                }
+            });
+            appearanceSheet.show(getChildFragmentManager(), "shortcut_appearance");
+        };
+
+        if (btnAppearance != null) {
+            btnAppearance.setOnClickListener(openAppearanceCustomizer);
+        }
+        imgIcon.setOnClickListener(openAppearanceCustomizer);
+        txtTitle.setOnClickListener(openAppearanceCustomizer);
 
         // Pin to Home Screen
         View btnPin = view.findViewById(R.id.sheet_action_pin);

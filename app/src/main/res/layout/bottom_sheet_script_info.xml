@@ -115,6 +115,63 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- Customize Name & Icon (Cosmetic) -->
+            <LinearLayout
+                android:id="@+id/sheet_action_appearance"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_lucide_palette"
+                    app:tint="@color/m3_primary"
+                    android:layout_marginEnd="14dp"
+                    android:contentDescription="@null" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Customize Name &amp; Icon"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/m3_on_surface" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="Set custom label and icon for widgets"
+                        android:textSize="11sp"
+                        android:textColor="@color/m3_on_surface_variant" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_lucide_chevron_right"
+                    app:tint="@color/m3_on_surface_variant"
+                    android:contentDescription="@null" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/m3_outline_variant" />
+
             <!-- Pin to Launcher -->
             <LinearLayout
                 android:id="@+id/sheet_action_pin"

@@ -34,10 +34,36 @@ public final class TermuxGridWidgetProvider extends AppWidgetProvider {
         }
     }
 
+    @Override
+    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, android.os.Bundle newOptions) {
+        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
+        updateAppWidgetRemoteViews(context, appWidgetManager, appWidgetId);
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_grid);
+    }
+
     public static void updateAppWidgetRemoteViews(@NonNull Context context, @NonNull AppWidgetManager appWidgetManager, int appWidgetId) {
         if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) return;
 
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_grid_layout);
+        android.os.Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
+        RemoteViews remoteViews;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            java.util.Map<android.util.SizeF, RemoteViews> viewMapping = new java.util.HashMap<>();
+            viewMapping.put(new android.util.SizeF(60f, 60f), buildSingleGridRemoteViews(context, appWidgetId, true));
+            viewMapping.put(new android.util.SizeF(170f, 60f), buildSingleGridRemoteViews(context, appWidgetId, false));
+            remoteViews = new RemoteViews(viewMapping);
+        } else {
+            int minWidth = options != null ? options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 0) : 0;
+            boolean singleCol = (minWidth > 0 && minWidth < 170);
+            remoteViews = buildSingleGridRemoteViews(context, appWidgetId, singleCol);
+        }
+
+        appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+    }
+
+    private static RemoteViews buildSingleGridRemoteViews(@NonNull Context context, int appWidgetId, boolean singleColumn) {
+        int layoutId = singleColumn ? R.layout.widget_grid_layout_1col : R.layout.widget_grid_layout;
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), layoutId);
         remoteViews.setEmptyView(R.id.widget_grid, R.id.empty_view);
 
         Intent intent = new Intent(context, TermuxGridWidgetService.class);
@@ -65,7 +91,7 @@ public final class TermuxGridWidgetProvider extends AppWidgetProvider {
                 PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setPendingIntentTemplate(R.id.widget_grid, clickPendingIntent);
 
-        appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+        return remoteViews;
     }
 
     @Override
