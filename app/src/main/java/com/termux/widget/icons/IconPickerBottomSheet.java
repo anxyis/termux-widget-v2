@@ -20,6 +20,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.ChipGroup;
 import com.termux.widget.R;
+import com.termux.widget.icons.IconRegistry.IconItem;
 
 import java.util.ArrayList;
 import java.util.List;
