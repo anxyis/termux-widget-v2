@@ -78,8 +78,8 @@ public final class TermuxGridWidgetService extends RemoteViewsService {
         @Override
         public void onDataSetChanged() {
             shortcutFiles.clear();
-            TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR.mkdirs();
-            ShortcutUtils.enumerateShortcutFiles(shortcutFiles, true);
+            try { TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR.mkdirs(); } catch (Exception ignored) {}
+            ShortcutUtils.enumerateShortcutFiles(mContext, shortcutFiles, true);
         }
     }
 }

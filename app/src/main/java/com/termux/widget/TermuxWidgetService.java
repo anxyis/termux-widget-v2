@@ -84,10 +84,10 @@ public final class TermuxWidgetService extends RemoteViewsService {
             Logger.logDebug(LOG_TAG, "onDataSetChanged(): " + mAppWidgetId);
 
             displayList.clear();
-            TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR.mkdirs();
+            try { TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR.mkdirs(); } catch (Exception ignored) {}
 
             List<ShortcutFile> rawFiles = new ArrayList<>();
-            ShortcutUtils.enumerateShortcutFiles(rawFiles, true);
+            ShortcutUtils.enumerateShortcutFiles(mContext, rawFiles, true);
 
             // Group files by category/directory
             Map<String, List<ShortcutFile>> groups = new LinkedHashMap<>();

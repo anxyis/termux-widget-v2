@@ -1,13 +1,19 @@
 package com.termux.widget.activities;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,22 +21,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.color.DynamicColors;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.termux.shared.errors.Error;
 import com.termux.shared.file.FileUtils;
 import com.termux.shared.logger.Logger;
 import com.termux.shared.termux.TermuxConstants;
-import com.termux.shared.termux.TermuxUtils;
 import com.termux.shared.termux.file.TermuxFileUtils;
 import com.termux.widget.R;
 import com.termux.widget.ShortcutFile;
+import com.termux.widget.TermuxCustomCommandPreferences;
+import com.termux.widget.TermuxCustomCommandPreferences.CustomCommand;
 import com.termux.widget.TermuxWidgetApplication;
 import com.termux.widget.TermuxWidgetProvider;
+import com.termux.widget.icons.IconPickerBottomSheet;
 import com.termux.widget.icons.IconRegistry;
 import com.termux.widget.tiles.TermuxTilePreferences;
 import com.termux.widget.utils.ShortcutUtils;
@@ -38,7 +48,6 @@ import com.termux.widget.utils.ShortcutUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class TermuxWidgetMainActivity extends AppCompatActivity {
 
@@ -73,6 +82,32 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         findViewById(R.id.btn_refresh_shortcuts).setOnClickListener(v -> populateDashboard());
         findViewById(R.id.button_refresh_all_widgets).setOnClickListener(v -> sendIntentToRefreshAllWidgets());
 
+        View btnAddCmd = findViewById(R.id.btn_add_command);
+        if (btnAddCmd != null) {
+            btnAddCmd.setOnClickListener(v -> showAddEditCommandDialog(null));
+        }
+
+        View btnCopy = findViewById(R.id.btn_copy_setup_command);
+        if (btnCopy != null) {
+            btnCopy.setOnClickListener(v -> {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("Termux Setup", "echo \"allow-external-apps = true\" >> ~/.termux/termux.properties && termux-reload-settings");
+                if (clipboard != null) {
+                    clipboard.setPrimaryClip(clip);
+                    Toast.makeText(this, "Setup command copied! Paste & run inside Termux", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        View btnSettings = findViewById(R.id.btn_open_app_settings);
+        if (btnSettings != null) {
+            btnSettings.setOnClickListener(v -> {
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                intent.setData(Uri.parse("package:" + getPackageName()));
+                startActivity(intent);
+            });
+        }
+
         setDynamicShortcutsButtons();
         sendIntentToRefreshAllWidgets();
     }
@@ -92,15 +127,16 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
     }
 
     private void checkTermuxStatus() {
-        String errmsg = TermuxUtils.isTermuxAppAccessible(this);
-        if (errmsg != null) {
-            mTxtStatusTitle.setText("Termux Not Accessible");
-            mTxtStatusSubtitle.setText(errmsg);
+        boolean accessible = ShortcutUtils.isTermuxAppAccessible(this, LOG_TAG, false);
+        List<ShortcutFile> files = new ArrayList<>();
+        ShortcutUtils.enumerateShortcutFiles(this, files, false);
+
+        if (!accessible) {
+            mTxtStatusTitle.setText("Termux App Not Found");
+            mTxtStatusSubtitle.setText("Install Termux (com.termux) to execute commands & shortcuts");
         } else {
             mTxtStatusTitle.setText("Termux Connected");
-            List<ShortcutFile> files = new ArrayList<>();
-            ShortcutUtils.enumerateShortcutFiles(files, false);
-            mTxtStatusSubtitle.setText(files.size() + " shortcut(s) found in ~/.shortcuts/");
+            mTxtStatusSubtitle.setText(files.size() + " shortcut(s) active • Public RUN_COMMAND API");
         }
     }
 
@@ -150,7 +186,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         mContainerDetectedShortcuts.removeAllViews();
 
         List<ShortcutFile> files = new ArrayList<>();
-        ShortcutUtils.enumerateShortcutFiles(files, true);
+        ShortcutUtils.enumerateShortcutFiles(this, files, true);
 
         if (files.isEmpty()) {
             TextView emptyText = new TextView(this);
@@ -176,15 +212,118 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
 
             boolean isTask = sf.isTask();
             txtBadge.setText(isTask ? "TASK" : "TERM");
-            imgIcon.setImageResource(isTask ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal);
+
+            int defaultIcon = isTask ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
+            int iconRes = sf.mIconId != null ? IconRegistry.getDrawableResId(sf.mIconId, defaultIcon) : defaultIcon;
+            imgIcon.setImageResource(iconRes);
 
             btnRun.setOnClickListener(v -> {
                 TermuxWidgetProvider.sendExecutionIntentToTermuxService(this, sf.getPath(), LOG_TAG);
                 Toast.makeText(this, "Executing: " + sf.getLabel(), Toast.LENGTH_SHORT).show();
             });
 
+            if (sf.mIsCustomCommand) {
+                row.setOnLongClickListener(v -> {
+                    showCommandOptionsDialog(sf);
+                    return true;
+                });
+            }
+
             mContainerDetectedShortcuts.addView(row);
         }
+    }
+
+    private void showCommandOptionsDialog(@NonNull ShortcutFile sf) {
+        String cmdId = sf.getPath().replace("custom:", "");
+        CustomCommand cmd = TermuxCustomCommandPreferences.getCommandById(this, cmdId);
+        if (cmd == null) return;
+
+        CharSequence[] options = new CharSequence[]{"Run Command", "Edit Command", "Delete Command"};
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(cmd.name)
+                .setItems(options, (dialog, which) -> {
+                    if (which == 0) {
+                        TermuxWidgetProvider.sendExecutionIntentToTermuxService(this, sf.getPath(), LOG_TAG);
+                    } else if (which == 1) {
+                        showAddEditCommandDialog(cmd);
+                    } else if (which == 2) {
+                        new MaterialAlertDialogBuilder(this)
+                                .setTitle("Delete Command")
+                                .setMessage("Are you sure you want to delete '" + cmd.name + "'?")
+                                .setPositiveButton("Delete", (d, w) -> {
+                                    TermuxCustomCommandPreferences.deleteCustomCommand(this, cmd.id);
+                                    populateDashboard();
+                                    sendIntentToRefreshAllWidgets();
+                                    Toast.makeText(this, "Command deleted", Toast.LENGTH_SHORT).show();
+                                })
+                                .setNegativeButton("Cancel", null)
+                                .show();
+                    }
+                })
+                .show();
+    }
+
+    private void showAddEditCommandDialog(@Nullable CustomCommand existingCmd) {
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(48, 24, 48, 24);
+
+        EditText inputName = new EditText(this);
+        inputName.setHint("Command Name (e.g. Update Packages)");
+        if (existingCmd != null) inputName.setText(existingCmd.name);
+        layout.addView(inputName);
+
+        EditText inputCommand = new EditText(this);
+        inputCommand.setHint("Bash Command (e.g. htop or pkg update)");
+        if (existingCmd != null) inputCommand.setText(existingCmd.command);
+        layout.addView(inputCommand);
+
+        EditText inputGroup = new EditText(this);
+        inputGroup.setHint("Group / Category (e.g. System, Dev)");
+        if (existingCmd != null) inputGroup.setText(existingCmd.group);
+        else inputGroup.setText("Commands");
+        layout.addView(inputGroup);
+
+        CheckBox chkTask = new CheckBox(this);
+        chkTask.setText("Run in background (Task / Silent)");
+        if (existingCmd != null) chkTask.setChecked(existingCmd.isTask);
+        layout.addView(chkTask);
+
+        final String[] selectedIconId = new String[]{existingCmd != null ? existingCmd.iconId : "lucide_terminal"};
+        MaterialButton btnPickIcon = new MaterialButton(this);
+        btnPickIcon.setText("Select Icon: " + selectedIconId[0]);
+        btnPickIcon.setIconResource(IconRegistry.getDrawableResId(selectedIconId[0], R.drawable.ic_lucide_terminal));
+        btnPickIcon.setOnClickListener(v -> {
+            IconPickerBottomSheet picker = IconPickerBottomSheet.newInstance(selectedIconId[0]);
+            picker.setOnIconSelectedListener((iconId, iconName) -> {
+                selectedIconId[0] = iconId;
+                btnPickIcon.setText("Select Icon: " + iconName);
+                btnPickIcon.setIconResource(IconRegistry.getDrawableResId(iconId, R.drawable.ic_lucide_terminal));
+            });
+            picker.show(getSupportFragmentManager(), "command_icon_picker");
+        });
+        layout.addView(btnPickIcon);
+
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(existingCmd != null ? "Edit Command" : "New Custom Command")
+                .setView(layout)
+                .setPositiveButton("Save", (dialog, which) -> {
+                    String name = inputName.getText().toString().trim();
+                    String command = inputCommand.getText().toString().trim();
+                    String group = inputGroup.getText().toString().trim();
+                    if (name.isEmpty() || command.isEmpty()) {
+                        Toast.makeText(this, "Name and Command cannot be empty", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    String id = existingCmd != null ? existingCmd.id : ("cmd_" + System.currentTimeMillis());
+                    CustomCommand cmd = new CustomCommand(id, name, command, chkTask.isChecked(), selectedIconId[0], group);
+                    TermuxCustomCommandPreferences.saveCustomCommand(this, cmd);
+                    populateDashboard();
+                    sendIntentToRefreshAllWidgets();
+                    Toast.makeText(this, "Saved " + name, Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void setDynamicShortcutsButtons() {

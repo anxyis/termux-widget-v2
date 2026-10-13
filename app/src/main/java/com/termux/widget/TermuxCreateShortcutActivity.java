@@ -13,20 +13,16 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.termux.shared.activity.media.AppCompatActivityUtils;
-import com.termux.shared.data.DataUtils;
 import com.termux.shared.logger.Logger;
-import com.termux.shared.termux.TermuxConstants;
-import com.termux.shared.termux.TermuxUtils;
 import com.termux.widget.utils.ShortcutUtils;
 
-import java.io.File;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TermuxCreateShortcutActivity extends AppCompatActivity {
 
     private ListView mListView;
-    private File mCurrentDirectory;
-    private File[] mCurrentFiles;
+    private List<ShortcutFile> mFiles = new ArrayList<>();
 
     private static final String LOG_TAG = "TermuxCreateShortcutActivity";
 
@@ -43,76 +39,44 @@ public class TermuxCreateShortcutActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        String errmsg = TermuxUtils.isTermuxAppAccessible(this);
-        if (errmsg != null) {
-            Logger.logErrorAndShowToast(this, LOG_TAG, errmsg);
+        if (!ShortcutUtils.isTermuxAppAccessible(this, LOG_TAG, true)) {
             finish();
             return;
         }
 
-        updateListview(TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR);
+        mFiles.clear();
+        ShortcutUtils.enumerateShortcutFiles(this, mFiles, true);
 
-        mListView.setOnItemClickListener((parent, view, position, id) -> {
-            final Context context = TermuxCreateShortcutActivity.this;
-            File clickedFile = mCurrentFiles[position];
-            if (clickedFile.isDirectory()) {
-                updateListview(clickedFile);
-            } else {
-                createShortcut(context, clickedFile);
-                finish();
-            }
-        });
-    }
-
-    private void updateListview(File directory) {
-        mCurrentDirectory = directory;
-        mCurrentFiles = directory.listFiles(ShortcutUtils.SHORTCUT_FILES_FILTER);
-
-        if (mCurrentFiles == null) mCurrentFiles = new File[0];
-
-        Arrays.sort(mCurrentFiles, (f1, f2) -> f1.getName().compareTo(f2.getName()));
-
-        final boolean isTopDir = directory.equals(TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR);
-        AppCompatActivityUtils.setShowBackButtonInActionBar(this, !isTopDir);
-
-        if (isTopDir && mCurrentFiles.length == 0) {
-            // Create if necessary so user can more easily add.
-            TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR.mkdirs();
+        if (mFiles.isEmpty()) {
             new AlertDialog.Builder(this)
                     .setMessage(R.string.msg_no_shortcut_scripts)
                     .setOnDismissListener(dialog -> finish()).show();
             return;
         }
 
-        final String[] values = new String[mCurrentFiles.length];
-        for (int i = 0; i < values.length; i++)
-            values[i] = mCurrentFiles[i].getName() +
-                    (mCurrentFiles[i].isDirectory() ? "/" : "");
+        final String[] values = new String[mFiles.size()];
+        for (int i = 0; i < mFiles.size(); i++) {
+            ShortcutFile sf = mFiles.get(i);
+            values[i] = "[" + sf.getGroupName() + "] " + sf.getLabel();
+        }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, values);
         mListView.setAdapter(adapter);
+
+        mListView.setOnItemClickListener((parent, view, position, id) -> {
+            ShortcutFile sf = mFiles.get(position);
+            createShortcut(TermuxCreateShortcutActivity.this, sf);
+            finish();
+        });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            updateListview(DataUtils.getDefaultIfNull(mCurrentDirectory.getParentFile(), mCurrentDirectory));
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
-
-    private void createShortcut(Context context, File clickedFile) {
+    private void createShortcut(Context context, ShortcutFile shortcutFile) {
         boolean isPinnedShortcutSupported = false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             ShortcutManager shortcutManager = ShortcutUtils.getShortcutManager(context, LOG_TAG, true);
             if (shortcutManager != null && shortcutManager.isRequestPinShortcutSupported())
                 isPinnedShortcutSupported = true;
         }
-
-        ShortcutFile shortcutFile = new ShortcutFile(clickedFile);
 
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && isPinnedShortcutSupported)

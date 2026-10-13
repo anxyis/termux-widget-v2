@@ -118,7 +118,7 @@ public class TermuxTileConfigActivity extends AppCompatActivity {
 
     private void showScriptSelectionDialog() {
         List<ShortcutFile> files = new ArrayList<>();
-        ShortcutUtils.enumerateShortcutFiles(files, true);
+        ShortcutUtils.enumerateShortcutFiles(this, files, true);
 
         if (files.isEmpty()) {
             Toast.makeText(this, R.string.msg_no_shortcut_scripts, Toast.LENGTH_SHORT).show();

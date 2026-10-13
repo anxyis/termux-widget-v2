@@ -41,6 +41,19 @@ public final class ShortcutFile {
     public String mGroup;
     public int mGroupCount = 0;
     public String mIconId;
+    public boolean mIsCustomCommand = false;
+    public String mCustomCommand;
+    public boolean mIsTask = false;
+
+    public ShortcutFile(@NonNull TermuxCustomCommandPreferences.CustomCommand cmd) {
+        mPath = "custom:" + cmd.id;
+        mLabel = cmd.name;
+        mGroup = cmd.group;
+        mIconId = cmd.iconId;
+        mIsTask = cmd.isTask;
+        mCustomCommand = cmd.command;
+        mIsCustomCommand = true;
+    }
 
     public ShortcutFile(@NonNull String path) {
         this(path, null);
@@ -74,6 +87,9 @@ public final class ShortcutFile {
     }
 
     public boolean isTask() {
+        if (mIsCustomCommand) {
+            return mIsTask;
+        }
         if (mPath == null) return false;
         File file = new File(mPath);
         File parent = file.getParentFile();
@@ -101,6 +117,9 @@ public final class ShortcutFile {
 
     @NonNull
     public String getSubtitle() {
+        if (mIsCustomCommand) {
+            return mCustomCommand != null ? mCustomCommand : "";
+        }
         if (mPath == null) return "";
         File file = new File(mPath);
         File parent = file.getParentFile();
@@ -117,11 +136,15 @@ public final class ShortcutFile {
 
     @NonNull
     public String getCanonicalPath() {
+        if (mIsCustomCommand) return getPath();
         return FileUtils.getCanonicalPath(getPath(), null);
     }
 
     @NonNull
     public String getUnExpandedPath() {
+        if (mIsCustomCommand) {
+            return mCustomCommand != null ? mCustomCommand : mLabel;
+        }
         return TermuxFileUtils.getUnExpandedTermuxPath(getCanonicalPath());
     }
 
@@ -139,9 +162,13 @@ public final class ShortcutFile {
     }
 
     public Intent getExecutionIntent(Context context) {
-        Uri scriptUri = new Uri.Builder().scheme(TERMUX_SERVICE.URI_SCHEME_SERVICE_EXECUTE).path(getPath()).build();
+        Uri scriptUri = new Uri.Builder()
+                .scheme("termux-widget")
+                .authority("execute")
+                .appendQueryParameter("path", getPath())
+                .build();
         Intent executionIntent = new Intent(context, TermuxLaunchShortcutActivity.class);
-        executionIntent.setAction(TERMUX_SERVICE.ACTION_SERVICE_EXECUTE); // Mandatory for pinned shortcuts
+        executionIntent.setAction(Intent.ACTION_VIEW);
         executionIntent.setData(scriptUri);
         executionIntent.putExtra(TERMUX_WIDGET_APP.EXTRA_TOKEN_NAME, TermuxWidgetAppSharedPreferences.getGeneratedToken(context));
         return executionIntent;

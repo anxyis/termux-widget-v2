@@ -7,6 +7,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.view.Gravity;
@@ -50,10 +51,8 @@ public final class TermuxWidgetProvider extends AppWidgetProvider {
 
     public void onEnabled(Context context) {
         Logger.logDebug(LOG_TAG, "onEnabled");
-
-        String errmsg = TermuxUtils.isTermuxAppAccessible(context);
-        if (errmsg != null) {
-            Logger.logErrorAndShowToast(context, LOG_TAG, errmsg);
+        if (!ShortcutUtils.isTermuxAppAccessible(context, LOG_TAG, false)) {
+            Logger.logWarn(LOG_TAG, "Termux app not detected");
         }
     }
 
@@ -250,111 +249,96 @@ public final class TermuxWidgetProvider extends AppWidgetProvider {
             return;
         }
 
-        sendExecutionIntentToTermuxService(context, intent.getData().getPath(), logTag);
+        String target = null;
+        if (intent.getData() != null) {
+            target = intent.getData().getQueryParameter("path");
+            if (target == null) target = intent.getData().getPath();
+        }
+        if (target != null) {
+            sendExecutionIntentToTermuxService(context, target, logTag);
+        }
     }
 
     /**
-     * Send execution intent to TermuxService for a shortcut file.
+     * Send execution intent to Termux using the official com.termux.RUN_COMMAND API.
      *
-     * @param context The {@link Context} that will be used to send execution intent to the TermuxService.
-     * @param shortcutFilePath The path to the shortcut file.
+     * @param context The {@link Context} that will be used to send execution intent.
+     * @param shortcutFilePath The path to the shortcut file or custom command ID.
      */
     public static void sendExecutionIntentToTermuxService(final Context context, String shortcutFilePath, String logTag) {
-        if (context == null) return;
-
+        if (context == null || shortcutFilePath == null || shortcutFilePath.isEmpty()) return;
         logTag = DataUtils.getDefaultIfNull(logTag, LOG_TAG);
-        String errmsg;
-        Error error;
 
-        ExecutionCommand executionCommand = new ExecutionCommand(-1);
-        executionCommand.executable = shortcutFilePath;
-
-        // If Termux app is not installed, enabled or accessible with current context or if
-        // TermuxConstants.TERMUX_PREFIX_DIR_PATH does not exist or has required permissions, then
-        // just return.
-        errmsg = TermuxUtils.isTermuxAppAccessible(context);
-        if (errmsg != null) {
-            Logger.logErrorAndShowToast(context, logTag, errmsg);
+        PackageManager pm = context.getPackageManager();
+        try {
+            pm.getPackageInfo("com.termux", 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            Logger.logErrorAndShowToast(context, logTag, "Termux app (com.termux) is not installed!");
             return;
         }
 
+        String executablePath;
+        String[] arguments = null;
+        boolean isBackground = false;
 
-        // If executable is null or empty, then exit here instead of getting canonical path which would expand to "/"
-        if (executionCommand.executable == null || executionCommand.executable.isEmpty()) {
-            errmsg  = context.getString(R.string.error_null_or_empty_executable);
-            Logger.logErrorAndShowToast(context, logTag, errmsg);
-            return;
-        }
-
-        // Get canonical path of executable
-        executionCommand.executable = FileUtils.getCanonicalPath(executionCommand.executable, null);
-
-        // If executable is not under SHORTCUT_FILES_ALLOWED_PATHS_LIST
-        if (!FileUtils.isPathInDirPaths(executionCommand.executable, ShortcutUtils.SHORTCUT_FILES_ALLOWED_PATHS_LIST, true)) {
-            errmsg = context.getString(R.string.error_executable_not_under_shortcuts_directories,
-                    Joiner.on(", ").skipNulls().join(TermuxFileUtils.getUnExpandedTermuxPaths(ShortcutUtils.SHORTCUT_FILES_ALLOWED_PATHS_LIST))) +
-                    "\n" + context.getString(R.string.msg_executable_absolute_path, executionCommand.executable);
-            Logger.logErrorAndShowToast(context, logTag, errmsg);
-            return;
-        }
-
-        // If executable is not a regular file, or is not readable or executable, then return
-        // RESULT_CODE_FAILED to plugin host app
-        // Setting of read and execute permissions are only done if executable is under TermuxConstants#TERMUX_SHORTCUT_SCRIPTS_DIR_PATH
-        error = FileUtils.validateRegularFileExistenceAndPermissions("executable", executionCommand.executable,
-                TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR_PATH,
-                FileUtils.APP_EXECUTABLE_FILE_PERMISSIONS,
-                true, true,
-                false);
-        if (error != null) {
-            error.appendMessage("\n" + context.getString(R.string.msg_executable_absolute_path, executionCommand.executable));
-            executionCommand.setStateFailed(error);
-            Logger.logErrorAndShowToast(context, logTag, ResultData.getErrorsListMinimalString(executionCommand.resultData));
-            return;
-        }
-
-
-        // If executable is under a directory with the basename matching TermuxConstants#TERMUX_SHORTCUT_TASKS_SCRIPTS_DIR_BASENAME
-        File shortcutFile = new File(executionCommand.executable);
-        File shortcutParentDirFile = shortcutFile.getParentFile();
-        if (shortcutParentDirFile != null && shortcutParentDirFile.getName().equals(TermuxConstants.TERMUX_SHORTCUT_TASKS_SCRIPTS_DIR_BASENAME)) {
-            executionCommand.runner = Runner.APP_SHELL.getName();
-            // Show feedback for background task
-            Toast toast = Toast.makeText(context, context.getString(R.string.msg_executing_task,
-                    ShellUtils.getExecutableBasename(executionCommand.executable)),
-                    Toast.LENGTH_SHORT);
-            // Put the toast at the top of the screen, to avoid blocking eventual
-            // toasts made from the task with termux-toast.
-            // See https://github.com/termux/termux-widget/issues/33
-            toast.setGravity(Gravity.TOP, 0, 0);
-            toast.show();
+        if (shortcutFilePath.startsWith("custom:")) {
+            String cmdId = shortcutFilePath.substring("custom:".length());
+            TermuxCustomCommandPreferences.CustomCommand cmd = TermuxCustomCommandPreferences.getCommandById(context, cmdId);
+            if (cmd == null) {
+                Toast.makeText(context, "Command not found", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            executablePath = "/data/data/com.termux/files/usr/bin/bash";
+            arguments = new String[]{"-c", cmd.command};
+            isBackground = cmd.isTask;
+            if (isBackground) {
+                Toast toast = Toast.makeText(context, context.getString(R.string.msg_executing_task, cmd.name), Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP, 0, 0);
+                toast.show();
+            }
         } else {
-            executionCommand.runner = Runner.TERMINAL_SESSION.getName();
+            File shortcutFile = new File(shortcutFilePath);
+            File shortcutParentDirFile = shortcutFile.getParentFile();
+            isBackground = (shortcutParentDirFile != null && shortcutParentDirFile.getName().equals(TermuxConstants.TERMUX_SHORTCUT_TASKS_SCRIPTS_DIR_BASENAME));
+
+            if (isBackground) {
+                Toast toast = Toast.makeText(context, context.getString(R.string.msg_executing_task, ShellUtils.getExecutableBasename(shortcutFilePath)), Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP, 0, 0);
+                toast.show();
+            }
+
+            if (shortcutFilePath.startsWith("/storage") || shortcutFilePath.startsWith("/sdcard") || shortcutFilePath.contains("/Android/data/")) {
+                executablePath = "/data/data/com.termux/files/usr/bin/bash";
+                arguments = new String[]{shortcutFilePath};
+            } else {
+                executablePath = shortcutFilePath;
+            }
         }
 
-        // Create execution intent with the action TERMUX_SERVICE#ACTION_SERVICE_EXECUTE to be sent to the TERMUX_SERVICE
-        executionCommand.executableUri = new Uri.Builder().scheme(TERMUX_SERVICE.URI_SCHEME_SERVICE_EXECUTE).path(executionCommand.executable).build();
-        Intent executionIntent = new Intent(TERMUX_SERVICE.ACTION_SERVICE_EXECUTE, executionCommand.executableUri);
-        executionIntent.setClassName(TermuxConstants.TERMUX_PACKAGE_NAME, TermuxConstants.TERMUX_APP.TERMUX_SERVICE_NAME);
-        executionIntent.putExtra(TERMUX_SERVICE.EXTRA_RUNNER, executionCommand.runner); // Runner extra will be prioritized over background extra
-        executionIntent.putExtra(TERMUX_SERVICE.EXTRA_BACKGROUND, Runner.APP_SHELL.getName().equals(executionCommand.runner)); // Backward compatibility for runner
-        executionIntent.putExtra(TERMUX_SERVICE.EXTRA_PLUGIN_API_HELP, context.getString(R.string.plugin_api_help, TermuxConstants.TERMUX_WIDGET_GITHUB_REPO_URL));
+        Intent runIntent = new Intent("com.termux.RUN_COMMAND");
+        runIntent.setClassName("com.termux", "com.termux.app.RunCommandService");
+        runIntent.putExtra("com.termux.RUN_COMMAND_PATH", executablePath);
+        if (arguments != null) {
+            runIntent.putExtra("com.termux.RUN_COMMAND_ARGUMENTS", arguments);
+        }
+        runIntent.putExtra("com.termux.RUN_COMMAND_WORKDIR", "/data/data/com.termux/files/home");
+        runIntent.putExtra("com.termux.RUN_COMMAND_BACKGROUND", isBackground);
+        runIntent.putExtra("com.termux.RUN_COMMAND_SESSION_ACTION", "0");
 
-        Logger.logVerboseExtended(logTag, executionCommand.toString());
-        Logger.logDebug(logTag, "Sending execution intent to " + executionIntent.getComponent().toString() + " for \"" + executionCommand.executable + "\" with runner " + executionCommand.runner);
+        Logger.logDebug(logTag, "Sending RUN_COMMAND to Termux for " + executablePath + ", isBackground=" + isBackground);
 
         try {
-            // Send execution intent to execution service
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                // https://developer.android.com/about/versions/oreo/background.html
-                context.startForegroundService(executionIntent);
+                context.startForegroundService(runIntent);
             } else {
-                context.startService(executionIntent);
+                context.startService(runIntent);
             }
+        } catch (SecurityException se) {
+            Toast.makeText(context, "Permission error: Please enable 'Run commands in Termux' in Android Settings -> Apps -> Termux:Widget v2 -> Permissions", Toast.LENGTH_LONG).show();
+            Logger.logStackTraceWithMessage(logTag, "SecurityException sending RUN_COMMAND", se);
         } catch (Exception e) {
-            String message = "Failed to send execution intent to " + executionIntent.getComponent().toString();
-            Logger.logErrorAndShowToast(context, logTag, message + ": " + e.getMessage());
-            Logger.logStackTraceWithMessage(logTag, message, e);
+            Toast.makeText(context, "Failed to launch in Termux: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Logger.logStackTraceWithMessage(logTag, "Failed to send execution intent to Termux", e);
         }
     }
 

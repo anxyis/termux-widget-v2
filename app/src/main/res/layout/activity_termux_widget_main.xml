@@ -79,6 +79,69 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Setup & Pairing Guide Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_setup_guide"
+                style="@style/Widget.TermuxWidget.Card.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Termux v2 Setup (1-Time)"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/m3_primary"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1. Run the command below in Termux to allow external app commands.\n2. Ensure 'Run commands in Termux' permission is granted in Android App Settings."
+                        android:textSize="12sp"
+                        android:textColor="@color/m3_on_surface_variant"
+                        android:layout_marginBottom="12dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_copy_setup_command"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Copy Setup Command"
+                            android:textSize="11sp"
+                            app:icon="@drawable/ic_lucide_copy"
+                            app:cornerRadius="14dp"
+                            android:layout_marginEnd="6dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_open_app_settings"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="App Permissions"
+                            android:textSize="11sp"
+                            app:icon="@drawable/ic_lucide_settings"
+                            app:cornerRadius="14dp"
+                            android:layout_marginStart="6dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- Quick Settings Tiles Section -->
             <TextView
                 android:layout_width="wrap_content"
@@ -127,6 +190,17 @@
                     android:textColor="@color/m3_primary"
                     android:textAllCaps="true"
                     android:letterSpacing="0.05" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_add_command"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="Add"
+                    android:textSize="12sp"
+                    app:icon="@drawable/ic_lucide_plus"
+                    app:cornerRadius="18dp"
+                    android:layout_marginEnd="6dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_refresh_shortcuts"

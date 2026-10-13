@@ -13,13 +13,12 @@ import com.termux.shared.termux.theme.TermuxThemeUtils;
 public class TermuxWidgetApplication extends Application {
 
     public static final String LOG_TAG = "TermuxWidgetApplication";
+    private static Context sContext;
 
     public void onCreate() {
         super.onCreate();
-
-        Log.i(LOG_TAG, "AppInit");
-
-        Context context = getApplicationContext();
+        sContext = getApplicationContext();
+        Context context = sContext;
 
         // Set crash handler for the app
         TermuxCrashUtils.setCrashHandler(context);
@@ -29,6 +28,10 @@ public class TermuxWidgetApplication extends Application {
 
         // Set NightMode.APP_NIGHT_MODE
         TermuxThemeUtils.setAppNightMode(context);
+    }
+
+    public static Context getAppContext() {
+        return sContext;
     }
 
     public static void setLogConfig(Context context, boolean commitToFile) {

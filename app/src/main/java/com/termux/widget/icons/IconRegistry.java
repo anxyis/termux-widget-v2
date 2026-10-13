@@ -68,6 +68,8 @@ public final class IconRegistry {
         register(new IconItem("phosphor_wifi", "Wi-Fi / Network", R.drawable.ic_phosphor_wifi, CAT_SYSTEM, "Phosphor"));
         register(new IconItem("lucide_folder", "Directory", R.drawable.ic_lucide_folder, CAT_SYSTEM, "Lucide"));
         register(new IconItem("lucide_settings", "Configuration", R.drawable.ic_lucide_settings, CAT_SYSTEM, "Lucide"));
+        register(new IconItem("lucide_plus", "Plus / Add", R.drawable.ic_lucide_plus, CAT_DEV, "Lucide"));
+        register(new IconItem("lucide_copy", "Copy / Clipboard", R.drawable.ic_lucide_copy, CAT_DEV, "Lucide"));
     }
 
     private static void register(IconItem item) {
