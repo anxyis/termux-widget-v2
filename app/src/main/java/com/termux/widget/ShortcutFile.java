@@ -114,6 +114,10 @@ public final class ShortcutFile {
         if (customIconId != null && !customIconId.trim().isEmpty()) {
             mIconId = customIconId.trim();
         }
+        String customGroup = TermuxShortcutMetadataPreferences.getCustomGroup(context, mPath);
+        if (customGroup != null && !customGroup.trim().isEmpty()) {
+            mGroup = customGroup.trim();
+        }
     }
 
     @NonNull

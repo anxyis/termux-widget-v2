@@ -17,6 +17,7 @@ public final class TermuxShortcutMetadataPreferences {
     private static final String PREF_NAME = "termux_shortcut_metadata_preferences";
     private static final String KEY_PREFIX_LABEL = "label_";
     private static final String KEY_PREFIX_ICON = "icon_";
+    private static final String KEY_PREFIX_GROUP = "group_";
 
     private TermuxShortcutMetadataPreferences() {}
 
@@ -26,6 +27,12 @@ public final class TermuxShortcutMetadataPreferences {
 
     public static void setShortcutMetadata(@NonNull Context context, @NonNull String path,
                                            @Nullable String label, @Nullable String iconId) {
+        setShortcutMetadata(context, path, label, iconId, null);
+    }
+
+    public static void setShortcutMetadata(@NonNull Context context, @NonNull String path,
+                                           @Nullable String label, @Nullable String iconId,
+                                           @Nullable String group) {
         SharedPreferences.Editor editor = getPrefs(context).edit();
         if (label != null && !label.trim().isEmpty()) {
             editor.putString(KEY_PREFIX_LABEL + path, label.trim());
@@ -37,6 +44,12 @@ public final class TermuxShortcutMetadataPreferences {
             editor.putString(KEY_PREFIX_ICON + path, iconId.trim());
         } else {
             editor.remove(KEY_PREFIX_ICON + path);
+        }
+
+        if (group != null && !group.trim().isEmpty()) {
+            editor.putString(KEY_PREFIX_GROUP + path, group.trim());
+        } else {
+            editor.remove(KEY_PREFIX_GROUP + path);
         }
         editor.apply();
     }
@@ -71,10 +84,26 @@ public final class TermuxShortcutMetadataPreferences {
         return getPrefs(context).getString(KEY_PREFIX_ICON + path, null);
     }
 
+    public static void setCustomGroup(@NonNull Context context, @NonNull String path, @Nullable String group) {
+        SharedPreferences.Editor editor = getPrefs(context).edit();
+        if (group != null && !group.trim().isEmpty()) {
+            editor.putString(KEY_PREFIX_GROUP + path, group.trim());
+        } else {
+            editor.remove(KEY_PREFIX_GROUP + path);
+        }
+        editor.apply();
+    }
+
+    @Nullable
+    public static String getCustomGroup(@NonNull Context context, @NonNull String path) {
+        return getPrefs(context).getString(KEY_PREFIX_GROUP + path, null);
+    }
+
     public static void clearShortcutMetadata(@NonNull Context context, @NonNull String path) {
         getPrefs(context).edit()
                 .remove(KEY_PREFIX_LABEL + path)
                 .remove(KEY_PREFIX_ICON + path)
+                .remove(KEY_PREFIX_GROUP + path)
                 .apply();
     }
 

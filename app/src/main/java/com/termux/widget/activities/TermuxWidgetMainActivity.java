@@ -15,15 +15,23 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -77,6 +85,9 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
     private GridLayout mGridQuickTiles;
     private LinearLayout mContainerDetectedShortcuts;
     private LinearLayout mContainerToggleShortcuts;
+    private LinearLayout mContainerGroupChips;
+    private HorizontalScrollView mScrollGroupChips;
+    private String mSelectedGroupFilter = "ALL";
     private TextView mTxtStatusTitle;
     private TextView mTxtStatusSubtitle;
     private TextView mTxtShortcutsCount;
@@ -109,15 +120,19 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         if (switchAmoled != null) {
             switchAmoled.setChecked(ThemeManager.isAmoledMode(this));
             switchAmoled.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked == ThemeManager.isAmoledMode(this)) return;
                 ThemeManager.setAmoledMode(this, isChecked);
-                sendIntentToRefreshAllWidgets();
-                recreate();
+                sendIntentToRefreshAllWidgets(false);
+                // Allow switch thumb animation to smoothly finish before recreating activity
+                buttonView.postDelayed(this::recreate, 220);
             });
         }
 
         mGridQuickTiles = findViewById(R.id.grid_quick_tiles);
         mContainerDetectedShortcuts = findViewById(R.id.container_detected_shortcuts);
         mContainerToggleShortcuts = findViewById(R.id.container_toggle_shortcuts);
+        mContainerGroupChips = findViewById(R.id.container_group_chips);
+        mScrollGroupChips = findViewById(R.id.scroll_group_chips);
         mTxtStatusTitle = findViewById(R.id.txt_status_title);
         mTxtStatusSubtitle = findViewById(R.id.txt_status_subtitle);
         mTxtShortcutsCount = findViewById(R.id.txt_shortcuts_count);
@@ -134,13 +149,13 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
 
         View btnAddToggle = findViewById(R.id.btn_add_toggle);
         if (btnAddToggle != null) {
-            BouncyAnimationHelper.applySpringPress(btnAddToggle, 0.88f);
+            BouncyAnimationHelper.applySpringPress(btnAddToggle, 0.95f);
             btnAddToggle.setOnClickListener(v -> showAddEditToggleDialog(null));
         }
 
         View btnAddCmd = findViewById(R.id.btn_add_command);
         if (btnAddCmd != null) {
-            BouncyAnimationHelper.applySpringPress(btnAddCmd, 0.88f);
+            BouncyAnimationHelper.applySpringPress(btnAddCmd, 0.95f);
             btnAddCmd.setOnClickListener(v -> showAddEditCommandDialog(null));
         }
 
@@ -296,8 +311,6 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
 
         TextView txtAmoledTitle = findViewById(R.id.txt_amoled_title);
         if (txtAmoledTitle != null) txtAmoledTitle.setTextColor(Color.WHITE);
-        TextView txtAmoledSub = findViewById(R.id.txt_amoled_subtitle);
-        if (txtAmoledSub != null) txtAmoledSub.setTextColor(Color.parseColor("#9E9E9E"));
         ImageView imgAmoledMoon = findViewById(R.id.img_amoled_moon);
         if (imgAmoledMoon != null) imgAmoledMoon.setColorFilter(Color.WHITE);
 
@@ -310,19 +323,19 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         ImageView imgHelpToggles = findViewById(R.id.img_help_toggles);
         if (imgHelpToggles != null) imgHelpToggles.setColorFilter(Color.WHITE);
 
-        View btnAddCmd = findViewById(R.id.btn_add_command);
+        MaterialButton btnAddCmd = findViewById(R.id.btn_add_command);
         if (btnAddCmd != null) {
-            btnAddCmd.setBackgroundResource(R.drawable.bento_plus_button_amoled_bg);
+            btnAddCmd.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
+            btnAddCmd.setTextColor(Color.BLACK);
+            btnAddCmd.setIconTint(ColorStateList.valueOf(Color.BLACK));
         }
-        ImageView imgAddCmd = findViewById(R.id.img_add_command);
-        if (imgAddCmd != null) imgAddCmd.setColorFilter(Color.BLACK);
 
-        View btnAddToggle = findViewById(R.id.btn_add_toggle);
+        MaterialButton btnAddToggle = findViewById(R.id.btn_add_toggle);
         if (btnAddToggle != null) {
-            btnAddToggle.setBackgroundResource(R.drawable.bento_plus_button_amoled_bg);
+            btnAddToggle.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
+            btnAddToggle.setTextColor(Color.BLACK);
+            btnAddToggle.setIconTint(ColorStateList.valueOf(Color.BLACK));
         }
-        ImageView imgAddToggle = findViewById(R.id.img_add_toggle);
-        if (imgAddToggle != null) imgAddToggle.setColorFilter(Color.BLACK);
 
         // Quick Tiles Card
         MaterialCardView tilesCard = findViewById(R.id.card_tiles_section);
@@ -448,6 +461,71 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         }
     }
 
+    private View createGroupChip(String title, String groupKey, boolean isSelected, boolean isAmoled) {
+        TextView chip = new TextView(this);
+        chip.setText(title);
+        chip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+        chip.setTypeface(null, isSelected ? Typeface.BOLD : Typeface.NORMAL);
+        chip.setGravity(Gravity.CENTER);
+
+        int padH = dpToPx(14);
+        int padV = dpToPx(8);
+        chip.setPadding(padH, padV, padH, padV);
+
+        GradientDrawable bg = new GradientDrawable();
+        bg.setShape(GradientDrawable.RECTANGLE);
+        bg.setCornerRadius(dpToPx(16));
+
+        if (isAmoled) {
+            if (isSelected) {
+                bg.setColor(Color.WHITE);
+                chip.setTextColor(Color.BLACK);
+            } else {
+                bg.setColor(Color.parseColor("#121214"));
+                bg.setStroke(dpToPx(1), Color.parseColor("#282828"));
+                chip.setTextColor(Color.parseColor("#CCCCCC"));
+            }
+        } else {
+            if (isSelected) {
+                TypedValue typedValue = new TypedValue();
+                getTheme().resolveAttribute(com.google.android.material.R.attr.colorPrimary, typedValue, true);
+                bg.setColor(typedValue.data);
+
+                TypedValue textValue = new TypedValue();
+                getTheme().resolveAttribute(com.google.android.material.R.attr.colorOnPrimary, textValue, true);
+                chip.setTextColor(textValue.data);
+            } else {
+                TypedValue typedValue = new TypedValue();
+                getTheme().resolveAttribute(com.google.android.material.R.attr.colorSurfaceContainerHigh, typedValue, true);
+                bg.setColor(typedValue.data);
+
+                TypedValue textValue = new TypedValue();
+                getTheme().resolveAttribute(com.google.android.material.R.attr.colorOnSurface, textValue, true);
+                chip.setTextColor(textValue.data);
+            }
+        }
+
+        chip.setBackground(bg);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        lp.setMarginEnd(dpToPx(8));
+        chip.setLayoutParams(lp);
+
+        BouncyAnimationHelper.applySpringPress(chip, 0.94f);
+        chip.setOnClickListener(v -> {
+            mSelectedGroupFilter = groupKey;
+            populateDetectedShortcuts();
+        });
+
+        return chip;
+    }
+
+    private int dpToPx(int dp) {
+        return (int) (dp * getResources().getDisplayMetrics().density + 0.5f);
+    }
+
     private void populateDetectedShortcuts() {
         if (mContainerDetectedShortcuts == null) return;
         mContainerDetectedShortcuts.removeAllViews();
@@ -462,22 +540,69 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
             }
         }
 
-        if (mTxtShortcutsCount != null) {
-            mTxtShortcutsCount.setText("Scripts : " + files.size());
+        boolean isAmoled = ThemeManager.isAmoledMode(this);
+
+        // Group counts
+        Map<String, Integer> groupCounts = new LinkedHashMap<>();
+        for (ShortcutFile sf : files) {
+            String grp = sf.getGroupName();
+            groupCounts.put(grp, groupCounts.getOrDefault(grp, 0) + 1);
         }
 
-        if (files.isEmpty()) {
+        // Validate current filter
+        if (!"ALL".equalsIgnoreCase(mSelectedGroupFilter) && !groupCounts.containsKey(mSelectedGroupFilter)) {
+            mSelectedGroupFilter = "ALL";
+        }
+
+        // Populate group filter chips
+        if (mContainerGroupChips != null) {
+            mContainerGroupChips.removeAllViews();
+            if (files.isEmpty()) {
+                if (mScrollGroupChips != null) mScrollGroupChips.setVisibility(View.GONE);
+            } else {
+                if (mScrollGroupChips != null) mScrollGroupChips.setVisibility(View.VISIBLE);
+                mContainerGroupChips.addView(createGroupChip("All (" + files.size() + ")", "ALL", "ALL".equalsIgnoreCase(mSelectedGroupFilter), isAmoled));
+                for (Map.Entry<String, Integer> entry : groupCounts.entrySet()) {
+                    String grpName = entry.getKey();
+                    int count = entry.getValue();
+                    boolean isSel = grpName.equalsIgnoreCase(mSelectedGroupFilter);
+                    mContainerGroupChips.addView(createGroupChip(grpName + " (" + count + ")", grpName, isSel, isAmoled));
+                }
+            }
+        }
+
+        // Filter files for display
+        List<ShortcutFile> displayFiles = new ArrayList<>();
+        for (ShortcutFile sf : files) {
+            if ("ALL".equalsIgnoreCase(mSelectedGroupFilter) || mSelectedGroupFilter.equalsIgnoreCase(sf.getGroupName())) {
+                displayFiles.add(sf);
+            }
+        }
+
+        if (mTxtShortcutsCount != null) {
+            if ("ALL".equalsIgnoreCase(mSelectedGroupFilter) || displayFiles.size() == files.size()) {
+                mTxtShortcutsCount.setText("Scripts : " + files.size());
+            } else {
+                mTxtShortcutsCount.setText("Scripts : " + displayFiles.size() + "/" + files.size());
+            }
+        }
+
+        if (displayFiles.isEmpty()) {
             TextView emptyText = new TextView(this);
-            emptyText.setText(R.string.msg_no_shortcut_scripts);
+            if (files.isEmpty()) {
+                emptyText.setText(R.string.msg_no_shortcut_scripts);
+            } else {
+                emptyText.setText("No scripts found in group '" + mSelectedGroupFilter + "'");
+            }
             emptyText.setTextSize(13);
-            emptyText.setPadding(0, 16, 0, 16);
+            emptyText.setPadding(dpToPx(6), dpToPx(16), dpToPx(6), dpToPx(16));
+            emptyText.setTextColor(isAmoled ? Color.parseColor("#9E9E9E") : getResources().getColor(R.color.m3_on_surface_variant));
             mContainerDetectedShortcuts.addView(emptyText);
             return;
         }
 
         LayoutInflater inflater = LayoutInflater.from(this);
-        boolean isAmoled = ThemeManager.isAmoledMode(this);
-        for (ShortcutFile sf : files) {
+        for (ShortcutFile sf : displayFiles) {
             View row = inflater.inflate(R.layout.item_main_shortcut_row, mContainerDetectedShortcuts, false);
 
             TextView txtTitle = row.findViewById(R.id.row_shortcut_title);

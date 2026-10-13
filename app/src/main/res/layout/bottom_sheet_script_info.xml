@@ -2,10 +2,11 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sheet_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/widget_card_item_bg"
+    android:background="@drawable/widget_sheet_bg"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
     android:paddingTop="12dp"
@@ -13,8 +14,9 @@
 
     <!-- Bottom Sheet Drag Handle -->
     <View
-        android:layout_width="36dp"
-        android:layout_height="4dp"
+        android:id="@+id/sheet_drag_handle"
+        android:layout_width="38dp"
+        android:layout_height="5dp"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/widget_pill_badge_bg"
         android:backgroundTint="@color/m3_outline"
@@ -26,9 +28,10 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="18dp">
 
         <FrameLayout
+            android:id="@+id/sheet_icon_frame"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:background="@drawable/widget_icon_badge_bg"
@@ -70,44 +73,68 @@
                 android:ellipsize="middle"
                 android:singleLine="true" />
 
-            <TextView
-                android:id="@+id/sheet_badge"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/widget_pill_badge_bg"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                android:textColor="@color/badge_task_text" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="6dp">
+
+                <TextView
+                    android:id="@+id/sheet_badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/widget_pill_badge_bg"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/badge_task_text" />
+
+                <TextView
+                    android:id="@+id/sheet_group_badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/widget_pill_session_bg"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/badge_session_text" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Primary Action: Run Capsule Button -->
+    <!-- Primary Action: Oversized Bento Run Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/sheet_btn_run"
         style="@style/Widget.TermuxWidget.Button.Capsule"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="58dp"
         android:text="Run Script"
-        android:textSize="14sp"
+        android:textSize="15sp"
         android:textStyle="bold"
+        app:cornerRadius="20dp"
         app:icon="@drawable/ic_lucide_play"
         app:iconGravity="textStart"
-        app:iconSize="18dp"
+        app:iconSize="20dp"
         app:backgroundTint="@color/m3_primary"
         android:textColor="@color/m3_on_primary"
         app:iconTint="@color/m3_on_primary"
         android:layout_marginBottom="16dp" />
 
-    <!-- Secondary Actions Container -->
+    <!-- Secondary Actions Container: Bento Card -->
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/sheet_secondary_card"
         style="@style/Widget.TermuxWidget.Card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:cardCornerRadius="24dp"
         app:cardBackgroundColor="@color/m3_surface_container_high">
 
         <LinearLayout
@@ -119,7 +146,7 @@
             <LinearLayout
                 android:id="@+id/sheet_action_appearance"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="56dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
@@ -129,8 +156,9 @@
                 android:focusable="true">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:id="@+id/sheet_icon_appearance"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:src="@drawable/ic_lucide_palette"
                     app:tint="@color/m3_primary"
                     android:layout_marginEnd="14dp"
@@ -143,6 +171,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/sheet_txt_appearance_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Customize Name &amp; Icon"
@@ -151,6 +180,7 @@
                         android:textColor="@color/m3_on_surface" />
 
                     <TextView
+                        android:id="@+id/sheet_txt_appearance_sub"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="1dp"
@@ -160,6 +190,7 @@
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/sheet_arrow_appearance"
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:src="@drawable/ic_lucide_chevron_right"
@@ -168,15 +199,16 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/sheet_divider_1"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/m3_outline_variant" />
 
-            <!-- Pin to Launcher -->
+            <!-- Change Category / Group -->
             <LinearLayout
-                android:id="@+id/sheet_action_pin"
+                android:id="@+id/sheet_action_group"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="56dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
@@ -186,14 +218,78 @@
                 android:focusable="true">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:id="@+id/sheet_icon_group"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_lucide_folder"
+                    app:tint="@color/m3_primary"
+                    android:layout_marginEnd="14dp"
+                    android:contentDescription="@null" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/sheet_txt_group_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Change Category / Group"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/m3_on_surface" />
+
+                    <TextView
+                        android:id="@+id/sheet_txt_group_sub"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="Organize into app groups"
+                        android:textSize="11sp"
+                        android:textColor="@color/m3_on_surface_variant" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/sheet_arrow_group"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_lucide_chevron_right"
+                    app:tint="@color/m3_on_surface_variant"
+                    android:contentDescription="@null" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/sheet_divider_2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/m3_outline_variant" />
+
+            <!-- Pin to Launcher -->
+            <LinearLayout
+                android:id="@+id/sheet_action_pin"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:id="@+id/sheet_icon_pin"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:src="@drawable/ic_hero_bolt"
                     app:tint="@color/m3_on_surface"
                     android:layout_marginEnd="14dp"
                     android:contentDescription="@null" />
 
                 <TextView
+                    android:id="@+id/sheet_txt_pin"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -203,6 +299,7 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/sheet_divider_3"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/m3_outline_variant" />
@@ -211,7 +308,7 @@
             <LinearLayout
                 android:id="@+id/sheet_action_tile"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="52dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
@@ -221,14 +318,16 @@
                 android:focusable="true">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:id="@+id/sheet_icon_tile"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:src="@drawable/ic_lucide_settings"
                     app:tint="@color/m3_on_surface"
                     android:layout_marginEnd="14dp"
                     android:contentDescription="@null" />
 
                 <TextView
+                    android:id="@+id/sheet_txt_tile"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -238,6 +337,7 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/sheet_divider_4"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/m3_outline_variant" />
@@ -246,7 +346,7 @@
             <LinearLayout
                 android:id="@+id/sheet_action_copy"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="52dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
@@ -256,8 +356,9 @@
                 android:focusable="true">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:id="@+id/sheet_icon_copy"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:src="@drawable/ic_lucide_copy"
                     app:tint="@color/m3_on_surface"
                     android:layout_marginEnd="14dp"
@@ -277,7 +378,7 @@
             <LinearLayout
                 android:id="@+id/sheet_action_edit"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="52dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
@@ -288,14 +389,16 @@
                 android:visibility="gone">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:id="@+id/sheet_icon_edit"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:src="@drawable/ic_lucide_code"
                     app:tint="@color/m3_on_surface"
                     android:layout_marginEnd="14dp"
                     android:contentDescription="@null" />
 
                 <TextView
+                    android:id="@+id/sheet_txt_edit"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -308,7 +411,7 @@
             <LinearLayout
                 android:id="@+id/sheet_action_delete"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="52dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
@@ -319,14 +422,16 @@
                 android:visibility="gone">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:id="@+id/sheet_icon_delete"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:src="@drawable/ic_lucide_trash"
                     app:tint="@color/status_disconnected"
                     android:layout_marginEnd="14dp"
                     android:contentDescription="@null" />
 
                 <TextView
+                    android:id="@+id/sheet_txt_delete"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

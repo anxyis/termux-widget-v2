@@ -137,6 +137,7 @@
                         app:iconSize="22dp" />
 
                     <!-- AMOLED Pure Black Display Option -->
+                    <!-- AMOLED Mode Row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -154,31 +155,16 @@
                             app:tint="?attr/colorOnSurface"
                             android:contentDescription="@null" />
 
-                        <LinearLayout
+                        <TextView
+                            android:id="@+id/txt_amoled_title"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginStart="14dp"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/txt_amoled_title"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="AMOLED Pure Black"
-                                android:textSize="15sp"
-                                android:textStyle="bold"
-                                android:textColor="?attr/colorOnSurface" />
-
-                            <TextView
-                                android:id="@+id/txt_amoled_subtitle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:text="Pitch black #000000 background"
-                                android:textSize="12sp"
-                                android:textColor="?attr/colorOnSurfaceVariant" />
-                        </LinearLayout>
+                            android:text="AMOLED Mode"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="?attr/colorOnSurface" />
 
                         <com.google.android.material.materialswitch.MaterialSwitch
                             android:id="@+id/switch_amoled_theme"
@@ -195,8 +181,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="12dp">
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="10dp"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
 
                 <TextView
                     android:id="@+id/txt_shortcuts_count"
@@ -226,31 +214,44 @@
                         android:src="@drawable/ic_lucide_circle_help"
                         app:tint="?attr/colorOnSurfaceVariant" />
                 </FrameLayout>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1" />
-
-                <FrameLayout
-                    android:id="@+id/btn_add_command"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:background="@drawable/bento_plus_button_bg"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:contentDescription="New Command"
-                    android:tooltipText="Add New Command">
-
-                    <ImageView
-                        android:id="@+id/img_add_command"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_lucide_plus"
-                        app:tint="?attr/colorOnPrimaryContainer" />
-                </FrameLayout>
             </LinearLayout>
+
+            <!-- Group Filter Chips (In-App Sorting) -->
+            <HorizontalScrollView
+                android:id="@+id/scroll_group_chips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:clipToPadding="false"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:layout_marginBottom="10dp">
+
+                <LinearLayout
+                    android:id="@+id/container_group_chips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical" />
+            </HorizontalScrollView>
+
+            <!-- Wide Centered Bento Button: New Command -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_add_command"
+                style="@style/Widget.TermuxWidget.Button.Tonal"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="12dp"
+                android:text="New Command"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:cornerRadius="20dp"
+                app:backgroundTint="?attr/colorPrimaryContainer"
+                android:textColor="?attr/colorOnPrimaryContainer"
+                app:icon="@drawable/ic_lucide_plus"
+                app:iconGravity="textStart"
+                app:iconTint="?attr/colorOnPrimaryContainer"
+                app:iconSize="20dp" />
 
             <!-- Shortcuts Container -->
             <LinearLayout
@@ -266,8 +267,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="12dp"
-                android:layout_marginTop="8dp">
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="12dp"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp">
 
                 <TextView
                     android:id="@+id/txt_toggles_count"
@@ -297,31 +300,25 @@
                         android:src="@drawable/ic_lucide_circle_help"
                         app:tint="?attr/colorOnSurfaceVariant" />
                 </FrameLayout>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1" />
-
-                <FrameLayout
-                    android:id="@+id/btn_add_toggle"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:background="@drawable/bento_plus_button_bg"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:contentDescription="New Toggle"
-                    android:tooltipText="Add New Toggle">
-
-                    <ImageView
-                        android:id="@+id/img_add_toggle"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_lucide_plus"
-                        app:tint="?attr/colorOnPrimaryContainer" />
-                </FrameLayout>
             </LinearLayout>
+
+            <!-- Wide Centered Bento Button: New Toggle -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_add_toggle"
+                style="@style/Widget.TermuxWidget.Button.Tonal"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="12dp"
+                android:text="New Toggle"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:cornerRadius="20dp"
+                app:backgroundTint="?attr/colorPrimaryContainer"
+                android:textColor="?attr/colorOnPrimaryContainer"
+                app:icon="@drawable/ic_lucide_plus"
+                app:iconGravity="textStart"
+                app:iconTint="?attr/colorOnPrimaryContainer"
+                app:iconSize="20dp" />
 
             <!-- Toggles Container -->
             <LinearLayout
