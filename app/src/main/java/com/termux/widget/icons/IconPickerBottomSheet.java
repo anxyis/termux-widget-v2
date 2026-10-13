@@ -88,10 +88,22 @@ public class IconPickerBottomSheet extends BottomSheetDialogFragment {
                 mSelectedCategory = IconRegistry.CAT_DEV;
             } else if (checkedId == R.id.chip_cat_servers) {
                 mSelectedCategory = IconRegistry.CAT_SERVERS;
+            } else if (checkedId == R.id.chip_cat_selfhosted) {
+                mSelectedCategory = IconRegistry.CAT_SELFHOSTED;
             } else if (checkedId == R.id.chip_cat_power) {
                 mSelectedCategory = IconRegistry.CAT_POWER;
             } else if (checkedId == R.id.chip_cat_system) {
                 mSelectedCategory = IconRegistry.CAT_SYSTEM;
+            } else if (checkedId == R.id.chip_cat_files) {
+                mSelectedCategory = IconRegistry.CAT_FILES;
+            } else if (checkedId == R.id.chip_cat_hardware) {
+                mSelectedCategory = IconRegistry.CAT_HARDWARE;
+            } else if (checkedId == R.id.chip_cat_media) {
+                mSelectedCategory = IconRegistry.CAT_MEDIA;
+            } else if (checkedId == R.id.chip_cat_security) {
+                mSelectedCategory = IconRegistry.CAT_SECURITY;
+            } else if (checkedId == R.id.chip_cat_tools) {
+                mSelectedCategory = IconRegistry.CAT_TOOLS;
             } else {
                 mSelectedCategory = IconRegistry.CAT_ALL;
             }

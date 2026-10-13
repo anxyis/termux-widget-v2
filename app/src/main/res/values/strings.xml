@@ -128,8 +128,14 @@
     <string name="icon_cat_all">All</string>
     <string name="icon_cat_dev">Developer</string>
     <string name="icon_cat_servers">Servers &amp; Cloud</string>
+    <string name="icon_cat_selfhosted">Self-Hosted &amp; Homelab</string>
     <string name="icon_cat_power">Actions &amp; Power</string>
     <string name="icon_cat_system">System &amp; Network</string>
+    <string name="icon_cat_files">Files &amp; Storage</string>
+    <string name="icon_cat_hardware">Hardware &amp; IoT</string>
+    <string name="icon_cat_media">Media &amp; Audio</string>
+    <string name="icon_cat_security">Security &amp; Keys</string>
+    <string name="icon_cat_tools">Tools &amp; Utilities</string>
     <string name="icon_custom_image">Pick custom image</string>
 
     <!-- Groups & Badges -->

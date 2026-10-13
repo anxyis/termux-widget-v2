@@ -28,7 +28,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Choose from Lucide, Heroicons, Phosphor, or Ionicons"
+        android:text="Select from over 300+ vector icons across all categories"
         android:textSize="12sp"
         android:textColor="@color/m3_on_surface_variant"
         android:layout_marginBottom="12dp" />
@@ -92,6 +92,13 @@
                 android:text="@string/icon_cat_servers" />
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/chip_cat_selfhosted"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/icon_cat_selfhosted" />
+
+            <com.google.android.material.chip.Chip
                 android:id="@+id/chip_cat_power"
                 style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
@@ -104,6 +111,41 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/icon_cat_system" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_cat_files"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/icon_cat_files" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_cat_hardware"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/icon_cat_hardware" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_cat_media"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/icon_cat_media" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_cat_security"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/icon_cat_security" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_cat_tools"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/icon_cat_tools" />
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
 
@@ -111,7 +153,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_icons"
         android:layout_width="match_parent"
-        android:layout_height="260dp"
+        android:layout_height="380dp"
         android:clipToPadding="false"
         android:scrollbars="vertical" />
 
