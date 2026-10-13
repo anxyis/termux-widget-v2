@@ -38,6 +38,32 @@ public abstract class BaseTermuxTileService extends TileService {
         String iconId = TermuxTilePreferences.getIconId(this, slot);
 
         if (scriptPath != null && !scriptPath.isEmpty()) {
+            if (scriptPath.startsWith(com.termux.widget.toggle.TermuxTogglePreferences.PREFIX_TOGGLE)) {
+                String toggleId = scriptPath.substring(com.termux.widget.toggle.TermuxTogglePreferences.PREFIX_TOGGLE.length());
+                com.termux.widget.toggle.ToggleShortcut toggle = com.termux.widget.toggle.TermuxTogglePreferences.getToggle(this, toggleId);
+                if (toggle != null) {
+                    tile.setLabel(toggle.label);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        tile.setSubtitle(toggle.isOn ? "ON" : "OFF");
+                    }
+                    String currentIcon = (toggle.iconId != null && !toggle.iconId.isEmpty()) ? toggle.iconId : iconId;
+                    if (IconHelper.isCustomFile(currentIcon)) {
+                        android.graphics.Bitmap bmp = IconHelper.loadCustomBitmap(currentIcon);
+                        if (bmp != null) {
+                            tile.setIcon(Icon.createWithBitmap(bmp));
+                        } else {
+                            tile.setIcon(Icon.createWithResource(this, R.drawable.ic_lucide_power));
+                        }
+                    } else {
+                        int iconRes = IconRegistry.getDrawableResId(currentIcon, R.drawable.ic_lucide_power);
+                        tile.setIcon(Icon.createWithResource(this, iconRes));
+                    }
+                    tile.setState(toggle.isOn ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE);
+                    tile.updateTile();
+                    return;
+                }
+            }
+
             tile.setLabel(label != null && !label.isEmpty() ? label : ("Tile " + slot));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 tile.setSubtitle(getString(R.string.quick_tile_ready));
@@ -73,6 +99,12 @@ public abstract class BaseTermuxTileService extends TileService {
         String scriptPath = TermuxTilePreferences.getScriptPath(this, slot);
 
         if (scriptPath != null && !scriptPath.isEmpty()) {
+            if (scriptPath.startsWith(com.termux.widget.toggle.TermuxTogglePreferences.PREFIX_TOGGLE)) {
+                String toggleId = scriptPath.substring(com.termux.widget.toggle.TermuxTogglePreferences.PREFIX_TOGGLE.length());
+                com.termux.widget.toggle.TermuxTogglePreferences.toggleState(this, toggleId);
+                updateTileState();
+                return;
+            }
             String label = TermuxTilePreferences.getLabel(this, slot);
             Toast.makeText(this, "Executing: " + (label != null ? label : scriptPath), Toast.LENGTH_SHORT).show();
             TermuxWidgetProvider.sendExecutionIntentToTermuxService(this, scriptPath, "QuickTile" + slot);

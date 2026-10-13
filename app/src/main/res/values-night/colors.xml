@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- PixelPlayer Canonical Expressive Dark Palette -->
-    <!-- Primary: PixelPlay Purple (#AB47BC / #BA68C8) -->
-    <color name="m3_primary">#BA68C8</color>
-    <color name="m3_on_primary">#FFFFFF</color>
-    <color name="m3_primary_container">#3D1E4E</color>
-    <color name="m3_on_primary_container">#F3E5F5</color>
+    <!-- Material 3 Standard Neutral Dark Palette (No Hardcoded Purple!) -->
+    <!-- Primary: Google Material 3 Blue (#A8C7FA) -->
+    <color name="m3_primary">#A8C7FA</color>
+    <color name="m3_on_primary">#062E6F</color>
+    <color name="m3_primary_container">#0842A0</color>
+    <color name="m3_on_primary_container">#D3E3FD</color>
 
-    <!-- Secondary: PixelPlay Pink (#F06292) -->
-    <color name="m3_secondary">#F06292</color>
-    <color name="m3_on_secondary">#FFFFFF</color>
-    <color name="m3_secondary_container">#4E1E32</color>
-    <color name="m3_on_secondary_container">#FCE4EC</color>
+    <!-- Secondary: Slate Cyan (#7FCFFF) -->
+    <color name="m3_secondary">#7FCFFF</color>
+    <color name="m3_on_secondary">#00344F</color>
+    <color name="m3_secondary_container">#004B70</color>
+    <color name="m3_on_secondary_container">#C2E7FF</color>
 
-    <!-- Tertiary: PixelPlay Orange (#FF8A65) -->
-    <color name="m3_tertiary">#FF8A65</color>
-    <color name="m3_on_tertiary">#000000</color>
-    <color name="m3_tertiary_container">#522415</color>
-    <color name="m3_on_tertiary_container">#FBE9E7</color>
+    <!-- Tertiary: Coral (#FFB4A9) -->
+    <color name="m3_tertiary">#FFB4A9</color>
+    <color name="m3_on_tertiary">#690005</color>
+    <color name="m3_tertiary_container">#93000A</color>
+    <color name="m3_on_tertiary_container">#FFDAD6</color>
 
-    <!-- Background & Surfaces: PixelPlay Surface (#1E1234 & #2A1F40) -->
-    <color name="m3_surface">#19102B</color>
-    <color name="m3_on_surface">#FFFFFF</color>
-    <color name="m3_surface_variant">#2E2248</color>
-    <color name="m3_on_surface_variant">#D1C4E9</color>
+    <!-- Background & Surfaces: Neutral Slate Dark (#121316 / #1A1B1F / #212227) -->
+    <color name="m3_surface">#121316</color>
+    <color name="m3_on_surface">#E2E2E6</color>
+    <color name="m3_surface_variant">#24262C</color>
+    <color name="m3_on_surface_variant">#C4C6D0</color>
 
-    <color name="m3_surface_container_lowest">#130A22</color>
-    <color name="m3_surface_container_low">#1E1234</color>
-    <color name="m3_surface_container">#281C3F</color>
-    <color name="m3_surface_container_high">#32254E</color>
-    <color name="m3_surface_container_highest">#3E305C</color>
+    <color name="m3_surface_container_lowest">#0C0E11</color>
+    <color name="m3_surface_container_low">#17181D</color>
+    <color name="m3_surface_container">#1E2025</color>
+    <color name="m3_surface_container_high">#282A30</color>
+    <color name="m3_surface_container_highest">#33353C</color>
 
-    <color name="m3_outline">#584474</color>
-    <color name="m3_outline_variant">#392C54</color>
+    <color name="m3_outline">#8E9099</color>
+    <color name="m3_outline_variant">#44474F</color>
 
     <!-- Semantic Status & Task Badges -->
-    <color name="badge_task_bg">#3D1E4E</color>
-    <color name="badge_task_text">#E1BEE7</color>
-    <color name="badge_session_bg">#281C3F</color>
-    <color name="badge_session_text">#D1C4E9</color>
-    <color name="badge_group_bg">#281C3F</color>
+    <color name="badge_task_bg">#0842A0</color>
+    <color name="badge_task_text">#D3E3FD</color>
+    <color name="badge_session_bg">#282A30</color>
+    <color name="badge_session_text">#E2E2E6</color>
+    <color name="badge_group_bg">#1E2025</color>
     <color name="badge_group_text">#FFFFFF</color>
 
-    <color name="status_connected">#4CAF50</color>
+    <color name="status_connected">#81C995</color>
     <color name="status_connected_dim">#1B5E20</color>
-    <color name="status_disconnected">#FF5252</color>
+    <color name="status_disconnected">#F28B82</color>
     <color name="status_disconnected_dim">#5C1D1D</color>
 
     <!-- Widget Specific Canonical Colors -->
@@ -55,6 +55,12 @@
     <color name="widget_list_badge_icon">@color/m3_on_surface</color>
     <color name="widget_text_color">@color/m3_on_surface</color>
     <color name="widget_divider_color">@color/m3_outline_variant</color>
-    <color name="widget_container_bg">#251742</color>
-    <color name="widget_ripple">#35BA68C8</color>
+    <color name="widget_container_bg">#141518</color>
+    <color name="widget_ripple">#35A8C7FA</color>
+
+    <!-- Toggle Inverted Active Colors (Matching User Diagram) -->
+    <color name="widget_toggle_card_on">#D3E3FD</color>
+    <color name="widget_toggle_badge_on">#0842A0</color>
+    <color name="widget_toggle_text_on">#041E49</color>
+    <color name="widget_toggle_icon_on">#D3E3FD</color>
 </resources>

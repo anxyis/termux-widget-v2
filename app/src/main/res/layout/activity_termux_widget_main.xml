@@ -125,6 +125,52 @@
                         app:iconTint="@color/m3_primary"
                         app:iconSize="18dp" />
 
+                    <!-- AMOLED Pure Black Display Option -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="12dp"
+                        android:paddingStart="4dp"
+                        android:paddingEnd="4dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_lucide_moon"
+                            app:tint="@color/m3_on_surface"
+                            android:contentDescription="@null" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="AMOLED Pure Black"
+                                android:textSize="13sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/m3_on_surface" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Pitch black #000000 background"
+                                android:textSize="11sp"
+                                android:textColor="@color/m3_on_surface_variant" />
+                        </LinearLayout>
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/switch_amoled_theme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -180,6 +226,64 @@
             <!-- Shortcuts Container -->
             <LinearLayout
                 android:id="@+id/container_detected_shortcuts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="10dp" />
+
+            <!-- TOGGLE SHORTCUTS SECTION (ON / OFF PAIRS) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="4dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TOGGLE SHORTCUTS"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.08"
+                        android:textColor="@color/m3_primary" />
+
+                    <TextView
+                        android:id="@+id/txt_toggles_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Pair ON and OFF scripts into 1 interactive switch"
+                        android:textSize="11sp"
+                        android:textColor="@color/m3_on_surface_variant" />
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_add_toggle"
+                    style="@style/Widget.TermuxWidget.Button.Tonal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:text="New Toggle"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:cornerRadius="14dp"
+                    app:backgroundTint="@color/m3_primary_container"
+                    android:textColor="@color/m3_on_primary_container"
+                    app:icon="@drawable/ic_lucide_plus"
+                    app:iconTint="@color/m3_on_primary_container"
+                    app:iconSize="16dp" />
+            </LinearLayout>
+
+            <!-- Toggles Container -->
+            <LinearLayout
+                android:id="@+id/container_toggle_shortcuts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"

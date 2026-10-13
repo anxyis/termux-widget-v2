@@ -32,6 +32,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.color.DynamicColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.materialswitch.MaterialSwitch;
 import com.termux.shared.errors.Error;
 import com.termux.shared.file.FileUtils;
 import com.termux.shared.logger.Logger;
@@ -49,7 +50,10 @@ import com.termux.widget.TermuxWidgetProvider;
 import com.termux.widget.icons.IconHelper;
 import com.termux.widget.icons.IconPickerBottomSheet;
 import com.termux.widget.icons.IconRegistry;
+import com.termux.widget.theme.ThemeManager;
 import com.termux.widget.tiles.TermuxTilePreferences;
+import com.termux.widget.toggle.TermuxTogglePreferences;
+import com.termux.widget.toggle.ToggleShortcut;
 import com.termux.widget.utils.ShortcutUtils;
 
 import java.io.File;
@@ -65,9 +69,11 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
 
     private GridLayout mGridQuickTiles;
     private LinearLayout mContainerDetectedShortcuts;
+    private LinearLayout mContainerToggleShortcuts;
     private TextView mTxtStatusTitle;
     private TextView mTxtStatusSubtitle;
     private TextView mTxtShortcutsCount;
+    private TextView mTxtTogglesCount;
     private TextView mTxtTilesSummary;
     private LinearLayout mContainerTilesExpandable;
     private ImageView mImgTilesExpandIcon;
@@ -82,8 +88,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Apply Material You dynamic colors if available on Android 12+
-        DynamicColors.applyToActivityIfAvailable(this);
+        ThemeManager.applyTheme(this);
         super.onCreate(savedInstanceState);
 
         Logger.logDebug(LOG_TAG, "onCreate");
@@ -93,11 +98,22 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         MaterialToolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
 
+        MaterialSwitch switchAmoled = findViewById(R.id.switch_amoled_theme);
+        if (switchAmoled != null) {
+            switchAmoled.setChecked(ThemeManager.isAmoledMode(this));
+            switchAmoled.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                ThemeManager.setAmoledMode(this, isChecked);
+                recreate();
+            });
+        }
+
         mGridQuickTiles = findViewById(R.id.grid_quick_tiles);
         mContainerDetectedShortcuts = findViewById(R.id.container_detected_shortcuts);
+        mContainerToggleShortcuts = findViewById(R.id.container_toggle_shortcuts);
         mTxtStatusTitle = findViewById(R.id.txt_status_title);
         mTxtStatusSubtitle = findViewById(R.id.txt_status_subtitle);
         mTxtShortcutsCount = findViewById(R.id.txt_shortcuts_count);
+        mTxtTogglesCount = findViewById(R.id.txt_toggles_count);
         mTxtTilesSummary = findViewById(R.id.txt_tiles_summary);
         mContainerTilesExpandable = findViewById(R.id.container_tiles_expandable);
         mImgTilesExpandIcon = findViewById(R.id.img_tiles_expand_icon);
@@ -105,6 +121,11 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         View headerTiles = findViewById(R.id.header_quick_tiles);
         if (headerTiles != null) {
             headerTiles.setOnClickListener(v -> toggleTilesExpansion());
+        }
+
+        View btnAddToggle = findViewById(R.id.btn_add_toggle);
+        if (btnAddToggle != null) {
+            btnAddToggle.setOnClickListener(v -> showAddEditToggleDialog(null));
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -190,6 +211,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         checkTermuxStatus();
         populateQuickTiles();
         populateDetectedShortcuts();
+        populateToggleShortcuts();
     }
 
     private void checkTermuxStatus() {
@@ -256,8 +278,15 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         if (mContainerDetectedShortcuts == null) return;
         mContainerDetectedShortcuts.removeAllViews();
 
+        List<ShortcutFile> allFiles = new ArrayList<>();
+        ShortcutUtils.enumerateShortcutFiles(this, allFiles, true);
+
         List<ShortcutFile> files = new ArrayList<>();
-        ShortcutUtils.enumerateShortcutFiles(this, files, true);
+        for (ShortcutFile sf : allFiles) {
+            if (!sf.isToggle()) {
+                files.add(sf);
+            }
+        }
 
         if (mTxtShortcutsCount != null) {
             mTxtShortcutsCount.setText(files.size() + " script" + (files.size() == 1 ? "" : "s") + " detected • Tap to run or view options");
@@ -356,6 +385,231 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
 
             mContainerDetectedShortcuts.addView(row);
         }
+    }
+
+    private void populateToggleShortcuts() {
+        if (mContainerToggleShortcuts == null) return;
+        mContainerToggleShortcuts.removeAllViews();
+
+        List<ToggleShortcut> toggles = TermuxTogglePreferences.getToggles(this);
+        if (mTxtTogglesCount != null) {
+            mTxtTogglesCount.setText(toggles.size() + " toggle shortcut" + (toggles.size() == 1 ? "" : "s") + " configured • Tap for options");
+        }
+
+        if (toggles.isEmpty()) {
+            TextView emptyText = new TextView(this);
+            emptyText.setText("No toggles configured yet. Tap '+ New Toggle' to pair 2 scripts.");
+            emptyText.setTextSize(12);
+            emptyText.setTextColor(getResources().getColor(R.color.m3_on_surface_variant));
+            emptyText.setPadding(8, 12, 8, 12);
+            mContainerToggleShortcuts.addView(emptyText);
+            return;
+        }
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        for (ToggleShortcut toggle : toggles) {
+            View row = inflater.inflate(R.layout.item_main_toggle_row, mContainerToggleShortcuts, false);
+
+            TextView txtTitle = row.findViewById(R.id.txt_toggle_title);
+            TextView txtScripts = row.findViewById(R.id.txt_toggle_scripts);
+            TextView txtStatusPill = row.findViewById(R.id.txt_toggle_status_pill);
+            ImageView imgIcon = row.findViewById(R.id.img_toggle_icon);
+            ImageView imgCustom = row.findViewById(R.id.img_toggle_custom_image);
+            MaterialSwitch switchState = row.findViewById(R.id.switch_toggle_state);
+            View badgeFrame = row.findViewById(R.id.toggle_badge_frame);
+
+            txtTitle.setText(toggle.label);
+
+            String onName = com.termux.shared.shell.ShellUtils.getExecutableBasename(toggle.onScriptPath);
+            String offName = com.termux.shared.shell.ShellUtils.getExecutableBasename(toggle.offScriptPath);
+            txtScripts.setText("ON: " + onName + " • OFF: " + offName);
+
+            IconHelper.applyToImageView(imgIcon, imgCustom, toggle.iconId, R.drawable.ic_lucide_power);
+
+            com.google.android.material.card.MaterialCardView card = row.findViewById(R.id.card_toggle_row);
+            if (toggle.isOn) {
+                card.setCardBackgroundColor(getResources().getColor(R.color.m3_primary));
+                txtTitle.setTextColor(getResources().getColor(R.color.m3_on_primary));
+                txtScripts.setTextColor(getResources().getColor(R.color.m3_on_primary));
+                txtStatusPill.setText("ON");
+                txtStatusPill.setBackgroundResource(R.drawable.widget_toggle_badge_on_bg);
+                txtStatusPill.setTextColor(getResources().getColor(R.color.m3_primary));
+                badgeFrame.setBackgroundResource(R.drawable.widget_toggle_badge_on_bg);
+                imgIcon.setColorFilter(getResources().getColor(R.color.m3_primary));
+            } else {
+                card.setCardBackgroundColor(getResources().getColor(R.color.m3_surface_container));
+                txtTitle.setTextColor(getResources().getColor(R.color.m3_on_surface));
+                txtScripts.setTextColor(getResources().getColor(R.color.m3_on_surface_variant));
+                txtStatusPill.setText("OFF");
+                txtStatusPill.setBackgroundResource(R.drawable.widget_pill_session_bg);
+                txtStatusPill.setTextColor(getResources().getColor(R.color.badge_session_text));
+                badgeFrame.setBackgroundResource(R.drawable.widget_icon_badge_bg);
+                imgIcon.setColorFilter(getResources().getColor(R.color.m3_primary));
+            }
+
+            switchState.setChecked(toggle.isOn);
+            switchState.setOnClickListener(v -> {
+                TermuxTogglePreferences.toggleState(this, toggle.id);
+                populateDashboard();
+            });
+
+            row.setOnClickListener(v -> showToggleOptionsDialog(toggle));
+
+            mContainerToggleShortcuts.addView(row);
+        }
+    }
+
+    private void showToggleOptionsDialog(@NonNull ToggleShortcut toggle) {
+        CharSequence[] options = new CharSequence[]{
+                "Toggle State (Switch to " + (toggle.isOn ? "OFF" : "ON") + ")",
+                "Edit Toggle",
+                "Delete Toggle"
+        };
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(toggle.label)
+                .setItems(options, (dialog, which) -> {
+                    if (which == 0) {
+                        TermuxTogglePreferences.toggleState(this, toggle.id);
+                        populateDashboard();
+                    } else if (which == 1) {
+                        showAddEditToggleDialog(toggle);
+                    } else if (which == 2) {
+                        new MaterialAlertDialogBuilder(this)
+                                .setTitle("Delete Toggle")
+                                .setMessage("Are you sure you want to delete toggle '" + toggle.label + "'?")
+                                .setPositiveButton("Delete", (d, w) -> {
+                                    TermuxTogglePreferences.deleteToggle(this, toggle.id);
+                                    populateDashboard();
+                                    sendIntentToRefreshAllWidgets();
+                                    Toast.makeText(this, "Toggle deleted", Toast.LENGTH_SHORT).show();
+                                })
+                                .setNegativeButton("Cancel", null)
+                                .show();
+                    }
+                })
+                .show();
+    }
+
+    private void showAddEditToggleDialog(@Nullable ToggleShortcut existingToggle) {
+        List<ShortcutFile> allFiles = new ArrayList<>();
+        ShortcutUtils.enumerateShortcutFiles(this, allFiles, true);
+        List<ShortcutFile> scriptFiles = new ArrayList<>();
+        for (ShortcutFile sf : allFiles) {
+            if (!sf.isToggle()) {
+                scriptFiles.add(sf);
+            }
+        }
+
+        if (scriptFiles.size() < 2 && existingToggle == null) {
+            Toast.makeText(this, "At least 2 scripts or commands are required to create a toggle pair.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        String[] scriptNames = new String[scriptFiles.size()];
+        for (int i = 0; i < scriptFiles.size(); i++) {
+            scriptNames[i] = scriptFiles.get(i).getLabel() + " (" + scriptFiles.get(i).getGroupName() + ")";
+        }
+
+        final String[] onScriptPath = new String[]{existingToggle != null ? existingToggle.onScriptPath : (scriptFiles.size() > 0 ? scriptFiles.get(0).getPath() : "")};
+        final String[] offScriptPath = new String[]{existingToggle != null ? existingToggle.offScriptPath : (scriptFiles.size() > 1 ? scriptFiles.get(1).getPath() : "")};
+        final String[] selectedIconId = new String[]{existingToggle != null ? existingToggle.iconId : "lucide_power"};
+
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(48, 24, 48, 24);
+
+        EditText inputName = new EditText(this);
+        inputName.setHint("Toggle Name (e.g. SSH Server, Tailscale VPN)");
+        if (existingToggle != null) inputName.setText(existingToggle.label);
+        layout.addView(inputName);
+
+        MaterialButton btnPickOn = new MaterialButton(this);
+        btnPickOn.setText("ON Script: " + (onScriptPath[0].isEmpty() ? "Select..." : getScriptDisplayName(scriptFiles, onScriptPath[0])));
+        btnPickOn.setOnClickListener(v -> {
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle("Select ON Script")
+                    .setItems(scriptNames, (d, which) -> {
+                        onScriptPath[0] = scriptFiles.get(which).getPath();
+                        btnPickOn.setText("ON Script: " + scriptFiles.get(which).getLabel());
+                    })
+                    .show();
+        });
+        layout.addView(btnPickOn);
+
+        MaterialButton btnPickOff = new MaterialButton(this);
+        btnPickOff.setText("OFF Script: " + (offScriptPath[0].isEmpty() ? "Select..." : getScriptDisplayName(scriptFiles, offScriptPath[0])));
+        btnPickOff.setOnClickListener(v -> {
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle("Select OFF Script")
+                    .setItems(scriptNames, (d, which) -> {
+                        offScriptPath[0] = scriptFiles.get(which).getPath();
+                        btnPickOff.setText("OFF Script: " + scriptFiles.get(which).getLabel());
+                    })
+                    .show();
+        });
+        layout.addView(btnPickOff);
+
+        MaterialButton btnPickIcon = new MaterialButton(this);
+        if (IconHelper.isCustomFile(selectedIconId[0])) {
+            btnPickIcon.setText("Custom Image");
+        } else {
+            IconRegistry.IconItem item = IconRegistry.getIcon(selectedIconId[0]);
+            btnPickIcon.setText("Select Icon: " + (item != null ? item.name : selectedIconId[0]));
+            btnPickIcon.setIconResource(IconRegistry.getDrawableResId(selectedIconId[0], R.drawable.ic_lucide_power));
+        }
+        btnPickIcon.setOnClickListener(v -> {
+            IconPickerBottomSheet picker = IconPickerBottomSheet.newInstance();
+            picker.setOnIconSelectedListener(iconId -> {
+                selectedIconId[0] = iconId;
+                if (IconHelper.isCustomFile(iconId)) {
+                    btnPickIcon.setText("Custom Image");
+                    btnPickIcon.setIcon(null);
+                } else {
+                    IconRegistry.IconItem item = IconRegistry.getIcon(iconId);
+                    btnPickIcon.setText("Select Icon: " + (item != null ? item.name : iconId));
+                    btnPickIcon.setIconResource(IconRegistry.getDrawableResId(iconId, R.drawable.ic_lucide_power));
+                }
+            });
+            picker.show(getSupportFragmentManager(), "toggle_icon_picker");
+        });
+        layout.addView(btnPickIcon);
+
+        CheckBox chkInitialOn = new CheckBox(this);
+        chkInitialOn.setText("State is currently ON");
+        if (existingToggle != null) chkInitialOn.setChecked(existingToggle.isOn);
+        layout.addView(chkInitialOn);
+
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(existingToggle != null ? "Edit Toggle Shortcut" : "New Toggle Shortcut")
+                .setView(layout)
+                .setPositiveButton("Save", (dialog, which) -> {
+                    String name = inputName.getText().toString().trim();
+                    if (name.isEmpty()) {
+                        Toast.makeText(this, "Toggle name cannot be empty", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (onScriptPath[0].isEmpty() || offScriptPath[0].isEmpty()) {
+                        Toast.makeText(this, "Both ON and OFF scripts must be chosen", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    String id = existingToggle != null ? existingToggle.id : ("toggle_" + System.currentTimeMillis());
+                    ToggleShortcut toggle = new ToggleShortcut(id, name, onScriptPath[0], offScriptPath[0], selectedIconId[0], chkInitialOn.isChecked());
+                    TermuxTogglePreferences.saveToggle(this, toggle);
+                    populateDashboard();
+                    sendIntentToRefreshAllWidgets();
+                    Toast.makeText(this, "Saved toggle: " + name, Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private String getScriptDisplayName(List<ShortcutFile> scriptFiles, String path) {
+        for (ShortcutFile sf : scriptFiles) {
+            if (sf.getPath().equals(path)) {
+                return sf.getLabel();
+            }
+        }
+        return com.termux.shared.shell.ShellUtils.getExecutableBasename(path);
     }
 
     private void showCommandOptionsDialog(@NonNull ShortcutFile sf) {

@@ -89,6 +89,12 @@ public class ShortcutUtils {
             tempList.add(new ShortcutFile(cmd));
         }
 
+        // 6. User-defined Toggle Shortcuts (combine ON & OFF scripts)
+        List<com.termux.widget.toggle.ToggleShortcut> toggles = com.termux.widget.toggle.TermuxTogglePreferences.getToggles(context);
+        for (com.termux.widget.toggle.ToggleShortcut toggle : toggles) {
+            tempList.add(new ShortcutFile(toggle));
+        }
+
         // Deduplicate by path
         java.util.Set<String> seen = new java.util.HashSet<>();
         for (ShortcutFile sf : tempList) {

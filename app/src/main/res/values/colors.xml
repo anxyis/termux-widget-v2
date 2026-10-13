@@ -53,4 +53,10 @@
     <color name="widget_divider_color">@color/m3_outline_variant</color>
     <color name="widget_container_bg">#FFFFFF</color>
     <color name="widget_ripple">#256C4FF5</color>
+
+    <!-- Toggle Inverted Active Colors -->
+    <color name="widget_toggle_card_on">@color/m3_primary</color>
+    <color name="widget_toggle_badge_on">@color/m3_surface</color>
+    <color name="widget_toggle_text_on">@color/m3_on_primary</color>
+    <color name="widget_toggle_icon_on">@color/m3_primary</color>
 </resources>

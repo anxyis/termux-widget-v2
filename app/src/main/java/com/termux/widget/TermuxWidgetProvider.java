@@ -144,6 +144,10 @@ public final class TermuxWidgetProvider extends AppWidgetProvider {
                     return;
                 }
 
+                if (com.termux.widget.toggle.TermuxTogglePreferences.handleToggleClick(context, clickedFilePath)) {
+                    return;
+                }
+
                 if (FileUtils.getFileType(clickedFilePath, true) == FileType.DIRECTORY) {
                     Logger.logError(LOG_TAG, "Ignoring clicked directory file");
                     return;

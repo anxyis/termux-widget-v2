@@ -104,6 +104,9 @@ public final class TermuxGridWidgetProvider extends AppWidgetProvider {
             case TERMUX_WIDGET_PROVIDER.ACTION_WIDGET_ITEM_CLICKED: {
                 String clickedFilePath = intent.getStringExtra(TERMUX_WIDGET_PROVIDER.EXTRA_FILE_CLICKED);
                 if (clickedFilePath == null || clickedFilePath.isEmpty()) return;
+                if (com.termux.widget.toggle.TermuxTogglePreferences.handleToggleClick(context, clickedFilePath)) {
+                    return;
+                }
                 if (FileUtils.getFileType(clickedFilePath, true) == FileType.DIRECTORY) return;
                 TermuxWidgetProvider.sendExecutionIntentToTermuxService(context, clickedFilePath, LOG_TAG);
                 return;

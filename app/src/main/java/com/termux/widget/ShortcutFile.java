@@ -44,8 +44,23 @@ public final class ShortcutFile {
     public boolean mIsCustomCommand = false;
     public String mCustomCommand;
     public boolean mIsTask = false;
+    public boolean mIsToggle = false;
+    public boolean mToggleIsOn = false;
+    public String mToggleId;
 
     private String mDefaultLabel;
+
+    public ShortcutFile(@NonNull com.termux.widget.toggle.ToggleShortcut toggle) {
+        mPath = com.termux.widget.toggle.TermuxTogglePreferences.PREFIX_TOGGLE + toggle.id;
+        mLabel = toggle.label;
+        mDefaultLabel = toggle.label;
+        mGroup = "Toggles";
+        mIconId = toggle.iconId;
+        mIsToggle = true;
+        mToggleId = toggle.id;
+        mToggleIsOn = toggle.isOn;
+        applyStoredCustomMetadata();
+    }
 
     public ShortcutFile(@NonNull TermuxCustomCommandPreferences.CustomCommand cmd) {
         mPath = "custom:" + cmd.id;
@@ -114,6 +129,10 @@ public final class ShortcutFile {
 
     public boolean isHeader() {
         return mIsHeader;
+    }
+
+    public boolean isToggle() {
+        return mIsToggle;
     }
 
     public boolean isTask() {
@@ -281,7 +300,24 @@ public final class ShortcutFile {
 
         boolean isTaskScript = isTask();
         int defaultIcon = isTaskScript ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
-        IconHelper.applyToRemoteViews(remoteViews, R.id.widget_item_icon, R.id.widget_item_custom_image, mIconId, defaultIcon);
+
+        if (mIsToggle) {
+            if (mToggleIsOn) {
+                remoteViews.setInt(R.id.widget_item_card_container, "setBackgroundResource", R.drawable.widget_toggle_card_on_bg);
+                remoteViews.setInt(R.id.widget_item_icon_badge, "setBackgroundResource", R.drawable.widget_toggle_badge_on_bg);
+                remoteViews.setTextColor(R.id.widget_item, context.getColor(R.color.widget_toggle_text_on));
+                IconHelper.applyToRemoteViews(remoteViews, R.id.widget_item_icon, R.id.widget_item_custom_image, mIconId, defaultIcon);
+                remoteViews.setInt(R.id.widget_item_icon, "setColorFilter", context.getColor(R.color.widget_toggle_icon_on));
+            } else {
+                remoteViews.setInt(R.id.widget_item_card_container, "setBackgroundResource", R.drawable.widget_list_card_bg);
+                remoteViews.setInt(R.id.widget_item_icon_badge, "setBackgroundResource", R.drawable.widget_list_circle_icon_bg);
+                remoteViews.setTextColor(R.id.widget_item, context.getColor(R.color.widget_text_color));
+                IconHelper.applyToRemoteViews(remoteViews, R.id.widget_item_icon, R.id.widget_item_custom_image, mIconId, defaultIcon);
+                remoteViews.setInt(R.id.widget_item_icon, "setColorFilter", context.getColor(R.color.widget_list_badge_icon));
+            }
+        } else {
+            IconHelper.applyToRemoteViews(remoteViews, R.id.widget_item_icon, R.id.widget_item_custom_image, mIconId, defaultIcon);
+        }
 
         Intent fillInIntent = new Intent().putExtra(TERMUX_WIDGET_PROVIDER.EXTRA_FILE_CLICKED, getPath());
         remoteViews.setOnClickFillInIntent(R.id.widget_item_layout, fillInIntent);
@@ -296,6 +332,16 @@ public final class ShortcutFile {
 
         boolean isTaskScript = isTask();
         int defaultIcon = isTaskScript ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
+
+        if (mIsToggle) {
+            if (mToggleIsOn) {
+                remoteViews.setInt(R.id.widget_grid_item_layout, "setBackgroundResource", R.drawable.widget_toggle_grid_card_on_bg);
+                remoteViews.setTextColor(R.id.widget_grid_item_label, context.getColor(R.color.widget_toggle_text_on));
+            } else {
+                remoteViews.setInt(R.id.widget_grid_item_layout, "setBackgroundResource", R.drawable.widget_grid_card_bg);
+                remoteViews.setTextColor(R.id.widget_grid_item_label, context.getColor(R.color.widget_text_color));
+            }
+        }
         IconHelper.applyToRemoteViews(remoteViews, R.id.widget_grid_item_icon, R.id.widget_grid_item_custom_image, mIconId, defaultIcon);
 
         Intent fillInIntent = new Intent().putExtra(TERMUX_WIDGET_PROVIDER.EXTRA_FILE_CLICKED, getPath());

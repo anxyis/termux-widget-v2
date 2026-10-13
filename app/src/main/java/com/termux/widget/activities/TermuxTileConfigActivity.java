@@ -47,6 +47,7 @@ public class TermuxTileConfigActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        com.termux.widget.theme.ThemeManager.applyTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tile_config);
 
@@ -162,6 +163,12 @@ public class TermuxTileConfigActivity extends AppCompatActivity {
     private void testRun() {
         if (mSelectedScriptPath == null) {
             Toast.makeText(this, "Please choose a script first", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (mSelectedScriptPath.startsWith(com.termux.widget.toggle.TermuxTogglePreferences.PREFIX_TOGGLE)) {
+            String toggleId = mSelectedScriptPath.substring(com.termux.widget.toggle.TermuxTogglePreferences.PREFIX_TOGGLE.length());
+            com.termux.widget.toggle.TermuxTogglePreferences.toggleState(this, toggleId);
+            Toast.makeText(this, "Toggled shortcut: " + mSelectedScriptPath, Toast.LENGTH_SHORT).show();
             return;
         }
         TermuxWidgetProvider.sendExecutionIntentToTermuxService(this, mSelectedScriptPath, "TileTest" + mSlotIndex);

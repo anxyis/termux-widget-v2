@@ -28,6 +28,14 @@ public class TermuxWidgetApplication extends Application {
 
         // Set NightMode.APP_NIGHT_MODE
         TermuxThemeUtils.setAppNightMode(context);
+
+        // Apply Material You dynamic colors based on user wallpaper (Android 12+) unless AMOLED mode is active
+        com.google.android.material.color.DynamicColors.applyToActivitiesIfAvailable(
+                this,
+                new com.google.android.material.color.DynamicColorsOptions.Builder()
+                        .setPrecondition((activity, theme) -> !com.termux.widget.theme.ThemeManager.isAmoledMode(activity))
+                        .build()
+        );
     }
 
     public static Context getAppContext() {

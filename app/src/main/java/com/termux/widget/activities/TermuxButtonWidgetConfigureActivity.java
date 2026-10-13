@@ -46,6 +46,7 @@ public class TermuxButtonWidgetConfigureActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        com.termux.widget.theme.ThemeManager.applyTheme(this);
         super.onCreate(savedInstanceState);
         setResult(RESULT_CANCELED);
 
