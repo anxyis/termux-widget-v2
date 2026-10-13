@@ -88,9 +88,8 @@ public final class TermuxWidgetProvider extends AppWidgetProvider {
         remoteViews.setTextViewText(R.id.txt_empty_message, context.getString(R.string.msg_no_shortcut_scripts));
 
         List<ShortcutFile> shortcutCountList = new ArrayList<>();
-        ShortcutUtils.enumerateShortcutFiles(shortcutCountList, false);
-        remoteViews.setTextViewText(R.id.txt_widget_count,
-                String.format(context.getString(R.string.shortcut_count_format), shortcutCountList.size()));
+        ShortcutUtils.enumerateShortcutFiles(context, shortcutCountList, false);
+        remoteViews.setTextViewText(R.id.txt_widget_count, String.valueOf(shortcutCountList.size()));
 
         // Setup intent which points to the TermuxWidgetService which will provide the views for this collection.
         Intent intent = new Intent(context, TermuxWidgetService.class);
@@ -170,6 +169,9 @@ public final class TermuxWidgetProvider extends AppWidgetProvider {
 
             } case TERMUX_WIDGET_PROVIDER.ACTION_REFRESH_WIDGET: {
                 if (!ShortcutUtils.isTermuxAppAccessible(context, LOG_TAG, true)) return;
+
+                // Explicitly trigger a forced background sync from Termux!
+                TermuxShortcutSyncManager.syncShortcutsFromTermux(context, true);
 
                 int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
                 int[] appWidgetIds;

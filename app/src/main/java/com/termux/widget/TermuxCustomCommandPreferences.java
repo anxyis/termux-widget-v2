@@ -62,29 +62,11 @@ public final class TermuxCustomCommandPreferences {
         return context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
-    private static List<CustomCommand> createDefaultCommands() {
-        List<CustomCommand> defaults = new ArrayList<>();
-        defaults.add(new CustomCommand("pkg_update", "Update Packages", "pkg update && pkg upgrade -y", false, "lucide_refresh_cw", "System"));
-        defaults.add(new CustomCommand("htop", "Htop Monitor", "htop", false, "lucide_cpu", "System"));
-        defaults.add(new CustomCommand("neofetch", "System Info", "uname -a", false, "lucide_terminal", "System"));
-        defaults.add(new CustomCommand("sshd_start", "Start SSH Server", "sshd", true, "lucide_server", "Network"));
-        defaults.add(new CustomCommand("sshd_stop", "Stop SSH Server", "pkill sshd", true, "lucide_square", "Network"));
-        defaults.add(new CustomCommand("http_server", "Python HTTP Server", "python3 -m http.server 8080", false, "hero_bolt", "Development"));
-        defaults.add(new CustomCommand("git_status", "Git Status", "git status", false, "lucide_code", "Development"));
-        return defaults;
-    }
-
     @NonNull
     public static List<CustomCommand> getCustomCommands(@NonNull Context context) {
         List<CustomCommand> list = new ArrayList<>();
         String jsonStr = getPrefs(context).getString(KEY_COMMANDS_JSON, null);
-        if (jsonStr == null) {
-            // First run: populate defaults
-            List<CustomCommand> defaults = createDefaultCommands();
-            saveAllCommands(context, defaults);
-            return defaults;
-        }
-        if (!jsonStr.isEmpty()) {
+        if (jsonStr != null && !jsonStr.isEmpty()) {
             try {
                 JSONArray arr = new JSONArray(jsonStr);
                 for (int i = 0; i < arr.length(); i++) {

@@ -66,6 +66,14 @@
 
         <receiver android:name=".TermuxWidgetControlExecutorReceiver" />
 
+        <receiver
+            android:name=".TermuxShortcutSyncReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.termux.widget.v2.SYNC_RESULT" />
+            </intent-filter>
+        </receiver>
+
         <!-- Activities -->
         <activity
             android:name=".activities.TermuxWidgetMainActivity"

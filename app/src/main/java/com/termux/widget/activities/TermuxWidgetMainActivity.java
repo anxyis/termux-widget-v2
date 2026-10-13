@@ -1,9 +1,12 @@
 package com.termux.widget.activities;
 
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
 import android.net.Uri;
@@ -38,6 +41,7 @@ import com.termux.widget.R;
 import com.termux.widget.ShortcutFile;
 import com.termux.widget.TermuxCustomCommandPreferences;
 import com.termux.widget.TermuxCustomCommandPreferences.CustomCommand;
+import com.termux.widget.TermuxShortcutSyncManager;
 import com.termux.widget.TermuxWidgetApplication;
 import com.termux.widget.TermuxWidgetProvider;
 import com.termux.widget.icons.IconPickerBottomSheet;
@@ -61,6 +65,13 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
     private TextView mTxtStatusTitle;
     private TextView mTxtStatusSubtitle;
 
+    private final BroadcastReceiver mSyncReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            populateDashboard();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Apply Material You dynamic colors if available on Android 12+
@@ -79,7 +90,17 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         mTxtStatusTitle = findViewById(R.id.txt_status_title);
         mTxtStatusSubtitle = findViewById(R.id.txt_status_subtitle);
 
-        findViewById(R.id.btn_refresh_shortcuts).setOnClickListener(v -> populateDashboard());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission("com.termux.permission.RUN_COMMAND") != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{"com.termux.permission.RUN_COMMAND"}, 1001);
+            }
+        }
+
+        findViewById(R.id.btn_refresh_shortcuts).setOnClickListener(v -> {
+            TermuxShortcutSyncManager.syncShortcutsFromTermux(this, true);
+            Toast.makeText(this, "Refreshing shortcuts from Termux...", Toast.LENGTH_SHORT).show();
+            populateDashboard();
+        });
         findViewById(R.id.button_refresh_all_widgets).setOnClickListener(v -> sendIntentToRefreshAllWidgets());
 
         View btnAddCmd = findViewById(R.id.btn_add_command);
@@ -117,7 +138,23 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         super.onResume();
         TermuxWidgetApplication.setLogConfig(this, false);
         Logger.logVerbose(LOG_TAG, "onResume");
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(mSyncReceiver, new IntentFilter("com.termux.widget.v2.SHORTCUTS_UPDATED"), Context.RECEIVER_NOT_EXPORTED);
+            } else {
+                registerReceiver(mSyncReceiver, new IntentFilter("com.termux.widget.v2.SHORTCUTS_UPDATED"));
+            }
+        } catch (Exception ignored) {}
+        TermuxShortcutSyncManager.syncShortcutsFromTermux(this, false);
         populateDashboard();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            unregisterReceiver(mSyncReceiver);
+        } catch (Exception ignored) {}
     }
 
     private void populateDashboard() {

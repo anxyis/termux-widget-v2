@@ -157,8 +157,19 @@ public final class ShortcutFile {
     public String getLabelForShortcut(@Nullable String defaultLabel) {
         if (!DataUtils.isNullOrEmpty(defaultLabel))
             return defaultLabel;
-        else
-            return ShellUtils.getExecutableBasename(mPath);
+        if (mPath == null) return "";
+        String shortcutsDir = TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR_PATH;
+        if (mPath.startsWith(shortcutsDir)) {
+            String rel = mPath.substring(shortcutsDir.length());
+            while (rel.startsWith("/")) rel = rel.substring(1);
+            if (!rel.isEmpty()) return rel;
+        }
+        File file = new File(mPath);
+        File parent = file.getParentFile();
+        if (parent != null && !parent.getName().equals(".shortcuts") && !parent.getName().equals("shortcuts")) {
+            return parent.getName() + "/" + file.getName();
+        }
+        return file.getName();
     }
 
     public Intent getExecutionIntent(Context context) {
@@ -217,11 +228,8 @@ public final class ShortcutFile {
 
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_item);
         remoteViews.setTextViewText(R.id.widget_item, getLabel());
-        remoteViews.setTextViewText(R.id.widget_item_subtitle, getSubtitle());
 
         boolean isTaskScript = isTask();
-        remoteViews.setTextViewText(R.id.widget_item_badge, isTaskScript ? "TASK" : "TERM");
-
         int defaultIcon = isTaskScript ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
         int iconRes = mIconId != null ? IconRegistry.getDrawableResId(mIconId, defaultIcon) : defaultIcon;
         remoteViews.setImageViewResource(R.id.widget_item_icon, iconRes);

@@ -5,24 +5,22 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/widget_container_bg"
-    android:padding="8dp">
+    android:padding="0dp">
 
-    <!-- Header Row -->
+    <!-- Compact Header Row -->
     <LinearLayout
         android:id="@+id/top_row"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="36dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingStart="8dp"
-        android:paddingEnd="4dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="6dp">
+        android:paddingStart="12dp"
+        android:paddingEnd="6dp">
 
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginEnd="6dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginEnd="8dp"
             android:contentDescription="@null"
             android:src="@drawable/ic_lucide_terminal" />
 
@@ -32,8 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/title_termux_shortcuts"
-            android:textSize="14sp"
-            android:textStyle="bold"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-medium"
             android:textColor="@color/m3_on_surface"
             android:singleLine="true"
             android:ellipsize="end" />
@@ -42,25 +40,25 @@
             android:id="@+id/txt_widget_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/widget_pill_badge_bg"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:textSize="10sp"
-            android:textStyle="bold"
+            android:layout_marginEnd="6dp"
+            android:textSize="11sp"
             android:textColor="@color/m3_on_surface_variant" />
 
         <ImageButton
             android:id="@+id/refresh_button"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:background="@drawable/widget_header_btn_bg"
             android:src="@drawable/ic_hero_arrow_path"
             android:contentDescription="@string/action_refresh"
-            android:padding="6dp" />
+            android:padding="5dp" />
     </LinearLayout>
+
+    <!-- Header Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/m3_outline_variant" />
 
     <!-- Scrollable Shortcuts Collection -->
     <FrameLayout
@@ -72,9 +70,11 @@
             android:id="@+id/widget_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="0dp"
-            android:scrollbars="vertical" />
+            android:divider="@color/m3_outline_variant"
+            android:dividerHeight="1px"
+            android:scrollbars="vertical"
+            android:clipToPadding="false"
+            android:paddingBottom="2dp" />
 
         <!-- Empty State View -->
         <LinearLayout

@@ -54,35 +54,50 @@ public class ShortcutUtils {
     };
 
     public static void enumerateShortcutFiles(@NonNull Context context, @NonNull List<ShortcutFile> files, boolean sorted) {
-        // 1. In-app custom commands from preferences
-        List<TermuxCustomCommandPreferences.CustomCommand> customCmds = TermuxCustomCommandPreferences.getCustomCommands(context);
-        for (TermuxCustomCommandPreferences.CustomCommand cmd : customCmds) {
-            files.add(new ShortcutFile(cmd));
+        // Trigger background sync query to Termux
+        TermuxShortcutSyncManager.syncShortcutsFromTermux(context);
+
+        List<ShortcutFile> tempList = new ArrayList<>();
+
+        // 1. Synced paths from Termux ~/.shortcuts (populated via RUN_COMMAND query)
+        List<String> syncedPaths = TermuxShortcutSyncManager.getSyncedPaths(context);
+        for (String p : syncedPaths) {
+            tempList.add(new ShortcutFile(p));
         }
 
-        // 2. Shared storage /sdcard/Termux/shortcuts/
+        // 2. Direct Termux internal ~/.shortcuts (if readable directly)
+        if (syncedPaths.isEmpty() && TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR.exists() && TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR.canRead()) {
+            enumerateShortcutFiles(tempList, TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR, false, 0);
+        }
+
+        // 3. Shared storage /sdcard/Termux/shortcuts/
         File sdcardShortcuts = new File(Environment.getExternalStorageDirectory(), "Termux/shortcuts");
         if (sdcardShortcuts.exists() && sdcardShortcuts.canRead()) {
-            enumerateShortcutFiles(files, sdcardShortcuts, false, 0);
+            enumerateShortcutFiles(tempList, sdcardShortcuts, false, 0);
         }
 
-        // 3. App-specific external storage shortcuts directory
+        // 4. App-specific external storage shortcuts directory
         File appExternalShortcuts = context.getExternalFilesDir("shortcuts");
         if (appExternalShortcuts != null && appExternalShortcuts.exists() && appExternalShortcuts.canRead()) {
-            enumerateShortcutFiles(files, appExternalShortcuts, false, 0);
+            enumerateShortcutFiles(tempList, appExternalShortcuts, false, 0);
         }
 
-        // 4. Termux internal ~/.shortcuts (if readable)
-        if (TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR.exists() && TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR.canRead()) {
-            enumerateShortcutFiles(files, TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR, false, 0);
+        // 5. In-app custom commands (if manually created by user)
+        List<TermuxCustomCommandPreferences.CustomCommand> customCmds = TermuxCustomCommandPreferences.getCustomCommands(context);
+        for (TermuxCustomCommandPreferences.CustomCommand cmd : customCmds) {
+            tempList.add(new ShortcutFile(cmd));
+        }
+
+        // Deduplicate by path
+        java.util.Set<String> seen = new java.util.HashSet<>();
+        for (ShortcutFile sf : tempList) {
+            if (sf.getPath() != null && seen.add(sf.getPath())) {
+                files.add(sf);
+            }
         }
 
         if (sorted) {
-            files.sort((lhs, rhs) -> {
-                int groupCmp = lhs.getGroupName().compareToIgnoreCase(rhs.getGroupName());
-                if (groupCmp != 0) return groupCmp;
-                return NaturalOrderComparator.compare(lhs.getLabel(), rhs.getLabel());
-            });
+            files.sort((lhs, rhs) -> NaturalOrderComparator.compare(lhs.getLabel(), rhs.getLabel()));
         }
     }
 

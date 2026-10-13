@@ -66,7 +66,7 @@ public final class TermuxWidgetService extends RemoteViewsService {
 
         @Override
         public int getViewTypeCount() {
-            return 2; // Type 0: header, Type 1: item
+            return 1;
         }
 
         @Override
@@ -86,26 +86,7 @@ public final class TermuxWidgetService extends RemoteViewsService {
             displayList.clear();
             try { TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR.mkdirs(); } catch (Exception ignored) {}
 
-            List<ShortcutFile> rawFiles = new ArrayList<>();
-            ShortcutUtils.enumerateShortcutFiles(mContext, rawFiles, true);
-
-            // Group files by category/directory
-            Map<String, List<ShortcutFile>> groups = new LinkedHashMap<>();
-            for (ShortcutFile sf : rawFiles) {
-                String group = sf.getGroupName();
-                List<ShortcutFile> list = groups.computeIfAbsent(group, k -> new ArrayList<>());
-                list.add(sf);
-            }
-
-            // If we have multiple groups or tasks, insert group headers
-            boolean showHeaders = groups.size() > 1 || (groups.size() == 1 && !groups.containsKey("General"));
-
-            for (Map.Entry<String, List<ShortcutFile>> entry : groups.entrySet()) {
-                if (showHeaders) {
-                    displayList.add(ShortcutFile.createGroupHeader(entry.getKey(), entry.getValue().size()));
-                }
-                displayList.addAll(entry.getValue());
-            }
+            ShortcutUtils.enumerateShortcutFiles(mContext, displayList, true);
         }
     }
 }
