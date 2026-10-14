@@ -21,8 +21,6 @@
         android:stretchMode="columnWidth"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:requiresFadingEdge="vertical"
-        android:fadingEdgeLength="20dp"
         android:scrollbars="none" />
 
     <!-- Empty State View -->

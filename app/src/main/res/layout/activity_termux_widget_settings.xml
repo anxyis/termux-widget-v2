@@ -148,16 +148,21 @@
                             android:id="@+id/preview_icon_frame"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:background="@drawable/widget_icon_badge_bg"
                             android:layout_marginEnd="14dp">
 
                             <ImageView
+                                android:id="@+id/preview_widget_icon_bg"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/widget_badge_circle_solid"
+                                android:contentDescription="@null" />
+
+                            <ImageView
                                 android:id="@+id/preview_widget_icon"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
                                 android:layout_gravity="center"
                                 android:src="@drawable/ic_lucide_terminal"
-                                app:tint="?attr/colorPrimary"
                                 android:contentDescription="@null" />
                         </FrameLayout>
 
@@ -211,8 +216,14 @@
                                 android:id="@+id/preview_list_item1_frame"
                                 android:layout_width="36dp"
                                 android:layout_height="36dp"
-                                android:background="@drawable/widget_icon_badge_bg"
                                 android:layout_marginEnd="12dp">
+
+                                <ImageView
+                                    android:id="@+id/preview_list_item1_badge_bg"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:src="@drawable/widget_badge_circle_solid"
+                                    android:contentDescription="@null" />
 
                                 <ImageView
                                     android:id="@+id/preview_list_item1_icon"
@@ -220,7 +231,6 @@
                                     android:layout_height="20dp"
                                     android:layout_gravity="center"
                                     android:src="@drawable/ic_hero_bolt"
-                                    app:tint="?attr/colorPrimary"
                                     android:contentDescription="@null" />
                             </FrameLayout>
 
@@ -249,8 +259,14 @@
                                 android:id="@+id/preview_list_item2_frame"
                                 android:layout_width="36dp"
                                 android:layout_height="36dp"
-                                android:background="@drawable/widget_toggle_badge_on_bg"
                                 android:layout_marginEnd="12dp">
+
+                                <ImageView
+                                    android:id="@+id/preview_list_item2_badge_bg"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:src="@drawable/widget_badge_circle_solid"
+                                    android:contentDescription="@null" />
 
                                 <ImageView
                                     android:id="@+id/preview_list_item2_icon"
@@ -273,7 +289,7 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Grid Widget Preview -->
+                    <!-- Grid Widget Preview (Horizontal Cards: Icon on Left, Text on Right) -->
                     <LinearLayout
                         android:id="@+id/layout_preview_grid"
                         android:layout_width="match_parent"
@@ -287,33 +303,39 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center"
-                            android:padding="12dp"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:padding="10dp"
                             android:background="@drawable/widget_grid_item_bg"
                             android:layout_marginEnd="6dp">
 
                             <FrameLayout
                                 android:id="@+id/preview_grid_item1_frame"
-                                android:layout_width="44dp"
-                                android:layout_height="44dp"
-                                android:background="@drawable/widget_icon_badge_bg">
+                                android:layout_width="34dp"
+                                android:layout_height="34dp"
+                                android:layout_marginEnd="8dp">
+
+                                <ImageView
+                                    android:id="@+id/preview_grid_item1_badge_bg"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:src="@drawable/widget_badge_circle_solid"
+                                    android:contentDescription="@null" />
 
                                 <ImageView
                                     android:id="@+id/preview_grid_item1_icon"
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
                                     android:layout_gravity="center"
                                     android:src="@drawable/ic_lucide_terminal"
-                                    app:tint="?attr/colorPrimary"
                                     android:contentDescription="@null" />
                             </FrameLayout>
 
                             <TextView
                                 android:id="@+id/preview_grid_item1_text"
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="6dp"
+                                android:layout_weight="1"
                                 android:text="Quick Script"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
@@ -326,22 +348,29 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center"
-                            android:padding="12dp"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:padding="10dp"
                             android:background="@drawable/widget_toggle_grid_card_on_bg"
                             android:layout_marginStart="6dp">
 
                             <FrameLayout
                                 android:id="@+id/preview_grid_item2_frame"
-                                android:layout_width="44dp"
-                                android:layout_height="44dp"
-                                android:background="@drawable/widget_toggle_badge_on_bg">
+                                android:layout_width="34dp"
+                                android:layout_height="34dp"
+                                android:layout_marginEnd="8dp">
+
+                                <ImageView
+                                    android:id="@+id/preview_grid_item2_badge_bg"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:src="@drawable/widget_badge_circle_solid"
+                                    android:contentDescription="@null" />
 
                                 <ImageView
                                     android:id="@+id/preview_grid_item2_icon"
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
                                     android:layout_gravity="center"
                                     android:src="@drawable/ic_hero_bolt"
                                     android:contentDescription="@null" />
@@ -349,9 +378,9 @@
 
                             <TextView
                                 android:id="@+id/preview_grid_item2_text"
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="6dp"
+                                android:layout_weight="1"
                                 android:text="Tor (● ON)"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
@@ -436,7 +465,7 @@
                         android:gravity="center_vertical">
 
                         <ImageView
-                            android:id="@+id/img_settings_blur"
+                            android:id="@+id/img_settings_transparency"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_lucide_sparkles"
@@ -451,28 +480,72 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/txt_settings_blur_title"
+                                android:id="@+id/txt_settings_transparency_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Frosted Glass Blur"
+                                android:text="Widget Transparency"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:textColor="?attr/colorOnSurface" />
 
                             <TextView
-                                android:id="@+id/txt_settings_blur_subtitle"
+                                android:id="@+id/txt_settings_transparency_subtitle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
-                                android:text="Translucent acrylic glass effect"
+                                android:text="Translucent background over wallpaper"
                                 android:textSize="12sp"
                                 android:textColor="?attr/colorOnSurfaceVariant" />
                         </LinearLayout>
 
                         <com.google.android.material.materialswitch.MaterialSwitch
-                            android:id="@+id/switch_settings_blur"
+                            android:id="@+id/switch_settings_transparency"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <!-- Transparency Slider Layout (Visible only when switch is ON) -->
+                    <LinearLayout
+                        android:id="@+id/layout_transparency_slider"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="12dp"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Transparency Level"
+                                android:textSize="13sp"
+                                android:textStyle="bold"
+                                android:textColor="?attr/colorOnSurface" />
+
+                            <TextView
+                                android:id="@+id/txt_val_transparency"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="40%"
+                                android:textSize="13sp"
+                                android:textStyle="bold"
+                                android:textColor="?attr/colorPrimary" />
+                        </LinearLayout>
+
+                        <com.google.android.material.slider.Slider
+                            android:id="@+id/slider_transparency"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:valueFrom="10"
+                            android:valueTo="90"
+                            android:stepSize="5"
+                            android:value="40" />
                     </LinearLayout>
 
                     <!-- Divider -->
@@ -542,119 +615,193 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="CUSTOM PALETTE PRESETS"
+                            android:text="ACCENT COLOR PALETTE"
                             android:textSize="12sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.06"
                             android:textColor="?attr/colorPrimary"
-                            android:layout_marginBottom="10dp" />
+                            android:layout_marginBottom="12dp" />
 
-                        <!-- Horizontal Palette Chips / Swatches -->
+                        <!-- Horizontal Rainbow Circles & Add Color Button -->
                         <HorizontalScrollView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:scrollbars="none"
-                            android:layout_marginBottom="12dp">
+                            android:clipChildren="false"
+                            android:clipToPadding="false"
+                            android:paddingBottom="4dp">
 
                             <LinearLayout
                                 android:id="@+id/layout_color_swatches"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:orientation="horizontal">
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:clipChildren="false">
 
-                                <com.google.android.material.button.MaterialButton
-                                    android:id="@+id/btn_color_indigo"
-                                    style="@style/Widget.Material3.Button.TonalButton"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="42dp"
-                                    android:text="⚡ Indigo"
-                                    android:textSize="12sp"
-                                    android:layout_marginEnd="8dp"
-                                    app:cornerRadius="14dp" />
+                                <!-- Red -->
+                                <com.google.android.material.card.MaterialCardView
+                                    android:id="@+id/circle_color_red"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_marginEnd="10dp"
+                                    app:cardCornerRadius="20dp"
+                                    app:cardBackgroundColor="#EF4444"
+                                    app:strokeWidth="2dp"
+                                    app:strokeColor="#33FFFFFF" />
 
-                                <com.google.android.material.button.MaterialButton
-                                    android:id="@+id/btn_color_cyan"
-                                    style="@style/Widget.Material3.Button.TonalButton"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="42dp"
-                                    android:text="🌊 Cyan"
-                                    android:textSize="12sp"
-                                    android:layout_marginEnd="8dp"
-                                    app:cornerRadius="14dp" />
+                                <!-- Orange -->
+                                <com.google.android.material.card.MaterialCardView
+                                    android:id="@+id/circle_color_orange"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_marginEnd="10dp"
+                                    app:cardCornerRadius="20dp"
+                                    app:cardBackgroundColor="#F97316"
+                                    app:strokeWidth="2dp"
+                                    app:strokeColor="#33FFFFFF" />
 
-                                <com.google.android.material.button.MaterialButton
-                                    android:id="@+id/btn_color_emerald"
-                                    style="@style/Widget.Material3.Button.TonalButton"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="42dp"
-                                    android:text="🍃 Emerald"
-                                    android:textSize="12sp"
-                                    android:layout_marginEnd="8dp"
-                                    app:cornerRadius="14dp" />
+                                <!-- Amber -->
+                                <com.google.android.material.card.MaterialCardView
+                                    android:id="@+id/circle_color_amber"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_marginEnd="10dp"
+                                    app:cardCornerRadius="20dp"
+                                    app:cardBackgroundColor="#F59E0B"
+                                    app:strokeWidth="2dp"
+                                    app:strokeColor="#33FFFFFF" />
 
-                                <com.google.android.material.button.MaterialButton
-                                    android:id="@+id/btn_color_orange"
-                                    style="@style/Widget.Material3.Button.TonalButton"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="42dp"
-                                    android:text="🍊 Orange"
-                                    android:textSize="12sp"
-                                    android:layout_marginEnd="8dp"
-                                    app:cornerRadius="14dp" />
+                                <!-- Yellow -->
+                                <com.google.android.material.card.MaterialCardView
+                                    android:id="@+id/circle_color_yellow"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_marginEnd="10dp"
+                                    app:cardCornerRadius="20dp"
+                                    app:cardBackgroundColor="#EAB308"
+                                    app:strokeWidth="2dp"
+                                    app:strokeColor="#33FFFFFF" />
 
-                                <com.google.android.material.button.MaterialButton
-                                    android:id="@+id/btn_color_crimson"
-                                    style="@style/Widget.Material3.Button.TonalButton"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="42dp"
-                                    android:text="🔴 Crimson"
-                                    android:textSize="12sp"
-                                    android:layout_marginEnd="8dp"
-                                    app:cornerRadius="14dp" />
+                                <!-- Lime -->
+                                <com.google.android.material.card.MaterialCardView
+                                    android:id="@+id/circle_color_lime"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_marginEnd="10dp"
+                                    app:cardCornerRadius="20dp"
+                                    app:cardBackgroundColor="#84CC16"
+                                    app:strokeWidth="2dp"
+                                    app:strokeColor="#33FFFFFF" />
 
-                                <com.google.android.material.button.MaterialButton
-                                    android:id="@+id/btn_color_pink"
-                                    style="@style/Widget.Material3.Button.TonalButton"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="42dp"
-                                    android:text="🌸 Pink"
-                                    android:textSize="12sp"
-                                    android:layout_marginEnd="8dp"
-                                    app:cornerRadius="14dp" />
+                                <!-- Green -->
+                                <com.google.android.material.card.MaterialCardView
+                                    android:id="@+id/circle_color_green"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_marginEnd="10dp"
+                                    app:cardCornerRadius="20dp"
+                                    app:cardBackgroundColor="#10B981"
+                                    app:strokeWidth="2dp"
+                                    app:strokeColor="#33FFFFFF" />
 
-                                <com.google.android.material.button.MaterialButton
-                                    android:id="@+id/btn_color_amber"
-                                    style="@style/Widget.Material3.Button.TonalButton"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="42dp"
-                                    android:text="👑 Amber"
-                                    android:textSize="12sp"
-                                    android:layout_marginEnd="8dp"
-                                    app:cornerRadius="14dp" />
+                                <!-- Teal -->
+                                <com.google.android.material.card.MaterialCardView
+                                    android:id="@+id/circle_color_teal"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_marginEnd="10dp"
+                                    app:cardCornerRadius="20dp"
+                                    app:cardBackgroundColor="#14B8A6"
+                                    app:strokeWidth="2dp"
+                                    app:strokeColor="#33FFFFFF" />
 
-                                <com.google.android.material.button.MaterialButton
-                                    android:id="@+id/btn_color_monochrome"
-                                    style="@style/Widget.Material3.Button.TonalButton"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="42dp"
-                                    android:text="⚪ Minimal"
-                                    android:textSize="12sp"
-                                    app:cornerRadius="14dp" />
+                                <!-- Cyan -->
+                                <com.google.android.material.card.MaterialCardView
+                                    android:id="@+id/circle_color_cyan"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_marginEnd="10dp"
+                                    app:cardCornerRadius="20dp"
+                                    app:cardBackgroundColor="#06B6D4"
+                                    app:strokeWidth="2dp"
+                                    app:strokeColor="#33FFFFFF" />
+
+                                <!-- Blue -->
+                                <com.google.android.material.card.MaterialCardView
+                                    android:id="@+id/circle_color_blue"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_marginEnd="10dp"
+                                    app:cardCornerRadius="20dp"
+                                    app:cardBackgroundColor="#3B82F6"
+                                    app:strokeWidth="2dp"
+                                    app:strokeColor="#33FFFFFF" />
+
+                                <!-- Indigo -->
+                                <com.google.android.material.card.MaterialCardView
+                                    android:id="@+id/circle_color_indigo"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_marginEnd="10dp"
+                                    app:cardCornerRadius="20dp"
+                                    app:cardBackgroundColor="#6366F1"
+                                    app:strokeWidth="2dp"
+                                    app:strokeColor="#33FFFFFF" />
+
+                                <!-- Purple -->
+                                <com.google.android.material.card.MaterialCardView
+                                    android:id="@+id/circle_color_purple"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_marginEnd="10dp"
+                                    app:cardCornerRadius="20dp"
+                                    app:cardBackgroundColor="#8B5CF6"
+                                    app:strokeWidth="2dp"
+                                    app:strokeColor="#33FFFFFF" />
+
+                                <!-- Pink -->
+                                <com.google.android.material.card.MaterialCardView
+                                    android:id="@+id/circle_color_pink"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_marginEnd="10dp"
+                                    app:cardCornerRadius="20dp"
+                                    app:cardBackgroundColor="#EC4899"
+                                    app:strokeWidth="2dp"
+                                    app:strokeColor="#33FFFFFF" />
+
+                                <!-- White / Minimal -->
+                                <com.google.android.material.card.MaterialCardView
+                                    android:id="@+id/circle_color_white"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_marginEnd="10dp"
+                                    app:cardCornerRadius="20dp"
+                                    app:cardBackgroundColor="#FFFFFF"
+                                    app:strokeWidth="2dp"
+                                    app:strokeColor="#4D888888" />
+
+                                <!-- Add Color Circle: Grey with + Plus Icon -->
+                                <com.google.android.material.card.MaterialCardView
+                                    android:id="@+id/circle_color_add"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    app:cardCornerRadius="20dp"
+                                    app:cardBackgroundColor="#2A2A30"
+                                    app:strokeWidth="2dp"
+                                    app:strokeColor="?attr/colorOutlineVariant">
+
+                                    <ImageView
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/ic_lucide_plus"
+                                        app:tint="#FFFFFF"
+                                        android:contentDescription="Add Custom Color" />
+                                </com.google.android.material.card.MaterialCardView>
                             </LinearLayout>
                         </HorizontalScrollView>
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btn_custom_hex_picker"
-                            style="@style/Widget.TermuxWidget.Button.Tonal"
-                            android:layout_width="match_parent"
-                            android:layout_height="48dp"
-                            android:text="Custom Hex Accent (#RRGGBB)..."
-                            android:textSize="13sp"
-                            android:textStyle="bold"
-                            app:cornerRadius="16dp"
-                            app:icon="@drawable/ic_lucide_palette"
-                            app:iconSize="16dp"
-                            app:iconGravity="textStart" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

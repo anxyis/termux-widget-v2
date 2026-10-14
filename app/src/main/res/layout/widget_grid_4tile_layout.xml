@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_4tile_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="4dp">
+
+    <!-- 2x2 Grid of 4 Square Tiles (Image 4 Design) -->
+    <LinearLayout
+        android:id="@+id/layout_4tile_grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <!-- Top Row: Tile 1 & Tile 2 -->
+        <LinearLayout
+            android:id="@+id/row_top"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:layout_marginBottom="3dp">
+
+            <!-- Tile 1 (Top-Left) -->
+            <FrameLayout
+                android:id="@+id/tile_1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginEnd="3dp"
+                android:background="@drawable/widget_button_single_bg">
+
+                <FrameLayout
+                    android:id="@+id/tile_1_badge"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center">
+
+                    <ImageView
+                        android:id="@+id/tile_1_badge_bg"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/widget_badge_circle_solid"
+                        android:contentDescription="@null" />
+
+                    <ImageView
+                        android:id="@+id/tile_1_icon"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_hero_bolt"
+                        android:contentDescription="@null" />
+
+                    <ImageView
+                        android:id="@+id/tile_1_custom_image"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:scaleType="centerInside"
+                        android:visibility="gone"
+                        android:contentDescription="@null" />
+                </FrameLayout>
+            </FrameLayout>
+
+            <!-- Tile 2 (Top-Right) -->
+            <FrameLayout
+                android:id="@+id/tile_2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/widget_button_single_bg">
+
+                <FrameLayout
+                    android:id="@+id/tile_2_badge"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center">
+
+                    <ImageView
+                        android:id="@+id/tile_2_badge_bg"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/widget_badge_circle_solid"
+                        android:contentDescription="@null" />
+
+                    <ImageView
+                        android:id="@+id/tile_2_icon"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_lucide_terminal"
+                        android:contentDescription="@null" />
+
+                    <ImageView
+                        android:id="@+id/tile_2_custom_image"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:scaleType="centerInside"
+                        android:visibility="gone"
+                        android:contentDescription="@null" />
+                </FrameLayout>
+            </FrameLayout>
+        </LinearLayout>
+
+        <!-- Bottom Row: Tile 3 & Tile 4 -->
+        <LinearLayout
+            android:id="@+id/row_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <!-- Tile 3 (Bottom-Left) -->
+            <FrameLayout
+                android:id="@+id/tile_3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginEnd="3dp"
+                android:background="@drawable/widget_button_single_bg">
+
+                <FrameLayout
+                    android:id="@+id/tile_3_badge"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center">
+
+                    <ImageView
+                        android:id="@+id/tile_3_badge_bg"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/widget_badge_circle_solid"
+                        android:contentDescription="@null" />
+
+                    <ImageView
+                        android:id="@+id/tile_3_icon"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_lucide_settings"
+                        android:contentDescription="@null" />
+
+                    <ImageView
+                        android:id="@+id/tile_3_custom_image"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:scaleType="centerInside"
+                        android:visibility="gone"
+                        android:contentDescription="@null" />
+                </FrameLayout>
+            </FrameLayout>
+
+            <!-- Tile 4 (Bottom-Right) -->
+            <FrameLayout
+                android:id="@+id/tile_4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/widget_button_single_bg">
+
+                <FrameLayout
+                    android:id="@+id/tile_4_badge"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center">
+
+                    <ImageView
+                        android:id="@+id/tile_4_badge_bg"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/widget_badge_circle_solid"
+                        android:contentDescription="@null" />
+
+                    <ImageView
+                        android:id="@+id/tile_4_icon"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_lucide_sparkles"
+                        android:contentDescription="@null" />
+
+                    <ImageView
+                        android:id="@+id/tile_4_custom_image"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:scaleType="centerInside"
+                        android:visibility="gone"
+                        android:contentDescription="@null" />
+                </FrameLayout>
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 1x Tile (Single Shortcut or Extra Small Cell) -->
+    <FrameLayout
+        android:id="@+id/layout_1tile"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@drawable/widget_button_single_bg">
+
+        <FrameLayout
+            android:id="@+id/tile_single_badge"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/tile_single_badge_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/widget_badge_circle_solid"
+                android:contentDescription="@null" />
+
+            <ImageView
+                android:id="@+id/tile_single_icon"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_hero_bolt"
+                android:contentDescription="@null" />
+
+            <ImageView
+                android:id="@+id/tile_single_custom_image"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:scaleType="centerInside"
+                android:visibility="gone"
+                android:contentDescription="@null" />
+        </FrameLayout>
+    </FrameLayout>
+
+    <!-- Empty State View -->
+    <LinearLayout
+        android:id="@+id/empty_view_4tile"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_lucide_folder"
+            android:contentDescription="@null" />
+    </LinearLayout>
+
+</FrameLayout>

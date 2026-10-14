@@ -14,6 +14,8 @@ public final class TermuxWidgetStylePreferences {
     public static final String KEY_ICON_SIZE_DP = "widget_icon_size_dp";
     public static final String KEY_GRID_SPACING_DP = "widget_grid_spacing_dp";
     public static final String KEY_BLUR_EFFECT = "widget_blur_effect";
+    public static final String KEY_TRANSPARENCY_ENABLED = "widget_transparency_enabled";
+    public static final String KEY_TRANSPARENCY_PERCENT = "widget_transparency_percent";
     public static final String KEY_USE_CUSTOM_COLORS = "widget_use_custom_colors";
     public static final String KEY_CUSTOM_PRIMARY_COLOR = "widget_custom_primary_color";
     public static final String KEY_CUSTOM_CONTAINER_COLOR = "widget_custom_container_color";
@@ -24,6 +26,8 @@ public final class TermuxWidgetStylePreferences {
     public static final int DEFAULT_ICON_SIZE_DP = 24;
     public static final int DEFAULT_GRID_SPACING_DP = 14;
     public static final boolean DEFAULT_BLUR_EFFECT = false;
+    public static final boolean DEFAULT_TRANSPARENCY_ENABLED = false;
+    public static final int DEFAULT_TRANSPARENCY_PERCENT = 40;
     public static final boolean DEFAULT_USE_CUSTOM_COLORS = false;
     public static final int DEFAULT_CUSTOM_PRIMARY_COLOR = 0xFF6366F1; // Electric Indigo
     public static final int DEFAULT_CUSTOM_CONTAINER_COLOR = 0xFF18181B; // Deep Zinc
@@ -68,11 +72,27 @@ public final class TermuxWidgetStylePreferences {
     }
 
     public static boolean isBlurEnabled(@NonNull Context context) {
-        return getPrefs(context).getBoolean(KEY_BLUR_EFFECT, DEFAULT_BLUR_EFFECT);
+        return isTransparencyEnabled(context);
     }
 
     public static void setBlurEnabled(@NonNull Context context, boolean enabled) {
-        getPrefs(context).edit().putBoolean(KEY_BLUR_EFFECT, enabled).apply();
+        setTransparencyEnabled(context, enabled);
+    }
+
+    public static boolean isTransparencyEnabled(@NonNull Context context) {
+        return getPrefs(context).getBoolean(KEY_TRANSPARENCY_ENABLED, DEFAULT_TRANSPARENCY_ENABLED);
+    }
+
+    public static void setTransparencyEnabled(@NonNull Context context, boolean enabled) {
+        getPrefs(context).edit().putBoolean(KEY_TRANSPARENCY_ENABLED, enabled).apply();
+    }
+
+    public static int getTransparencyPercent(@NonNull Context context) {
+        return getPrefs(context).getInt(KEY_TRANSPARENCY_PERCENT, DEFAULT_TRANSPARENCY_PERCENT);
+    }
+
+    public static void setTransparencyPercent(@NonNull Context context, int percent) {
+        getPrefs(context).edit().putInt(KEY_TRANSPARENCY_PERCENT, percent).apply();
     }
 
     public static boolean isCustomColorsEnabled(@NonNull Context context) {
@@ -114,6 +134,8 @@ public final class TermuxWidgetStylePreferences {
                 .putInt(KEY_ICON_SIZE_DP, DEFAULT_ICON_SIZE_DP)
                 .putInt(KEY_GRID_SPACING_DP, DEFAULT_GRID_SPACING_DP)
                 .putBoolean(KEY_BLUR_EFFECT, DEFAULT_BLUR_EFFECT)
+                .putBoolean(KEY_TRANSPARENCY_ENABLED, DEFAULT_TRANSPARENCY_ENABLED)
+                .putInt(KEY_TRANSPARENCY_PERCENT, DEFAULT_TRANSPARENCY_PERCENT)
                 .putBoolean(KEY_USE_CUSTOM_COLORS, DEFAULT_USE_CUSTOM_COLORS)
                 .putInt(KEY_CUSTOM_PRIMARY_COLOR, DEFAULT_CUSTOM_PRIMARY_COLOR)
                 .putInt(KEY_CUSTOM_CONTAINER_COLOR, DEFAULT_CUSTOM_CONTAINER_COLOR)

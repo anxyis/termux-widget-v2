@@ -16,8 +16,14 @@
         android:id="@+id/widget_button_icon_frame"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginEnd="12dp"
-        android:background="@drawable/widget_icon_badge_bg">
+        android:layout_marginEnd="12dp">
+
+        <ImageView
+            android:id="@+id/widget_button_badge_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/widget_badge_circle_solid"
+            android:contentDescription="@null" />
 
         <ImageView
             android:id="@+id/widget_button_icon"

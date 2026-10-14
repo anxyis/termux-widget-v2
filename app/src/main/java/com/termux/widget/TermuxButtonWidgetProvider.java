@@ -68,7 +68,10 @@ public final class TermuxButtonWidgetProvider extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), layoutId);
 
         boolean isAmoled = ThemeManager.isAmoledMode(context);
-        boolean isBlur = TermuxWidgetStylePreferences.isBlurEnabled(context);
+        boolean isTrans = TermuxWidgetStylePreferences.isTransparencyEnabled(context);
+        int transPercent = TermuxWidgetStylePreferences.getTransparencyPercent(context);
+        float cardAlpha = isTrans ? Math.max(0.08f, Math.min(1.0f, (100 - transPercent) / 100f)) : 1.0f;
+
         boolean isCustom = TermuxWidgetStylePreferences.isCustomColorsEnabled(context);
         int customPrimary = TermuxWidgetStylePreferences.getCustomPrimaryColor(context);
         int customText = TermuxWidgetStylePreferences.getCustomTextColor(context);
@@ -96,83 +99,59 @@ public final class TermuxButtonWidgetProvider extends AppWidgetProvider {
             views.setTextViewText(R.id.widget_button_label, displayLabel);
 
             boolean isToggleOn = toggle != null && toggle.isOn;
-            int bgRes = WidgetBackgroundHelper.getButtonBackground(isAmoled, isToggleOn, cornerRadius, isBlur);
+            int bgRes = WidgetBackgroundHelper.getButtonBackground(isAmoled, isToggleOn, cornerRadius, false);
             views.setInt(R.id.widget_button_root, "setBackgroundResource", bgRes);
+            views.setFloat(R.id.widget_button_root, "setAlpha", cardAlpha);
 
-            if (isBlur) {
-                int badgeBgRes = isToggleOn ? R.drawable.widget_toggle_badge_on_bg : R.drawable.widget_icon_badge_blur_bg;
-                views.setInt(R.id.widget_button_icon_frame, "setBackgroundResource", badgeBgRes);
+            int badgeBgColor;
+            int iconColor;
+            int textColor;
+            int sublabelColor;
 
-                if (toggle != null) {
-                    views.setTextViewText(R.id.widget_button_sublabel, toggle.isOn ? "State: ON" : "State: OFF");
-                    if (toggle.isOn) {
-                        views.setTextColor(R.id.widget_button_label, Color.BLACK);
-                        views.setTextColor(R.id.widget_button_sublabel, Color.BLACK);
-                        views.setInt(R.id.widget_button_icon, "setColorFilter", Color.BLACK);
-                    } else {
-                        views.setTextColor(R.id.widget_button_label, Color.WHITE);
-                        views.setTextColor(R.id.widget_button_sublabel, Color.parseColor("#CCCCCC"));
-                        views.setInt(R.id.widget_button_icon, "setColorFilter", Color.WHITE);
-                    }
+            if (isAmoled) {
+                if (isToggleOn) {
+                    badgeBgColor = Color.WHITE;
+                    iconColor = Color.BLACK;
+                    textColor = Color.WHITE;
+                    sublabelColor = Color.parseColor("#CCCCCC");
                 } else {
-                    views.setTextViewText(R.id.widget_button_sublabel, "Tap to run");
-                    views.setTextColor(R.id.widget_button_label, Color.WHITE);
-                    views.setTextColor(R.id.widget_button_sublabel, Color.parseColor("#CCCCCC"));
-                    views.setInt(R.id.widget_button_icon, "setColorFilter", Color.WHITE);
-                }
-            } else if (isAmoled) {
-                int badgeBgRes = isToggleOn ? R.drawable.widget_toggle_badge_amoled_on_bg : R.drawable.widget_icon_badge_amoled_bg;
-                views.setInt(R.id.widget_button_icon_frame, "setBackgroundResource", badgeBgRes);
-
-                if (toggle != null) {
-                    views.setTextViewText(R.id.widget_button_sublabel, toggle.isOn ? "State: ON" : "State: OFF");
-                    if (toggle.isOn) {
-                        // High-contrast M3 Expressive: white text on dark card, black icon on white badge
-                        views.setTextColor(R.id.widget_button_label, Color.WHITE);
-                        views.setTextColor(R.id.widget_button_sublabel, Color.parseColor("#CCCCCC"));
-                        views.setInt(R.id.widget_button_icon, "setColorFilter", Color.BLACK);
-                    } else {
-                        views.setTextColor(R.id.widget_button_label, Color.WHITE);
-                        views.setTextColor(R.id.widget_button_sublabel, Color.parseColor("#9E9E9E"));
-                        views.setInt(R.id.widget_button_icon, "setColorFilter", Color.WHITE);
-                    }
-                } else {
-                    views.setTextViewText(R.id.widget_button_sublabel, "Tap to run");
-                    views.setTextColor(R.id.widget_button_label, Color.WHITE);
-                    views.setTextColor(R.id.widget_button_sublabel, Color.parseColor("#9E9E9E"));
-                    views.setInt(R.id.widget_button_icon, "setColorFilter", Color.WHITE);
+                    badgeBgColor = Color.parseColor("#262626");
+                    iconColor = Color.WHITE;
+                    textColor = Color.WHITE;
+                    sublabelColor = Color.parseColor("#9E9E9E");
                 }
             } else if (isCustom) {
-                views.setTextColor(R.id.widget_button_label, customText);
-                views.setTextColor(R.id.widget_button_sublabel, customText);
-                if (toggle != null && toggle.isOn) {
-                    views.setInt(R.id.widget_button_icon_frame, "setBackgroundResource", R.drawable.widget_toggle_badge_on_bg);
-                    views.setInt(R.id.widget_button_icon, "setColorFilter", Color.BLACK);
-                    views.setTextViewText(R.id.widget_button_sublabel, "State: ON");
+                if (isToggleOn) {
+                    badgeBgColor = Color.WHITE;
+                    iconColor = Color.BLACK;
+                    textColor = Color.BLACK;
+                    sublabelColor = Color.BLACK;
                 } else {
-                    views.setInt(R.id.widget_button_icon_frame, "setBackgroundResource", R.drawable.widget_icon_badge_bg);
-                    views.setInt(R.id.widget_button_icon, "setColorFilter", customPrimary);
-                    views.setTextViewText(R.id.widget_button_sublabel, toggle != null ? "State: OFF" : "Tap to run");
+                    badgeBgColor = customPrimary;
+                    iconColor = androidx.core.graphics.ColorUtils.calculateLuminance(customPrimary) > 0.55 ? Color.BLACK : Color.WHITE;
+                    textColor = customText;
+                    sublabelColor = Color.parseColor("#A1A1AA");
                 }
             } else {
-                int badgeBgRes = isToggleOn ? R.drawable.widget_toggle_badge_on_bg : R.drawable.widget_icon_badge_bg;
-                views.setInt(R.id.widget_button_icon_frame, "setBackgroundResource", badgeBgRes);
-
-                if (toggle != null) {
-                    views.setTextViewText(R.id.widget_button_sublabel, toggle.isOn ? "State: ON" : "State: OFF");
-                    if (toggle.isOn) {
-                        views.setTextColor(R.id.widget_button_label, context.getColor(R.color.widget_toggle_text_on));
-                        views.setTextColor(R.id.widget_button_sublabel, context.getColor(R.color.widget_toggle_text_on));
-                    } else {
-                        views.setTextColor(R.id.widget_button_label, context.getColor(R.color.m3_on_surface));
-                        views.setTextColor(R.id.widget_button_sublabel, context.getColor(R.color.m3_on_surface_variant));
-                    }
+                // Material You
+                if (isToggleOn) {
+                    badgeBgColor = context.getColor(R.color.widget_toggle_badge_on);
+                    iconColor = context.getColor(R.color.widget_toggle_icon_on);
+                    textColor = context.getColor(R.color.widget_toggle_text_on);
+                    sublabelColor = context.getColor(R.color.widget_toggle_text_on);
                 } else {
-                    views.setTextViewText(R.id.widget_button_sublabel, "Tap to run");
-                    views.setTextColor(R.id.widget_button_label, context.getColor(R.color.m3_on_surface));
-                    views.setTextColor(R.id.widget_button_sublabel, context.getColor(R.color.m3_on_surface_variant));
+                    badgeBgColor = context.getColor(R.color.widget_accent_circle_bg);
+                    iconColor = context.getColor(R.color.widget_accent_circle_icon);
+                    textColor = context.getColor(R.color.m3_on_surface);
+                    sublabelColor = context.getColor(R.color.m3_on_surface_variant);
                 }
             }
+
+            views.setInt(R.id.widget_button_badge_bg, "setColorFilter", badgeBgColor);
+            views.setInt(R.id.widget_button_icon, "setColorFilter", iconColor);
+            views.setTextColor(R.id.widget_button_label, textColor);
+            views.setTextColor(R.id.widget_button_sublabel, sublabelColor);
+            views.setTextViewText(R.id.widget_button_sublabel, toggle != null ? (toggle.isOn ? "State: ON" : "State: OFF") : "Tap to run");
 
             IconHelper.applyToRemoteViews(views, R.id.widget_button_icon, R.id.widget_button_custom_image, iconId, R.drawable.ic_lucide_terminal);
 
@@ -186,19 +165,15 @@ public final class TermuxButtonWidgetProvider extends AppWidgetProvider {
                     context, appWidgetId, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             views.setOnClickPendingIntent(R.id.widget_button_root, pendingIntent);
         } else {
-            int emptyBgRes = WidgetBackgroundHelper.getButtonBackground(isAmoled, false, cornerRadius, isBlur);
+            int emptyBgRes = WidgetBackgroundHelper.getButtonBackground(isAmoled, false, cornerRadius, false);
             views.setInt(R.id.widget_button_root, "setBackgroundResource", emptyBgRes);
-            int emptyBadgeBgRes = isBlur ? R.drawable.widget_icon_badge_blur_bg :
-                    (isAmoled ? R.drawable.widget_icon_badge_amoled_bg : R.drawable.widget_icon_badge_bg);
+            views.setFloat(R.id.widget_button_root, "setAlpha", cardAlpha);
+            int emptyBadgeBgRes = isAmoled ? R.drawable.widget_icon_badge_amoled_bg : R.drawable.widget_icon_badge_bg;
             views.setInt(R.id.widget_button_icon_frame, "setBackgroundResource", emptyBadgeBgRes);
             views.setTextViewText(R.id.widget_button_label, "Setup Button");
             views.setTextViewText(R.id.widget_button_sublabel, "Tap to configure");
             views.setImageViewResource(R.id.widget_button_icon, R.drawable.ic_lucide_settings);
-            if (isBlur) {
-                views.setTextColor(R.id.widget_button_label, Color.WHITE);
-                views.setTextColor(R.id.widget_button_sublabel, Color.parseColor("#CCCCCC"));
-                views.setInt(R.id.widget_button_icon, "setColorFilter", Color.WHITE);
-            } else if (isAmoled) {
+            if (isAmoled) {
                 views.setTextColor(R.id.widget_button_label, Color.WHITE);
                 views.setTextColor(R.id.widget_button_sublabel, Color.parseColor("#9E9E9E"));
                 views.setInt(R.id.widget_button_icon, "setColorFilter", Color.WHITE);
