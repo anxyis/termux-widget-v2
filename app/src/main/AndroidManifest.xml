@@ -74,6 +74,10 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name=".TermuxButtonWidgetPinnedReceiver"
+            android:exported="true" />
+
         <!-- Activities -->
         <activity
             android:name=".activities.TermuxWidgetMainActivity"
@@ -90,6 +94,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity-alias>
+
+        <activity
+            android:name=".activities.TermuxWidgetSettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TermuxWidget.Material3" />
 
         <activity
             android:name=".activities.TermuxButtonWidgetConfigureActivity"

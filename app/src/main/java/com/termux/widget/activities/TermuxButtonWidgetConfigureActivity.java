@@ -74,6 +74,27 @@ public class TermuxButtonWidgetConfigureActivity extends AppCompatActivity {
         mPreviewIcon = findViewById(R.id.widget_button_icon);
         mPreviewLabel = findViewById(R.id.widget_button_label);
 
+        // If a pending pin request exists (from "Add to Home Screen"), apply it immediately and finish!
+        String pendingPath = TermuxButtonWidgetPreferences.getPendingPinScriptPath(this);
+        if (pendingPath != null) {
+            String pendingLabel = TermuxButtonWidgetPreferences.getPendingPinLabel(this);
+            String pendingIcon = TermuxButtonWidgetPreferences.getPendingPinIconId(this);
+            TermuxButtonWidgetPreferences.clearPendingPin(this);
+
+            String finalLabel = pendingLabel != null && !pendingLabel.isEmpty() ? pendingLabel : ShellUtils.getExecutableBasename(pendingPath);
+            TermuxButtonWidgetPreferences.saveButtonWidgetConfig(
+                    this, mAppWidgetId, pendingPath, finalLabel, pendingIcon);
+
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+            TermuxButtonWidgetProvider.updateButtonWidget(this, appWidgetManager, mAppWidgetId);
+
+            Intent resultValue = new Intent();
+            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+            setResult(RESULT_OK, resultValue);
+            finish();
+            return;
+        }
+
         // Pre-fill existing configuration if re-configuring
         String existingPath = TermuxButtonWidgetPreferences.getScriptPath(this, mAppWidgetId);
         if (existingPath != null) {

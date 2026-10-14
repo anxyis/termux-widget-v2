@@ -266,12 +266,12 @@ public class ScriptInfoBottomSheet extends BottomSheetDialogFragment {
             });
         }
 
-        // Pin to Home Screen
+        // Add to Home Screen (Widget)
         View btnPin = view.findViewById(R.id.sheet_action_pin);
         if (btnPin != null) {
             BouncyAnimationHelper.applySpringPress(btnPin, 0.97f);
             btnPin.setOnClickListener(v -> {
-                pinToHomeScreen(context, path, label, iconId, isTask, isCustom, customCommand);
+                TermuxButtonWidgetUtils.pinButtonWidget(context, path, label, iconId);
                 dismiss();
             });
         }

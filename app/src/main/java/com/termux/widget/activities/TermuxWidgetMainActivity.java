@@ -53,6 +53,7 @@ import com.termux.widget.R;
 import com.termux.widget.ScriptInfoBottomSheet;
 import com.termux.widget.ShortcutAppearanceBottomSheet;
 import com.termux.widget.ShortcutFile;
+import com.termux.widget.TermuxButtonWidgetUtils;
 import com.termux.widget.TermuxCustomCommandPreferences;
 import com.termux.widget.TermuxCustomCommandPreferences.CustomCommand;
 import com.termux.widget.TermuxShortcutSyncManager;
@@ -96,6 +97,12 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
     private LinearLayout mContainerTilesExpandable;
     private ImageView mImgTilesExpandIcon;
     private boolean mTilesExpanded = false;
+    private boolean mScriptsExpanded = true;
+    private boolean mTogglesExpanded = true;
+    private LinearLayout mContainerScriptsExpandable;
+    private LinearLayout mContainerTogglesExpandable;
+    private ImageView mImgScriptsExpandIcon;
+    private ImageView mImgTogglesExpandIcon;
 
     private final BroadcastReceiver mSyncReceiver = new BroadcastReceiver() {
         @Override
@@ -140,11 +147,39 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         mTxtTilesSummary = findViewById(R.id.txt_tiles_summary);
         mContainerTilesExpandable = findViewById(R.id.container_tiles_expandable);
         mImgTilesExpandIcon = findViewById(R.id.img_tiles_expand_icon);
+        mContainerScriptsExpandable = findViewById(R.id.container_scripts_expandable);
+        mContainerTogglesExpandable = findViewById(R.id.container_toggles_expandable);
+        mImgScriptsExpandIcon = findViewById(R.id.img_scripts_expand_icon);
+        mImgTogglesExpandIcon = findViewById(R.id.img_toggles_expand_icon);
 
         View headerTiles = findViewById(R.id.header_quick_tiles);
         if (headerTiles != null) {
             BouncyAnimationHelper.applySpringPress(headerTiles, 0.98f);
             headerTiles.setOnClickListener(v -> toggleTilesExpansion());
+        }
+
+        View headerScripts = findViewById(R.id.header_scripts);
+        if (headerScripts != null) {
+            BouncyAnimationHelper.applySpringPress(headerScripts, 0.98f);
+            headerScripts.setOnClickListener(v -> toggleScriptsExpansion());
+        }
+
+        View headerToggles = findViewById(R.id.header_toggles);
+        if (headerToggles != null) {
+            BouncyAnimationHelper.applySpringPress(headerToggles, 0.98f);
+            headerToggles.setOnClickListener(v -> toggleTogglesExpansion());
+        }
+
+        View btnOpenSettings = findViewById(R.id.btn_open_settings);
+        if (btnOpenSettings != null) {
+            BouncyAnimationHelper.applySpringPress(btnOpenSettings, 0.88f);
+            btnOpenSettings.setOnClickListener(v -> startActivity(new Intent(this, TermuxWidgetSettingsActivity.class)));
+        }
+
+        View btnOpenSettingsCard = findViewById(R.id.btn_open_settings_card);
+        if (btnOpenSettingsCard != null) {
+            BouncyAnimationHelper.applySpringPress(btnOpenSettingsCard, 0.96f);
+            btnOpenSettingsCard.setOnClickListener(v -> startActivity(new Intent(this, TermuxWidgetSettingsActivity.class)));
         }
 
         View btnAddToggle = findViewById(R.id.btn_add_toggle);
@@ -231,9 +266,29 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
             mContainerTilesExpandable.setVisibility(mTilesExpanded ? View.VISIBLE : View.GONE);
         }
         if (mImgTilesExpandIcon != null) {
-            mImgTilesExpandIcon.setRotation(mTilesExpanded ? 90f : 0f);
+            mImgTilesExpandIcon.animate().rotation(mTilesExpanded ? 90f : 0f).setDuration(200).start();
         }
         populateQuickTiles();
+    }
+
+    private void toggleScriptsExpansion() {
+        mScriptsExpanded = !mScriptsExpanded;
+        if (mContainerScriptsExpandable != null) {
+            mContainerScriptsExpandable.setVisibility(mScriptsExpanded ? View.VISIBLE : View.GONE);
+        }
+        if (mImgScriptsExpandIcon != null) {
+            mImgScriptsExpandIcon.animate().rotation(mScriptsExpanded ? 90f : 0f).setDuration(200).start();
+        }
+    }
+
+    private void toggleTogglesExpansion() {
+        mTogglesExpanded = !mTogglesExpanded;
+        if (mContainerTogglesExpandable != null) {
+            mContainerTogglesExpandable.setVisibility(mTogglesExpanded ? View.VISIBLE : View.GONE);
+        }
+        if (mImgTogglesExpandIcon != null) {
+            mImgTogglesExpandIcon.animate().rotation(mTogglesExpanded ? 90f : 0f).setDuration(200).start();
+        }
     }
 
     @Override
@@ -384,6 +439,23 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
             btnSettings.setStrokeColor(ColorStateList.valueOf(Color.parseColor("#2E2E32")));
             btnSettings.setStrokeWidth(3);
         }
+
+        View btnOpenSettings = findViewById(R.id.btn_open_settings);
+        if (btnOpenSettings != null) btnOpenSettings.setBackgroundResource(R.drawable.circle_refresh_button_amoled_bg);
+        ImageView imgOpenSettings = findViewById(R.id.img_open_settings);
+        if (imgOpenSettings != null) imgOpenSettings.setColorFilter(Color.WHITE);
+
+        MaterialButton btnOpenSettingsCard = findViewById(R.id.btn_open_settings_card);
+        if (btnOpenSettingsCard != null) {
+            btnOpenSettingsCard.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#141416")));
+            btnOpenSettingsCard.setTextColor(Color.WHITE);
+            btnOpenSettingsCard.setIconTint(ColorStateList.valueOf(Color.WHITE));
+            btnOpenSettingsCard.setStrokeColor(ColorStateList.valueOf(Color.parseColor("#2E2E32")));
+            btnOpenSettingsCard.setStrokeWidth(3);
+        }
+
+        if (mImgScriptsExpandIcon != null) mImgScriptsExpandIcon.setColorFilter(Color.parseColor("#9E9E9E"));
+        if (mImgTogglesExpandIcon != null) mImgTogglesExpandIcon.setColorFilter(Color.parseColor("#9E9E9E"));
     }
 
     private void checkTermuxStatus() {
@@ -923,6 +995,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
 
     private void showToggleOptionsDialog(@NonNull ToggleShortcut toggle) {
         CharSequence[] options = new CharSequence[]{
+                "Add to Home Screen (Widget)",
                 "Toggle State (Switch to " + (toggle.isOn ? "OFF" : "ON") + ")",
                 "Edit Toggle",
                 "Delete Toggle"
@@ -931,18 +1004,24 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
                 .setTitle(toggle.label)
                 .setItems(options, (dialog, which) -> {
                     if (which == 0) {
+                        TermuxButtonWidgetUtils.pinButtonWidget(
+                                this,
+                                TermuxTogglePreferences.PREFIX_TOGGLE + toggle.id,
+                                toggle.label,
+                                toggle.iconId);
+                    } else if (which == 1) {
                         TermuxTogglePreferences.toggleState(this, toggle.id);
                         populateDashboard();
-                    } else if (which == 1) {
-                        showAddEditToggleDialog(toggle);
                     } else if (which == 2) {
+                        showAddEditToggleDialog(toggle);
+                    } else if (which == 3) {
                         new MaterialAlertDialogBuilder(this)
                                 .setTitle("Delete Toggle")
                                 .setMessage("Are you sure you want to delete toggle '" + toggle.label + "'?")
                                 .setPositiveButton("Delete", (d, w) -> {
                                     TermuxTogglePreferences.deleteToggle(this, toggle.id);
                                     populateDashboard();
-                                    sendIntentToRefreshAllWidgets();
+                                    sendIntentToRefreshAllWidgets(false);
                                     Toast.makeText(this, "Toggle deleted", Toast.LENGTH_SHORT).show();
                                 })
                                 .setNegativeButton("Cancel", null)
@@ -1079,22 +1158,29 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         CustomCommand cmd = TermuxCustomCommandPreferences.getCommandById(this, cmdId);
         if (cmd == null) return;
 
-        CharSequence[] options = new CharSequence[]{"Run Command", "Edit Command", "Delete Command"};
+        CharSequence[] options = new CharSequence[]{
+                "Run Command",
+                "Add to Home Screen (Widget)",
+                "Edit Command",
+                "Delete Command"
+        };
         new MaterialAlertDialogBuilder(this)
                 .setTitle(cmd.name)
                 .setItems(options, (dialog, which) -> {
                     if (which == 0) {
                         TermuxWidgetProvider.sendExecutionIntentToTermuxService(this, sf.getPath(), LOG_TAG);
                     } else if (which == 1) {
-                        showAddEditCommandDialog(cmd);
+                        TermuxButtonWidgetUtils.pinButtonWidget(this, sf.getPath(), sf.getLabel(), sf.mIconId);
                     } else if (which == 2) {
+                        showAddEditCommandDialog(cmd);
+                    } else if (which == 3) {
                         new MaterialAlertDialogBuilder(this)
                                 .setTitle("Delete Command")
                                 .setMessage("Are you sure you want to delete '" + cmd.name + "'?")
                                 .setPositiveButton("Delete", (d, w) -> {
                                     TermuxCustomCommandPreferences.deleteCustomCommand(this, cmd.id);
                                     populateDashboard();
-                                    sendIntentToRefreshAllWidgets();
+                                    sendIntentToRefreshAllWidgets(false);
                                     Toast.makeText(this, "Command deleted", Toast.LENGTH_SHORT).show();
                                 })
                                 .setNegativeButton("Cancel", null)

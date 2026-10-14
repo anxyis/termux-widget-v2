@@ -293,7 +293,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Pin to Home Screen"
+                    android:text="Add to Home Screen (Widget)"
                     android:textSize="14sp"
                     android:textColor="@color/m3_on_surface" />
             </LinearLayout>
