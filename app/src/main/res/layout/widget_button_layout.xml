@@ -12,13 +12,21 @@
     android:paddingTop="@dimen/widget_button_padding_v"
     android:paddingBottom="@dimen/widget_button_padding_v">
 
-    <ImageView
-        android:id="@+id/widget_button_icon"
-        android:layout_width="@dimen/widget_button_icon_size"
-        android:layout_height="@dimen/widget_button_icon_size"
-        android:layout_marginEnd="10dp"
-        android:contentDescription="@null"
-        android:src="@drawable/ic_lucide_terminal" />
+    <FrameLayout
+        android:id="@+id/widget_button_icon_frame"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/widget_icon_badge_bg">
+
+        <ImageView
+            android:id="@+id/widget_button_icon"
+            android:layout_width="@dimen/widget_button_icon_size"
+            android:layout_height="@dimen/widget_button_icon_size"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_lucide_terminal" />
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="0dp"

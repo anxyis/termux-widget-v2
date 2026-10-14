@@ -104,6 +104,17 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
     private ImageView mImgScriptsExpandIcon;
     private ImageView mImgTogglesExpandIcon;
 
+    private com.termux.widget.views.ShortcutDiskChartView mChartDistribution;
+    private View mDotLegendScripts;
+    private View mDotLegendToggles;
+    private View mDotLegendCommands;
+    private TextView mTxtLegendScriptsCount;
+    private TextView mTxtLegendTogglesCount;
+    private TextView mTxtLegendCommandsCount;
+    private TextView mTxtLegendScriptsLabel;
+    private TextView mTxtLegendTogglesLabel;
+    private TextView mTxtLegendCommandsLabel;
+
     private final BroadcastReceiver mSyncReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -123,17 +134,16 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         MaterialToolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
 
-        MaterialSwitch switchAmoled = findViewById(R.id.switch_amoled_theme);
-        if (switchAmoled != null) {
-            switchAmoled.setChecked(ThemeManager.isAmoledMode(this));
-            switchAmoled.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked == ThemeManager.isAmoledMode(this)) return;
-                ThemeManager.setAmoledMode(this, isChecked);
-                sendIntentToRefreshAllWidgets(false);
-                // Allow switch thumb animation to smoothly finish before recreating activity
-                buttonView.postDelayed(this::recreate, 220);
-            });
-        }
+        mChartDistribution = findViewById(R.id.chart_shortcuts_distribution);
+        mDotLegendScripts = findViewById(R.id.dot_legend_scripts);
+        mDotLegendToggles = findViewById(R.id.dot_legend_toggles);
+        mDotLegendCommands = findViewById(R.id.dot_legend_commands);
+        mTxtLegendScriptsCount = findViewById(R.id.txt_legend_scripts_count);
+        mTxtLegendTogglesCount = findViewById(R.id.txt_legend_toggles_count);
+        mTxtLegendCommandsCount = findViewById(R.id.txt_legend_commands_count);
+        mTxtLegendScriptsLabel = findViewById(R.id.txt_legend_scripts_label);
+        mTxtLegendTogglesLabel = findViewById(R.id.txt_legend_toggles_label);
+        mTxtLegendCommandsLabel = findViewById(R.id.txt_legend_commands_label);
 
         mGridQuickTiles = findViewById(R.id.grid_quick_tiles);
         mContainerDetectedShortcuts = findViewById(R.id.container_detected_shortcuts);
@@ -174,12 +184,6 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         if (btnOpenSettings != null) {
             BouncyAnimationHelper.applySpringPress(btnOpenSettings, 0.88f);
             btnOpenSettings.setOnClickListener(v -> startActivity(new Intent(this, TermuxWidgetSettingsActivity.class)));
-        }
-
-        View btnOpenSettingsCard = findViewById(R.id.btn_open_settings_card);
-        if (btnOpenSettingsCard != null) {
-            BouncyAnimationHelper.applySpringPress(btnOpenSettingsCard, 0.96f);
-            btnOpenSettingsCard.setOnClickListener(v -> startActivity(new Intent(this, TermuxWidgetSettingsActivity.class)));
         }
 
         View btnAddToggle = findViewById(R.id.btn_add_toggle);
@@ -323,6 +327,44 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         populateQuickTiles();
         populateDetectedShortcuts();
         populateToggleShortcuts();
+        updateDiskChartOverview();
+        ThemeManager.applySystemFont(findViewById(R.id.main_root_layout));
+    }
+
+    private void updateDiskChartOverview() {
+        if (mChartDistribution == null) return;
+
+        List<ShortcutFile> files = new ArrayList<>();
+        ShortcutUtils.enumerateShortcutFiles(this, files, false);
+        int scriptsCount = files.size();
+        int togglesCount = TermuxTogglePreferences.getToggles(this).size();
+        int commandsCount = TermuxCustomCommandPreferences.getCustomCommands(this).size();
+
+        mChartDistribution.setAmoledMode(ThemeManager.isAmoledMode(this));
+        mChartDistribution.setData(scriptsCount, togglesCount, commandsCount);
+
+        if (mTxtLegendScriptsCount != null) mTxtLegendScriptsCount.setText(String.valueOf(scriptsCount));
+        if (mTxtLegendTogglesCount != null) mTxtLegendTogglesCount.setText(String.valueOf(togglesCount));
+        if (mTxtLegendCommandsCount != null) mTxtLegendCommandsCount.setText(String.valueOf(commandsCount));
+
+        if (mDotLegendScripts != null) {
+            GradientDrawable d = new GradientDrawable();
+            d.setShape(GradientDrawable.OVAL);
+            d.setColor(mChartDistribution.getScriptsColor());
+            mDotLegendScripts.setBackground(d);
+        }
+        if (mDotLegendToggles != null) {
+            GradientDrawable d = new GradientDrawable();
+            d.setShape(GradientDrawable.OVAL);
+            d.setColor(mChartDistribution.getTogglesColor());
+            mDotLegendToggles.setBackground(d);
+        }
+        if (mDotLegendCommands != null) {
+            GradientDrawable d = new GradientDrawable();
+            d.setShape(GradientDrawable.OVAL);
+            d.setColor(mChartDistribution.getCommandsColor());
+            mDotLegendCommands.setBackground(d);
+        }
     }
 
     private void applyAmoledThemeIfNeeded() {
@@ -364,10 +406,13 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
             btnSync.setStrokeWidth(3);
         }
 
-        TextView txtAmoledTitle = findViewById(R.id.txt_amoled_title);
-        if (txtAmoledTitle != null) txtAmoledTitle.setTextColor(Color.WHITE);
-        ImageView imgAmoledMoon = findViewById(R.id.img_amoled_moon);
-        if (imgAmoledMoon != null) imgAmoledMoon.setColorFilter(Color.WHITE);
+        // Disk Chart Legend AMOLED Colors
+        if (mTxtLegendScriptsLabel != null) mTxtLegendScriptsLabel.setTextColor(Color.parseColor("#9E9E9E"));
+        if (mTxtLegendTogglesLabel != null) mTxtLegendTogglesLabel.setTextColor(Color.parseColor("#9E9E9E"));
+        if (mTxtLegendCommandsLabel != null) mTxtLegendCommandsLabel.setTextColor(Color.parseColor("#9E9E9E"));
+        if (mTxtLegendScriptsCount != null) mTxtLegendScriptsCount.setTextColor(Color.WHITE);
+        if (mTxtLegendTogglesCount != null) mTxtLegendTogglesCount.setTextColor(Color.WHITE);
+        if (mTxtLegendCommandsCount != null) mTxtLegendCommandsCount.setTextColor(Color.WHITE);
 
         // Section Headers
         if (mTxtShortcutsCount != null) mTxtShortcutsCount.setTextColor(Color.WHITE);
@@ -445,15 +490,6 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         ImageView imgOpenSettings = findViewById(R.id.img_open_settings);
         if (imgOpenSettings != null) imgOpenSettings.setColorFilter(Color.WHITE);
 
-        MaterialButton btnOpenSettingsCard = findViewById(R.id.btn_open_settings_card);
-        if (btnOpenSettingsCard != null) {
-            btnOpenSettingsCard.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#141416")));
-            btnOpenSettingsCard.setTextColor(Color.WHITE);
-            btnOpenSettingsCard.setIconTint(ColorStateList.valueOf(Color.WHITE));
-            btnOpenSettingsCard.setStrokeColor(ColorStateList.valueOf(Color.parseColor("#2E2E32")));
-            btnOpenSettingsCard.setStrokeWidth(3);
-        }
-
         if (mImgScriptsExpandIcon != null) mImgScriptsExpandIcon.setColorFilter(Color.parseColor("#9E9E9E"));
         if (mImgTogglesExpandIcon != null) mImgTogglesExpandIcon.setColorFilter(Color.parseColor("#9E9E9E"));
     }
@@ -482,6 +518,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         for (int slot = 1; slot <= 8; slot++) {
             final int slotIndex = slot;
             View slotView = inflater.inflate(R.layout.item_main_tile_slot, mGridQuickTiles, false);
+            ThemeManager.applySystemFont(slotView);
 
             TextView txtSlotNum = slotView.findViewById(R.id.slot_number_badge);
             TextView txtLabel = slotView.findViewById(R.id.slot_tile_label);
@@ -676,6 +713,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         LayoutInflater inflater = LayoutInflater.from(this);
         for (ShortcutFile sf : displayFiles) {
             View row = inflater.inflate(R.layout.item_main_shortcut_row, mContainerDetectedShortcuts, false);
+            ThemeManager.applySystemFont(row);
 
             TextView txtTitle = row.findViewById(R.id.row_shortcut_title);
             TextView txtPath = row.findViewById(R.id.row_shortcut_path);
@@ -805,6 +843,7 @@ public class TermuxWidgetMainActivity extends AppCompatActivity {
         boolean isAmoled = ThemeManager.isAmoledMode(this);
         for (ToggleShortcut toggle : toggles) {
             View row = inflater.inflate(R.layout.item_main_toggle_row, mContainerToggleShortcuts, false);
+            ThemeManager.applySystemFont(row);
 
             TextView txtTitle = row.findViewById(R.id.txt_toggle_title);
             TextView txtScripts = row.findViewById(R.id.txt_toggle_scripts);

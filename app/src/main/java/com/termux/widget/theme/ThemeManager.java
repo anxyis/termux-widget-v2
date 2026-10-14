@@ -38,4 +38,24 @@ public final class ThemeManager {
             activity.setTheme(R.style.Theme_TermuxWidget_Material3);
         }
     }
+
+    /**
+     * Recursively resets any hardcoded typography font families so that all
+     * TextViews, Buttons, and text widgets strictly honor the user's OS system font
+     * (e.g. MiSans, OneUI font, or user-selected font in Android Display settings).
+     */
+    public static void applySystemFont(android.view.View view) {
+        if (view == null) return;
+        if (view instanceof android.widget.TextView) {
+            android.widget.TextView tv = (android.widget.TextView) view;
+            android.graphics.Typeface current = tv.getTypeface();
+            int style = current != null ? current.getStyle() : android.graphics.Typeface.NORMAL;
+            tv.setTypeface(android.graphics.Typeface.DEFAULT, style);
+        } else if (view instanceof android.view.ViewGroup) {
+            android.view.ViewGroup vg = (android.view.ViewGroup) view;
+            for (int i = 0; i < vg.getChildCount(); i++) {
+                applySystemFont(vg.getChildAt(i));
+            }
+        }
+    }
 }

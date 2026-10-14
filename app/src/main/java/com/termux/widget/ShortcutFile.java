@@ -316,11 +316,14 @@ public final class ShortcutFile {
         int cornerRadius = TermuxWidgetStylePreferences.getCornerRadiusDp(context);
         int textSizeSp = TermuxWidgetStylePreferences.getTextSizeSp(context);
         int iconSizeDp = TermuxWidgetStylePreferences.getIconSizeDp(context);
+        int badgeSizeDp = Math.round(iconSizeDp * 1.6f);
 
         remoteViews.setTextViewTextSize(R.id.widget_item, TypedValue.COMPLEX_UNIT_SP, textSizeSp);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             remoteViews.setViewLayoutWidth(R.id.widget_item_icon, iconSizeDp, TypedValue.COMPLEX_UNIT_DIP);
             remoteViews.setViewLayoutHeight(R.id.widget_item_icon, iconSizeDp, TypedValue.COMPLEX_UNIT_DIP);
+            remoteViews.setViewLayoutWidth(R.id.widget_item_icon_badge, badgeSizeDp, TypedValue.COMPLEX_UNIT_DIP);
+            remoteViews.setViewLayoutHeight(R.id.widget_item_icon_badge, badgeSizeDp, TypedValue.COMPLEX_UNIT_DIP);
         }
 
         boolean isTaskScript = isTask();
@@ -382,11 +385,14 @@ public final class ShortcutFile {
         int cornerRadius = TermuxWidgetStylePreferences.getCornerRadiusDp(context);
         int textSizeSp = TermuxWidgetStylePreferences.getTextSizeSp(context);
         int iconSizeDp = TermuxWidgetStylePreferences.getIconSizeDp(context);
+        int badgeSizeDp = Math.round(iconSizeDp * 1.6f);
 
         remoteViews.setTextViewTextSize(R.id.widget_grid_item_label, TypedValue.COMPLEX_UNIT_SP, textSizeSp);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             remoteViews.setViewLayoutWidth(R.id.widget_grid_item_icon, iconSizeDp, TypedValue.COMPLEX_UNIT_DIP);
             remoteViews.setViewLayoutHeight(R.id.widget_grid_item_icon, iconSizeDp, TypedValue.COMPLEX_UNIT_DIP);
+            remoteViews.setViewLayoutWidth(R.id.widget_grid_item_icon_badge, badgeSizeDp, TypedValue.COMPLEX_UNIT_DIP);
+            remoteViews.setViewLayoutHeight(R.id.widget_grid_item_icon_badge, badgeSizeDp, TypedValue.COMPLEX_UNIT_DIP);
         }
 
         boolean isTaskScript = isTask();

@@ -32,6 +32,7 @@ import com.termux.widget.utils.BouncyAnimationHelper;
 public class TermuxWidgetSettingsActivity extends AppCompatActivity {
 
     private MaterialCardView mCardPreview;
+    private View mPreviewIconFrame;
     private ImageView mPreviewIcon;
     private TextView mPreviewTitle;
     private TextView mPreviewSubtitle;
@@ -56,6 +57,7 @@ public class TermuxWidgetSettingsActivity extends AppCompatActivity {
         }
 
         mCardPreview = findViewById(R.id.card_widget_live_preview);
+        mPreviewIconFrame = findViewById(R.id.preview_icon_frame);
         mPreviewIcon = findViewById(R.id.preview_widget_icon);
         mPreviewTitle = findViewById(R.id.preview_widget_title);
         mPreviewSubtitle = findViewById(R.id.preview_widget_subtitle);
@@ -213,6 +215,15 @@ public class TermuxWidgetSettingsActivity extends AppCompatActivity {
     }
 
     private void updatePreviewIconSize(int sizeDp) {
+        int badgeSizeDp = Math.round(sizeDp * 1.6f);
+        if (mPreviewIconFrame != null) {
+            ViewGroup.LayoutParams frameLp = mPreviewIconFrame.getLayoutParams();
+            if (frameLp != null) {
+                frameLp.width = dpToPx(badgeSizeDp);
+                frameLp.height = dpToPx(badgeSizeDp);
+                mPreviewIconFrame.setLayoutParams(frameLp);
+            }
+        }
         if (mPreviewIcon != null) {
             ViewGroup.LayoutParams lp = mPreviewIcon.getLayoutParams();
             if (lp != null) {
@@ -262,6 +273,7 @@ public class TermuxWidgetSettingsActivity extends AppCompatActivity {
         if (mPreviewTitle != null) mPreviewTitle.setTextColor(Color.WHITE);
         if (mPreviewSubtitle != null) mPreviewSubtitle.setTextColor(Color.parseColor("#9E9E9E"));
         if (mPreviewIcon != null) mPreviewIcon.setColorFilter(Color.WHITE);
+        if (mPreviewIconFrame != null) mPreviewIconFrame.setBackgroundResource(R.drawable.widget_icon_badge_amoled_bg);
 
         TextView labelCorner = findViewById(R.id.label_corner_radius);
         if (labelCorner != null) labelCorner.setTextColor(Color.WHITE);

@@ -158,9 +158,9 @@
                         app:iconTint="?attr/colorPrimary"
                         app:iconSize="22dp" />
 
-                    <!-- AMOLED Pure Black Display Option -->
-                    <!-- AMOLED Mode Row -->
+                    <!-- Animated Bento Disk / Donut Chart Overview (Visual Flair) -->
                     <LinearLayout
+                        android:id="@+id/container_disk_chart_overview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -169,47 +169,126 @@
                         android:paddingStart="4dp"
                         android:paddingEnd="4dp">
 
-                        <ImageView
-                            android:id="@+id/img_amoled_moon"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_lucide_moon"
-                            app:tint="?attr/colorOnSurface"
-                            android:contentDescription="@null" />
+                        <!-- Custom Animated Donut Disk Chart View -->
+                        <com.termux.widget.views.ShortcutDiskChartView
+                            android:id="@+id/chart_shortcuts_distribution"
+                            android:layout_width="96dp"
+                            android:layout_height="96dp"
+                            android:layout_marginEnd="18dp" />
 
-                        <TextView
-                            android:id="@+id/txt_amoled_title"
+                        <!-- Breakdown Legend Bento Cards -->
+                        <LinearLayout
+                            android:id="@+id/container_chart_legend"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginStart="14dp"
-                            android:text="AMOLED Mode"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="?attr/colorOnSurface" />
+                            android:orientation="vertical">
 
-                        <com.google.android.material.materialswitch.MaterialSwitch
-                            android:id="@+id/switch_amoled_theme"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            <!-- Scripts Legend Item -->
+                            <LinearLayout
+                                android:id="@+id/legend_item_scripts"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginBottom="8dp">
+
+                                <View
+                                    android:id="@+id/dot_legend_scripts"
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"
+                                    android:background="@drawable/shape_chart_legend_dot" />
+
+                                <TextView
+                                    android:id="@+id/txt_legend_scripts_label"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:layout_marginStart="8dp"
+                                    android:text="Scripts"
+                                    android:textSize="13sp"
+                                    android:textColor="?attr/colorOnSurfaceVariant" />
+
+                                <TextView
+                                    android:id="@+id/txt_legend_scripts_count"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold"
+                                    android:textColor="?attr/colorOnSurface" />
+                            </LinearLayout>
+
+                            <!-- Toggles Legend Item -->
+                            <LinearLayout
+                                android:id="@+id/legend_item_toggles"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_marginBottom="8dp">
+
+                                <View
+                                    android:id="@+id/dot_legend_toggles"
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"
+                                    android:background="@drawable/shape_chart_legend_dot" />
+
+                                <TextView
+                                    android:id="@+id/txt_legend_toggles_label"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:layout_marginStart="8dp"
+                                    android:text="Toggles"
+                                    android:textSize="13sp"
+                                    android:textColor="?attr/colorOnSurfaceVariant" />
+
+                                <TextView
+                                    android:id="@+id/txt_legend_toggles_count"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold"
+                                    android:textColor="?attr/colorOnSurface" />
+                            </LinearLayout>
+
+                            <!-- Commands Legend Item -->
+                            <LinearLayout
+                                android:id="@+id/legend_item_commands"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
+
+                                <View
+                                    android:id="@+id/dot_legend_commands"
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"
+                                    android:background="@drawable/shape_chart_legend_dot" />
+
+                                <TextView
+                                    android:id="@+id/txt_legend_commands_label"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:layout_marginStart="8dp"
+                                    android:text="Commands"
+                                    android:textSize="13sp"
+                                    android:textColor="?attr/colorOnSurfaceVariant" />
+
+                                <TextView
+                                    android:id="@+id/txt_legend_commands_count"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold"
+                                    android:textColor="?attr/colorOnSurface" />
+                            </LinearLayout>
+                        </LinearLayout>
                     </LinearLayout>
-
-                    <!-- Widget Customization & Settings Shortcut Bento Button -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_open_settings_card"
-                        style="@style/Widget.TermuxWidget.Button.Tonal"
-                        android:layout_width="match_parent"
-                        android:layout_height="54dp"
-                        android:layout_marginTop="16dp"
-                        android:text="Customize Widgets &amp; Sizing"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        app:cornerRadius="18dp"
-                        app:backgroundTint="?attr/colorSurfaceContainerHigh"
-                        android:textColor="?attr/colorPrimary"
-                        app:icon="@drawable/ic_lucide_sliders"
-                        app:iconTint="?attr/colorPrimary"
-                        app:iconSize="20dp" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

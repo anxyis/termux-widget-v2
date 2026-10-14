@@ -39,6 +39,37 @@ public class TermuxWidgetApplication extends Application {
 
         // Pre-warm icon cache in background thread pool to ensure 0-lag instant picker opening
         com.termux.widget.icons.IconLoader.prewarmCache(this);
+
+        // Enforce system font across all activities
+        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(android.app.Activity activity, android.os.Bundle savedInstanceState) {}
+
+            @Override
+            public void onActivityStarted(android.app.Activity activity) {
+                android.view.View root = activity.findViewById(android.R.id.content);
+                if (root != null) {
+                    com.termux.widget.theme.ThemeManager.applySystemFont(root);
+                }
+            }
+
+            @Override
+            public void onActivityResumed(android.app.Activity activity) {
+                android.view.View root = activity.findViewById(android.R.id.content);
+                if (root != null) {
+                    com.termux.widget.theme.ThemeManager.applySystemFont(root);
+                }
+            }
+
+            @Override
+            public void onActivityPaused(android.app.Activity activity) {}
+            @Override
+            public void onActivityStopped(android.app.Activity activity) {}
+            @Override
+            public void onActivitySaveInstanceState(android.app.Activity activity, android.os.Bundle outState) {}
+            @Override
+            public void onActivityDestroyed(android.app.Activity activity) {}
+        });
     }
 
     public static Context getAppContext() {

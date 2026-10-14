@@ -46,12 +46,15 @@ public final class TermuxButtonWidgetProvider extends AppWidgetProvider {
         int cornerRadius = TermuxWidgetStylePreferences.getCornerRadiusDp(context);
         int textSizeSp = TermuxWidgetStylePreferences.getTextSizeSp(context);
         int iconSizeDp = TermuxWidgetStylePreferences.getIconSizeDp(context);
+        int badgeSizeDp = Math.round(iconSizeDp * 1.6f);
 
         views.setTextViewTextSize(R.id.widget_button_label, android.util.TypedValue.COMPLEX_UNIT_SP, textSizeSp);
         views.setTextViewTextSize(R.id.widget_button_sublabel, android.util.TypedValue.COMPLEX_UNIT_SP, Math.max(9, textSizeSp - 2));
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
             views.setViewLayoutWidth(R.id.widget_button_icon, iconSizeDp, android.util.TypedValue.COMPLEX_UNIT_DIP);
             views.setViewLayoutHeight(R.id.widget_button_icon, iconSizeDp, android.util.TypedValue.COMPLEX_UNIT_DIP);
+            views.setViewLayoutWidth(R.id.widget_button_icon_frame, badgeSizeDp, android.util.TypedValue.COMPLEX_UNIT_DIP);
+            views.setViewLayoutHeight(R.id.widget_button_icon_frame, badgeSizeDp, android.util.TypedValue.COMPLEX_UNIT_DIP);
         }
 
         if (scriptPath != null && !scriptPath.isEmpty()) {
@@ -65,6 +68,11 @@ public final class TermuxButtonWidgetProvider extends AppWidgetProvider {
             boolean isToggleOn = toggle != null && toggle.isOn;
             int bgRes = WidgetBackgroundHelper.getButtonBackground(isAmoled, isToggleOn, cornerRadius);
             views.setInt(R.id.widget_button_root, "setBackgroundResource", bgRes);
+
+            int badgeBgRes = isAmoled ?
+                    (isToggleOn ? R.drawable.widget_toggle_badge_amoled_on_bg : R.drawable.widget_icon_badge_amoled_bg) :
+                    (isToggleOn ? R.drawable.widget_toggle_badge_on_bg : R.drawable.widget_icon_badge_bg);
+            views.setInt(R.id.widget_button_icon_frame, "setBackgroundResource", badgeBgRes);
 
             if (isAmoled) {
                 if (toggle != null) {
@@ -115,6 +123,7 @@ public final class TermuxButtonWidgetProvider extends AppWidgetProvider {
         } else {
             int emptyBgRes = WidgetBackgroundHelper.getButtonBackground(isAmoled, false, cornerRadius);
             views.setInt(R.id.widget_button_root, "setBackgroundResource", emptyBgRes);
+            views.setInt(R.id.widget_button_icon_frame, "setBackgroundResource", isAmoled ? R.drawable.widget_icon_badge_amoled_bg : R.drawable.widget_icon_badge_bg);
             views.setTextViewText(R.id.widget_button_label, "Setup Button");
             views.setTextViewText(R.id.widget_button_sublabel, "Tap to configure");
             views.setImageViewResource(R.id.widget_button_icon, R.drawable.ic_lucide_settings);
