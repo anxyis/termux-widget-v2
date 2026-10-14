@@ -20,7 +20,8 @@ public final class TermuxGridWidgetService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-        return new GridRemoteViewsFactory(getApplicationContext(), appWidgetId);
+        boolean isStack = intent != null && intent.getBooleanExtra("IS_STACK_VIEW", false);
+        return new GridRemoteViewsFactory(getApplicationContext(), appWidgetId, isStack);
     }
 
     public static class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
@@ -28,10 +29,12 @@ public final class TermuxGridWidgetService extends RemoteViewsService {
         private final List<ShortcutFile> shortcutFiles = new ArrayList<>();
         private final Context mContext;
         private final int mAppWidgetId;
+        private final boolean mIsStack;
 
-        public GridRemoteViewsFactory(Context context, int appWidgetId) {
+        public GridRemoteViewsFactory(Context context, int appWidgetId, boolean isStack) {
             mContext = context;
             mAppWidgetId = appWidgetId;
+            mIsStack = isStack;
         }
 
         @Override
@@ -52,6 +55,9 @@ public final class TermuxGridWidgetService extends RemoteViewsService {
         @Override
         public RemoteViews getViewAt(int position) {
             if (position < 0 || position >= shortcutFiles.size()) return null;
+            if (mIsStack) {
+                return shortcutFiles.get(position).getStackWidgetView(mContext);
+            }
             return shortcutFiles.get(position).getGridWidgetView(mContext);
         }
 
@@ -79,7 +85,7 @@ public final class TermuxGridWidgetService extends RemoteViewsService {
         public void onDataSetChanged() {
             shortcutFiles.clear();
             try { TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR.mkdirs(); } catch (Exception ignored) {}
-            ShortcutUtils.enumerateShortcutFiles(mContext, shortcutFiles, true);
+            ShortcutUtils.enumerateShortcutFiles(mContext, shortcutFiles, !mIsStack);
         }
     }
 }

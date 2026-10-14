@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_button_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/widget_button_single_bg"
+    android:padding="6dp">
+
+    <FrameLayout
+        android:id="@+id/widget_button_icon_frame"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:background="@drawable/widget_icon_badge_bg">
+
+        <ImageView
+            android:id="@+id/widget_button_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_lucide_terminal" />
+
+        <ImageView
+            android:id="@+id/widget_button_custom_image"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:scaleType="centerInside"
+            android:visibility="gone"
+            android:contentDescription="@null" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/widget_button_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="@string/title_button_widget_name"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:textColor="@color/m3_on_surface"
+        android:gravity="center"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/widget_button_sublabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tap to run"
+        android:textSize="9sp"
+        android:textColor="@color/m3_on_surface_variant"
+        android:gravity="center"
+        android:maxLines="1"
+        android:visibility="gone" />
+</LinearLayout>

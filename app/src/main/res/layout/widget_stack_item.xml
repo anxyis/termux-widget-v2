@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_stack_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="4dp">
+
+    <!-- Launcher App Icon Styled Card -->
+    <FrameLayout
+        android:id="@+id/widget_stack_item_icon_badge"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:background="@drawable/widget_icon_badge_bg">
+
+        <ImageView
+            android:id="@+id/widget_stack_item_icon"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_hero_bolt"
+            android:tint="@color/widget_accent_circle_icon"
+            android:contentDescription="@null" />
+
+        <ImageView
+            android:id="@+id/widget_stack_item_custom_image"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:scaleType="centerInside"
+            android:visibility="gone"
+            android:contentDescription="@null" />
+    </FrameLayout>
+
+    <!-- App Name Label Beneath Icon -->
+    <TextView
+        android:id="@+id/widget_stack_item_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:textColor="@color/widget_text_color" />
+
+    <TextView
+        android:id="@+id/widget_stack_item_sublabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textSize="9sp"
+        android:visibility="gone"
+        android:textColor="@color/m3_primary" />
+</LinearLayout>

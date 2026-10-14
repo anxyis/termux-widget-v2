@@ -23,7 +23,8 @@ public final class TermuxWidgetService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-        return new ListRemoteViewsFactory(getApplicationContext(), appWidgetId);
+        boolean isStack = intent != null && intent.getBooleanExtra("IS_STACK_VIEW", false);
+        return new ListRemoteViewsFactory(getApplicationContext(), appWidgetId, isStack);
     }
 
     public static class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
@@ -31,10 +32,12 @@ public final class TermuxWidgetService extends RemoteViewsService {
         private final List<ShortcutFile> displayList = new ArrayList<>();
         private final Context mContext;
         private final int mAppWidgetId;
+        private final boolean mIsStack;
 
-        public ListRemoteViewsFactory(Context context, int appWidgetId) {
+        public ListRemoteViewsFactory(Context context, int appWidgetId, boolean isStack) {
             mContext = context;
             mAppWidgetId = appWidgetId;
+            mIsStack = isStack;
         }
 
         @Override
@@ -56,6 +59,9 @@ public final class TermuxWidgetService extends RemoteViewsService {
         @Override
         public RemoteViews getViewAt(int position) {
             if (position < 0 || position >= displayList.size()) return null;
+            if (mIsStack) {
+                return displayList.get(position).getStackWidgetView(mContext);
+            }
             return displayList.get(position).getListWidgetView(mContext, position, displayList.size());
         }
 
@@ -66,7 +72,7 @@ public final class TermuxWidgetService extends RemoteViewsService {
 
         @Override
         public int getViewTypeCount() {
-            return 1;
+            return mIsStack ? 1 : 2;
         }
 
         @Override
@@ -86,7 +92,7 @@ public final class TermuxWidgetService extends RemoteViewsService {
             displayList.clear();
             try { TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR.mkdirs(); } catch (Exception ignored) {}
 
-            ShortcutUtils.enumerateShortcutFiles(mContext, displayList, true);
+            ShortcutUtils.enumerateShortcutFiles(mContext, displayList, !mIsStack);
         }
     }
 }

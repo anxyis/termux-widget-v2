@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:background="@android:color/transparent">
+
+    <StackView
+        android:id="@+id/widget_stack_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:loopViews="true"
+        android:clipChildren="false"
+        android:clipToPadding="false" />
+
+    <!-- Empty State View -->
+    <LinearLayout
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="8dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginBottom="4dp"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_lucide_folder"
+            android:tint="@color/widget_list_badge_icon" />
+
+        <TextView
+            android:id="@+id/txt_empty_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/msg_no_shortcut_scripts"
+            android:gravity="center"
+            android:textSize="10sp"
+            android:textColor="@color/widget_text_color" />
+    </LinearLayout>
+</FrameLayout>

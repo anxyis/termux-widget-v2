@@ -41,6 +41,7 @@ public final class TermuxGridWidgetProvider extends AppWidgetProvider {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
         updateAppWidgetRemoteViews(context, appWidgetManager, appWidgetId);
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_grid);
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_stack_view);
     }
 
     public static void updateAppWidgetRemoteViews(@NonNull Context context, @NonNull AppWidgetManager appWidgetManager, int appWidgetId) {
@@ -51,16 +52,47 @@ public final class TermuxGridWidgetProvider extends AppWidgetProvider {
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
             java.util.Map<android.util.SizeF, RemoteViews> viewMapping = new java.util.HashMap<>();
-            viewMapping.put(new android.util.SizeF(60f, 60f), buildSingleGridRemoteViews(context, appWidgetId, true));
-            viewMapping.put(new android.util.SizeF(170f, 60f), buildSingleGridRemoteViews(context, appWidgetId, false));
+            viewMapping.put(new android.util.SizeF(60f, 60f), buildStackRemoteViews(context, appWidgetId, TermuxGridWidgetProvider.class, TermuxGridWidgetService.class));
+            viewMapping.put(new android.util.SizeF(120f, 120f), buildSingleGridRemoteViews(context, appWidgetId, false));
             remoteViews = new RemoteViews(viewMapping);
         } else {
             int minWidth = options != null ? options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 0) : 0;
-            boolean singleCol = (minWidth > 0 && minWidth < 170);
-            remoteViews = buildSingleGridRemoteViews(context, appWidgetId, singleCol);
+            int minHeight = options != null ? options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 0) : 0;
+            boolean is1x1 = (minWidth > 0 && minWidth < 120 && minHeight < 120);
+            if (is1x1) {
+                remoteViews = buildStackRemoteViews(context, appWidgetId, TermuxGridWidgetProvider.class, TermuxGridWidgetService.class);
+            } else {
+                boolean singleCol = (minWidth > 0 && minWidth < 170);
+                remoteViews = buildSingleGridRemoteViews(context, appWidgetId, singleCol);
+            }
         }
 
         appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+    }
+
+    public static RemoteViews buildStackRemoteViews(@NonNull Context context, int appWidgetId, Class<?> providerClass, Class<?> serviceClass) {
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_stack_layout);
+        remoteViews.setEmptyView(R.id.widget_stack_view, R.id.empty_view);
+        if (ThemeManager.isAmoledMode(context)) {
+            remoteViews.setTextColor(R.id.txt_empty_message, Color.WHITE);
+        }
+
+        Intent intent = new Intent(context, serviceClass);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        intent.putExtra("IS_STACK_VIEW", true);
+        intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+        remoteViews.setRemoteAdapter(R.id.widget_stack_view, intent);
+
+        Intent clickIntent = new Intent(context, providerClass);
+        clickIntent.setAction(TERMUX_WIDGET_PROVIDER.ACTION_WIDGET_ITEM_CLICKED);
+        clickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        clickIntent.setData(Uri.parse(clickIntent.toUri(Intent.URI_INTENT_SCHEME)));
+        @SuppressLint("UnspecifiedImmutableFlag")
+        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(context, 0, clickIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        remoteViews.setPendingIntentTemplate(R.id.widget_stack_view, clickPendingIntent);
+
+        return remoteViews;
     }
 
     private static RemoteViews buildSingleGridRemoteViews(@NonNull Context context, int appWidgetId, boolean singleColumn) {
@@ -102,6 +134,7 @@ public final class TermuxGridWidgetProvider extends AppWidgetProvider {
                     for (int id : ids) {
                         updateAppWidgetRemoteViews(context, AppWidgetManager.getInstance(context), id);
                         AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(id, R.id.widget_grid);
+                        AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(id, R.id.widget_stack_view);
                     }
                 }
                 return;
@@ -127,6 +160,7 @@ public final class TermuxGridWidgetProvider extends AppWidgetProvider {
                 for (int id : appWidgetIds) {
                     updateAppWidgetRemoteViews(context, AppWidgetManager.getInstance(context), id);
                     AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(id, R.id.widget_grid);
+                    AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(id, R.id.widget_stack_view);
                 }
                 return;
             }

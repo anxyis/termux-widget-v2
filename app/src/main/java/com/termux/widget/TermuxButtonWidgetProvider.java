@@ -34,30 +34,58 @@ public final class TermuxButtonWidgetProvider extends AppWidgetProvider {
         }
     }
 
+    @Override
+    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, android.os.Bundle newOptions) {
+        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
+        updateButtonWidget(context, appWidgetManager, appWidgetId);
+    }
+
     public static void updateButtonWidget(@NonNull Context context, @NonNull AppWidgetManager appWidgetManager, int appWidgetId) {
         if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) return;
 
+        RemoteViews views;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            java.util.Map<android.util.SizeF, RemoteViews> viewMapping = new java.util.HashMap<>();
+            viewMapping.put(new android.util.SizeF(50f, 50f), buildButtonRemoteViews(context, appWidgetId, true));
+            viewMapping.put(new android.util.SizeF(110f, 40f), buildButtonRemoteViews(context, appWidgetId, false));
+            views = new RemoteViews(viewMapping);
+        } else {
+            android.os.Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
+            int minWidth = options != null ? options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 0) : 0;
+            boolean isSquare = (minWidth > 0 && minWidth < 110);
+            views = buildButtonRemoteViews(context, appWidgetId, isSquare);
+        }
+
+        appWidgetManager.updateAppWidget(appWidgetId, views);
+    }
+
+    public static RemoteViews buildButtonRemoteViews(@NonNull Context context, int appWidgetId, boolean isSquare) {
         String scriptPath = TermuxButtonWidgetPreferences.getScriptPath(context, appWidgetId);
         String label = TermuxButtonWidgetPreferences.getLabel(context, appWidgetId);
         String iconId = TermuxButtonWidgetPreferences.getIconId(context, appWidgetId);
 
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_button_layout);
+        int layoutId = isSquare ? R.layout.widget_button_square_layout : R.layout.widget_button_layout;
+        RemoteViews views = new RemoteViews(context.getPackageName(), layoutId);
+
         boolean isAmoled = ThemeManager.isAmoledMode(context);
+        boolean isBlur = TermuxWidgetStylePreferences.isBlurEnabled(context);
+        boolean isCustom = TermuxWidgetStylePreferences.isCustomColorsEnabled(context);
+        int customPrimary = TermuxWidgetStylePreferences.getCustomPrimaryColor(context);
+        int customText = TermuxWidgetStylePreferences.getCustomTextColor(context);
+
         int cornerRadius = TermuxWidgetStylePreferences.getCornerRadiusDp(context);
         int textSizeSp = TermuxWidgetStylePreferences.getTextSizeSp(context);
         int iconSizeDp = TermuxWidgetStylePreferences.getIconSizeDp(context);
         int badgeSizeDp = Math.round(iconSizeDp * 1.6f);
 
-        views.setTextViewTextSize(R.id.widget_button_label, android.util.TypedValue.COMPLEX_UNIT_SP, textSizeSp);
-        views.setTextViewTextSize(R.id.widget_button_sublabel, android.util.TypedValue.COMPLEX_UNIT_SP, Math.max(9, textSizeSp - 2));
+        views.setTextViewTextSize(R.id.widget_button_label, android.util.TypedValue.COMPLEX_UNIT_SP, isSquare ? Math.max(10, textSizeSp - 2) : textSizeSp);
+        views.setTextViewTextSize(R.id.widget_button_sublabel, android.util.TypedValue.COMPLEX_UNIT_SP, Math.max(9, textSizeSp - 3));
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
             views.setViewLayoutWidth(R.id.widget_button_icon, iconSizeDp, android.util.TypedValue.COMPLEX_UNIT_DIP);
             views.setViewLayoutHeight(R.id.widget_button_icon, iconSizeDp, android.util.TypedValue.COMPLEX_UNIT_DIP);
             views.setViewLayoutWidth(R.id.widget_button_icon_frame, badgeSizeDp, android.util.TypedValue.COMPLEX_UNIT_DIP);
             views.setViewLayoutHeight(R.id.widget_button_icon_frame, badgeSizeDp, android.util.TypedValue.COMPLEX_UNIT_DIP);
         }
-
-        boolean isBlur = TermuxWidgetStylePreferences.isBlurEnabled(context);
 
         if (scriptPath != null && !scriptPath.isEmpty()) {
             boolean isToggle = scriptPath.startsWith(com.termux.widget.toggle.TermuxTogglePreferences.PREFIX_TOGGLE);
@@ -99,8 +127,9 @@ public final class TermuxButtonWidgetProvider extends AppWidgetProvider {
                 if (toggle != null) {
                     views.setTextViewText(R.id.widget_button_sublabel, toggle.isOn ? "State: ON" : "State: OFF");
                     if (toggle.isOn) {
-                        views.setTextColor(R.id.widget_button_label, Color.BLACK);
-                        views.setTextColor(R.id.widget_button_sublabel, Color.BLACK);
+                        // High-contrast M3 Expressive: white text on dark card, black icon on white badge
+                        views.setTextColor(R.id.widget_button_label, Color.WHITE);
+                        views.setTextColor(R.id.widget_button_sublabel, Color.parseColor("#CCCCCC"));
                         views.setInt(R.id.widget_button_icon, "setColorFilter", Color.BLACK);
                     } else {
                         views.setTextColor(R.id.widget_button_label, Color.WHITE);
@@ -112,6 +141,18 @@ public final class TermuxButtonWidgetProvider extends AppWidgetProvider {
                     views.setTextColor(R.id.widget_button_label, Color.WHITE);
                     views.setTextColor(R.id.widget_button_sublabel, Color.parseColor("#9E9E9E"));
                     views.setInt(R.id.widget_button_icon, "setColorFilter", Color.WHITE);
+                }
+            } else if (isCustom) {
+                views.setTextColor(R.id.widget_button_label, customText);
+                views.setTextColor(R.id.widget_button_sublabel, customText);
+                if (toggle != null && toggle.isOn) {
+                    views.setInt(R.id.widget_button_icon_frame, "setBackgroundResource", R.drawable.widget_toggle_badge_on_bg);
+                    views.setInt(R.id.widget_button_icon, "setColorFilter", Color.BLACK);
+                    views.setTextViewText(R.id.widget_button_sublabel, "State: ON");
+                } else {
+                    views.setInt(R.id.widget_button_icon_frame, "setBackgroundResource", R.drawable.widget_icon_badge_bg);
+                    views.setInt(R.id.widget_button_icon, "setColorFilter", customPrimary);
+                    views.setTextViewText(R.id.widget_button_sublabel, toggle != null ? "State: OFF" : "Tap to run");
                 }
             } else {
                 int badgeBgRes = isToggleOn ? R.drawable.widget_toggle_badge_on_bg : R.drawable.widget_icon_badge_bg;
@@ -133,7 +174,7 @@ public final class TermuxButtonWidgetProvider extends AppWidgetProvider {
                 }
             }
 
-            IconHelper.applyToRemoteViews(views, R.id.widget_button_icon, 0, iconId, R.drawable.ic_lucide_terminal);
+            IconHelper.applyToRemoteViews(views, R.id.widget_button_icon, R.id.widget_button_custom_image, iconId, R.drawable.ic_lucide_terminal);
 
             Intent clickIntent = new Intent(context, TermuxButtonWidgetProvider.class);
             clickIntent.setAction(ACTION_RUN_BUTTON_SHORTCUT);
@@ -161,6 +202,10 @@ public final class TermuxButtonWidgetProvider extends AppWidgetProvider {
                 views.setTextColor(R.id.widget_button_label, Color.WHITE);
                 views.setTextColor(R.id.widget_button_sublabel, Color.parseColor("#9E9E9E"));
                 views.setInt(R.id.widget_button_icon, "setColorFilter", Color.WHITE);
+            } else if (isCustom) {
+                views.setTextColor(R.id.widget_button_label, customText);
+                views.setTextColor(R.id.widget_button_sublabel, customText);
+                views.setInt(R.id.widget_button_icon, "setColorFilter", customPrimary);
             }
 
             Intent configIntent = new Intent(context, com.termux.widget.activities.TermuxButtonWidgetConfigureActivity.class);
@@ -173,7 +218,7 @@ public final class TermuxButtonWidgetProvider extends AppWidgetProvider {
             views.setOnClickPendingIntent(R.id.widget_button_root, pendingIntent);
         }
 
-        appWidgetManager.updateAppWidget(appWidgetId, views);
+        return views;
     }
 
     @Override

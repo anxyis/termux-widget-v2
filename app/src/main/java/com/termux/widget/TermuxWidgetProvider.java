@@ -79,9 +79,40 @@ public final class TermuxWidgetProvider extends AppWidgetProvider {
         }
     }
 
+    @Override
+    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, android.os.Bundle newOptions) {
+        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
+        updateAppWidgetRemoteViews(context, appWidgetManager, appWidgetId);
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_list);
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_stack_view);
+    }
+
     public static void updateAppWidgetRemoteViews(@NonNull Context context, @NonNull AppWidgetManager appWidgetManager, int appWidgetId) {
         if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) return;
 
+        android.os.Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
+        RemoteViews remoteViews;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            java.util.Map<android.util.SizeF, RemoteViews> viewMapping = new java.util.HashMap<>();
+            viewMapping.put(new android.util.SizeF(60f, 60f), TermuxGridWidgetProvider.buildStackRemoteViews(context, appWidgetId, TermuxWidgetProvider.class, TermuxWidgetService.class));
+            viewMapping.put(new android.util.SizeF(120f, 60f), buildListRemoteViews(context, appWidgetId));
+            remoteViews = new RemoteViews(viewMapping);
+        } else {
+            int minWidth = options != null ? options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 0) : 0;
+            int minHeight = options != null ? options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 0) : 0;
+            boolean is1x1 = (minWidth > 0 && minWidth < 120 && minHeight < 120);
+            if (is1x1) {
+                remoteViews = TermuxGridWidgetProvider.buildStackRemoteViews(context, appWidgetId, TermuxWidgetProvider.class, TermuxWidgetService.class);
+            } else {
+                remoteViews = buildListRemoteViews(context, appWidgetId);
+            }
+        }
+
+        appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+    }
+
+    public static RemoteViews buildListRemoteViews(@NonNull Context context, int appWidgetId) {
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
         // The empty view is displayed when the collection has no items. It should be a sibling
@@ -100,20 +131,16 @@ public final class TermuxWidgetProvider extends AppWidgetProvider {
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
         remoteViews.setRemoteAdapter(R.id.widget_list, intent);
 
-        // Here we setup the a pending intent template. Individuals items of a collection
-        // cannot setup their own pending intents, instead, the collection as a whole can
-        // setup a pending intent template, and the individual items can set a fillInIntent
-        // to create unique before on an item to item basis.
         Intent toastIntent = new Intent(context, TermuxWidgetProvider.class);
         toastIntent.setAction(TERMUX_WIDGET_PROVIDER.ACTION_WIDGET_ITEM_CLICKED);
         toastIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+        toastIntent.setData(Uri.parse(toastIntent.toUri(Intent.URI_INTENT_SCHEME)));
         @SuppressLint("UnspecifiedImmutableFlag") // Must be mutable
         PendingIntent toastPendingIntent = PendingIntent.getBroadcast(context, 0, toastIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setPendingIntentTemplate(R.id.widget_list, toastPendingIntent);
 
-        appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+        return remoteViews;
     }
 
     @Override
@@ -212,6 +239,7 @@ public final class TermuxWidgetProvider extends AppWidgetProvider {
                 updateAppWidgetRemoteViews(context, AppWidgetManager.getInstance(context), appWidgetId);
 
             AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_list);
+            AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_stack_view);
         }
 
         return updatedAppWidgetIds.size() > 0 ? updatedAppWidgetIds : null;

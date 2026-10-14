@@ -35,18 +35,89 @@
             android:orientation="vertical">
 
             <!-- Section 1: Live Interactive Widget Preview -->
-            <TextView
-                android:id="@+id/txt_preview_header"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
                 android:layout_marginStart="6dp"
-                android:layout_marginBottom="8dp"
-                android:text="LIVE WIDGET PREVIEW"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.08"
-                android:textColor="?attr/colorPrimary" />
+                android:layout_marginEnd="6dp"
+                android:layout_marginBottom="8dp">
 
+                <TextView
+                    android:id="@+id/txt_preview_header"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="LIVE WIDGET PREVIEW"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.08"
+                    android:textColor="?attr/colorPrimary" />
+
+                <TextView
+                    android:id="@+id/badge_live_preview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="INTERACTIVE"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.06"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:background="@drawable/widget_pill_badge_bg"
+                    android:textColor="@color/badge_task_text" />
+            </LinearLayout>
+
+            <!-- Preview Type Selector: Button | List | Grid -->
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggle_group_preview_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:singleSelection="true"
+                app:selectionRequired="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_preview_button"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:text="Button"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:icon="@drawable/ic_hero_bolt"
+                    app:iconSize="16dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_preview_list"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:text="List"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:icon="@drawable/ic_lucide_folder"
+                    app:iconSize="16dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_preview_grid"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:text="Grid"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:icon="@drawable/ic_lucide_terminal"
+                    app:iconSize="16dp" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <!-- Preview Container Card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_widget_live_preview"
                 style="@style/Widget.TermuxWidget.Card"
@@ -58,75 +129,236 @@
                 app:strokeWidth="1.5dp"
                 app:strokeColor="?attr/colorOutlineVariant">
 
-                <LinearLayout
-                    android:id="@+id/layout_preview_inner"
+                <FrameLayout
+                    android:id="@+id/layout_preview_root"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:paddingStart="18dp"
-                    android:paddingEnd="18dp"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp">
+                    android:padding="16dp">
 
-                    <FrameLayout
-                        android:id="@+id/preview_icon_frame"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/widget_icon_badge_bg"
-                        android:layout_marginEnd="14dp">
-
-                        <ImageView
-                            android:id="@+id/preview_widget_icon"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_lucide_terminal"
-                            app:tint="?attr/colorPrimary"
-                            android:contentDescription="@null" />
-                    </FrameLayout>
-
+                    <!-- Button Widget Preview -->
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:id="@+id/layout_preview_button"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center_vertical">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:visibility="visible">
 
-                        <TextView
-                            android:id="@+id/preview_widget_title"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Backup Server.sh"
-                            android:textSize="13sp"
-                            android:textStyle="bold"
-                            android:textColor="?attr/colorOnSurface" />
+                        <FrameLayout
+                            android:id="@+id/preview_icon_frame"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/widget_icon_badge_bg"
+                            android:layout_marginEnd="14dp">
 
-                        <TextView
-                            android:id="@+id/preview_widget_subtitle"
-                            android:layout_width="wrap_content"
+                            <ImageView
+                                android:id="@+id/preview_widget_icon"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_lucide_terminal"
+                                app:tint="?attr/colorPrimary"
+                                android:contentDescription="@null" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="Tap to run"
-                            android:textSize="11sp"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:id="@+id/preview_widget_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Backup Server.sh"
+                                android:textSize="13sp"
+                                android:textStyle="bold"
+                                android:textColor="?attr/colorOnSurface" />
+
+                            <TextView
+                                android:id="@+id/preview_widget_subtitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Tap to run"
+                                android:textSize="11sp"
+                                android:textColor="?attr/colorOnSurfaceVariant" />
+                        </LinearLayout>
                     </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/badge_live_preview"
-                        android:layout_width="wrap_content"
+                    <!-- List Widget Preview -->
+                    <LinearLayout
+                        android:id="@+id/layout_preview_list"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="PREVIEW"
-                        android:textSize="10sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="0.06"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
-                        android:paddingTop="3dp"
-                        android:paddingBottom="3dp"
-                        android:background="@drawable/widget_pill_badge_bg"
-                        android:textColor="@color/badge_task_text" />
-                </LinearLayout>
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <!-- List Item 1 -->
+                        <LinearLayout
+                            android:id="@+id/preview_list_item1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:padding="10dp"
+                            android:background="@drawable/widget_button_single_bg"
+                            android:layout_marginBottom="8dp">
+
+                            <FrameLayout
+                                android:id="@+id/preview_list_item1_frame"
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:background="@drawable/widget_icon_badge_bg"
+                                android:layout_marginEnd="12dp">
+
+                                <ImageView
+                                    android:id="@+id/preview_list_item1_icon"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_hero_bolt"
+                                    app:tint="?attr/colorPrimary"
+                                    android:contentDescription="@null" />
+                            </FrameLayout>
+
+                            <TextView
+                                android:id="@+id/preview_list_item1_text"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Deploy Production.sh"
+                                android:textSize="13sp"
+                                android:textStyle="bold"
+                                android:textColor="?attr/colorOnSurface" />
+                        </LinearLayout>
+
+                        <!-- List Item 2 (Active Toggle) -->
+                        <LinearLayout
+                            android:id="@+id/preview_list_item2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:padding="10dp"
+                            android:background="@drawable/widget_toggle_card_on_bg">
+
+                            <FrameLayout
+                                android:id="@+id/preview_list_item2_frame"
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:background="@drawable/widget_toggle_badge_on_bg"
+                                android:layout_marginEnd="12dp">
+
+                                <ImageView
+                                    android:id="@+id/preview_list_item2_icon"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_lucide_terminal"
+                                    android:contentDescription="@null" />
+                            </FrameLayout>
+
+                            <TextView
+                                android:id="@+id/preview_list_item2_text"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="VPN Tunnel Toggle (● ON)"
+                                android:textSize="13sp"
+                                android:textStyle="bold"
+                                android:textColor="?attr/colorOnSurface" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Grid Widget Preview -->
+                    <LinearLayout
+                        android:id="@+id/layout_preview_grid"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <!-- Grid Item 1 -->
+                        <LinearLayout
+                            android:id="@+id/preview_grid_item1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="12dp"
+                            android:background="@drawable/widget_grid_item_bg"
+                            android:layout_marginEnd="6dp">
+
+                            <FrameLayout
+                                android:id="@+id/preview_grid_item1_frame"
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:background="@drawable/widget_icon_badge_bg">
+
+                                <ImageView
+                                    android:id="@+id/preview_grid_item1_icon"
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_lucide_terminal"
+                                    app:tint="?attr/colorPrimary"
+                                    android:contentDescription="@null" />
+                            </FrameLayout>
+
+                            <TextView
+                                android:id="@+id/preview_grid_item1_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:text="Quick Script"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:textColor="?attr/colorOnSurface" />
+                        </LinearLayout>
+
+                        <!-- Grid Item 2 (Toggle ON) -->
+                        <LinearLayout
+                            android:id="@+id/preview_grid_item2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="12dp"
+                            android:background="@drawable/widget_toggle_grid_card_on_bg"
+                            android:layout_marginStart="6dp">
+
+                            <FrameLayout
+                                android:id="@+id/preview_grid_item2_frame"
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:background="@drawable/widget_toggle_badge_on_bg">
+
+                                <ImageView
+                                    android:id="@+id/preview_grid_item2_icon"
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_hero_bolt"
+                                    android:contentDescription="@null" />
+                            </FrameLayout>
+
+                            <TextView
+                                android:id="@+id/preview_grid_item2_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:text="Tor (● ON)"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:textColor="?attr/colorOnSurface" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Section 2: Display & AMOLED Mode -->
@@ -241,6 +473,188 @@
                             android:id="@+id/switch_settings_blur"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginBottom="14dp"
+                        android:background="?attr/colorOutlineVariant" />
+
+                    <!-- Material You Dynamic Colors Switch -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:id="@+id/img_settings_palette"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_lucide_palette"
+                            app:tint="?attr/colorOnSurface"
+                            android:contentDescription="@null" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="14dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/txt_settings_material_you_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Material You Dynamic Colors"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="?attr/colorOnSurface" />
+
+                            <TextView
+                                android:id="@+id/txt_settings_material_you_subtitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Toggle off to choose custom palette colors"
+                                android:textSize="12sp"
+                                android:textColor="?attr/colorOnSurfaceVariant" />
+                        </LinearLayout>
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/switch_settings_material_you"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <!-- Custom Colors Container (shown when Material You is OFF) -->
+                    <LinearLayout
+                        android:id="@+id/layout_custom_colors"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="16dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="CUSTOM PALETTE PRESETS"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.06"
+                            android:textColor="?attr/colorPrimary"
+                            android:layout_marginBottom="10dp" />
+
+                        <!-- Horizontal Palette Chips / Swatches -->
+                        <HorizontalScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:scrollbars="none"
+                            android:layout_marginBottom="12dp">
+
+                            <LinearLayout
+                                android:id="@+id/layout_color_swatches"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/btn_color_indigo"
+                                    style="@style/Widget.Material3.Button.TonalButton"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="42dp"
+                                    android:text="⚡ Indigo"
+                                    android:textSize="12sp"
+                                    android:layout_marginEnd="8dp"
+                                    app:cornerRadius="14dp" />
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/btn_color_cyan"
+                                    style="@style/Widget.Material3.Button.TonalButton"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="42dp"
+                                    android:text="🌊 Cyan"
+                                    android:textSize="12sp"
+                                    android:layout_marginEnd="8dp"
+                                    app:cornerRadius="14dp" />
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/btn_color_emerald"
+                                    style="@style/Widget.Material3.Button.TonalButton"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="42dp"
+                                    android:text="🍃 Emerald"
+                                    android:textSize="12sp"
+                                    android:layout_marginEnd="8dp"
+                                    app:cornerRadius="14dp" />
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/btn_color_orange"
+                                    style="@style/Widget.Material3.Button.TonalButton"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="42dp"
+                                    android:text="🍊 Orange"
+                                    android:textSize="12sp"
+                                    android:layout_marginEnd="8dp"
+                                    app:cornerRadius="14dp" />
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/btn_color_crimson"
+                                    style="@style/Widget.Material3.Button.TonalButton"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="42dp"
+                                    android:text="🔴 Crimson"
+                                    android:textSize="12sp"
+                                    android:layout_marginEnd="8dp"
+                                    app:cornerRadius="14dp" />
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/btn_color_pink"
+                                    style="@style/Widget.Material3.Button.TonalButton"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="42dp"
+                                    android:text="🌸 Pink"
+                                    android:textSize="12sp"
+                                    android:layout_marginEnd="8dp"
+                                    app:cornerRadius="14dp" />
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/btn_color_amber"
+                                    style="@style/Widget.Material3.Button.TonalButton"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="42dp"
+                                    android:text="👑 Amber"
+                                    android:textSize="12sp"
+                                    android:layout_marginEnd="8dp"
+                                    app:cornerRadius="14dp" />
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/btn_color_monochrome"
+                                    style="@style/Widget.Material3.Button.TonalButton"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="42dp"
+                                    android:text="⚪ Minimal"
+                                    android:textSize="12sp"
+                                    app:cornerRadius="14dp" />
+                            </LinearLayout>
+                        </HorizontalScrollView>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_custom_hex_picker"
+                            style="@style/Widget.TermuxWidget.Button.Tonal"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:text="Custom Hex Accent (#RRGGBB)..."
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="16dp"
+                            app:icon="@drawable/ic_lucide_palette"
+                            app:iconSize="16dp"
+                            app:iconGravity="textStart" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

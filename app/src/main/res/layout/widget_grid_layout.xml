@@ -6,7 +6,10 @@
     android:background="@android:color/transparent"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:padding="2dp">
+    android:paddingStart="6dp"
+    android:paddingEnd="6dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
 
     <GridView
         android:id="@+id/widget_grid"
@@ -18,7 +21,9 @@
         android:stretchMode="columnWidth"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:scrollbars="vertical" />
+        android:requiresFadingEdge="vertical"
+        android:fadingEdgeLength="20dp"
+        android:scrollbars="none" />
 
     <!-- Empty State View -->
     <LinearLayout
