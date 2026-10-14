@@ -57,6 +57,8 @@ public final class TermuxButtonWidgetProvider extends AppWidgetProvider {
             views.setViewLayoutHeight(R.id.widget_button_icon_frame, badgeSizeDp, android.util.TypedValue.COMPLEX_UNIT_DIP);
         }
 
+        boolean isBlur = TermuxWidgetStylePreferences.isBlurEnabled(context);
+
         if (scriptPath != null && !scriptPath.isEmpty()) {
             boolean isToggle = scriptPath.startsWith(com.termux.widget.toggle.TermuxTogglePreferences.PREFIX_TOGGLE);
             com.termux.widget.toggle.ToggleShortcut toggle = isToggle ?
@@ -66,15 +68,34 @@ public final class TermuxButtonWidgetProvider extends AppWidgetProvider {
             views.setTextViewText(R.id.widget_button_label, displayLabel);
 
             boolean isToggleOn = toggle != null && toggle.isOn;
-            int bgRes = WidgetBackgroundHelper.getButtonBackground(isAmoled, isToggleOn, cornerRadius);
+            int bgRes = WidgetBackgroundHelper.getButtonBackground(isAmoled, isToggleOn, cornerRadius, isBlur);
             views.setInt(R.id.widget_button_root, "setBackgroundResource", bgRes);
 
-            int badgeBgRes = isAmoled ?
-                    (isToggleOn ? R.drawable.widget_toggle_badge_amoled_on_bg : R.drawable.widget_icon_badge_amoled_bg) :
-                    (isToggleOn ? R.drawable.widget_toggle_badge_on_bg : R.drawable.widget_icon_badge_bg);
-            views.setInt(R.id.widget_button_icon_frame, "setBackgroundResource", badgeBgRes);
+            if (isBlur) {
+                int badgeBgRes = isToggleOn ? R.drawable.widget_toggle_badge_on_bg : R.drawable.widget_icon_badge_blur_bg;
+                views.setInt(R.id.widget_button_icon_frame, "setBackgroundResource", badgeBgRes);
 
-            if (isAmoled) {
+                if (toggle != null) {
+                    views.setTextViewText(R.id.widget_button_sublabel, toggle.isOn ? "State: ON" : "State: OFF");
+                    if (toggle.isOn) {
+                        views.setTextColor(R.id.widget_button_label, Color.BLACK);
+                        views.setTextColor(R.id.widget_button_sublabel, Color.BLACK);
+                        views.setInt(R.id.widget_button_icon, "setColorFilter", Color.BLACK);
+                    } else {
+                        views.setTextColor(R.id.widget_button_label, Color.WHITE);
+                        views.setTextColor(R.id.widget_button_sublabel, Color.parseColor("#CCCCCC"));
+                        views.setInt(R.id.widget_button_icon, "setColorFilter", Color.WHITE);
+                    }
+                } else {
+                    views.setTextViewText(R.id.widget_button_sublabel, "Tap to run");
+                    views.setTextColor(R.id.widget_button_label, Color.WHITE);
+                    views.setTextColor(R.id.widget_button_sublabel, Color.parseColor("#CCCCCC"));
+                    views.setInt(R.id.widget_button_icon, "setColorFilter", Color.WHITE);
+                }
+            } else if (isAmoled) {
+                int badgeBgRes = isToggleOn ? R.drawable.widget_toggle_badge_amoled_on_bg : R.drawable.widget_icon_badge_amoled_bg;
+                views.setInt(R.id.widget_button_icon_frame, "setBackgroundResource", badgeBgRes);
+
                 if (toggle != null) {
                     views.setTextViewText(R.id.widget_button_sublabel, toggle.isOn ? "State: ON" : "State: OFF");
                     if (toggle.isOn) {
@@ -93,6 +114,9 @@ public final class TermuxButtonWidgetProvider extends AppWidgetProvider {
                     views.setInt(R.id.widget_button_icon, "setColorFilter", Color.WHITE);
                 }
             } else {
+                int badgeBgRes = isToggleOn ? R.drawable.widget_toggle_badge_on_bg : R.drawable.widget_icon_badge_bg;
+                views.setInt(R.id.widget_button_icon_frame, "setBackgroundResource", badgeBgRes);
+
                 if (toggle != null) {
                     views.setTextViewText(R.id.widget_button_sublabel, toggle.isOn ? "State: ON" : "State: OFF");
                     if (toggle.isOn) {
@@ -121,13 +145,19 @@ public final class TermuxButtonWidgetProvider extends AppWidgetProvider {
                     context, appWidgetId, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             views.setOnClickPendingIntent(R.id.widget_button_root, pendingIntent);
         } else {
-            int emptyBgRes = WidgetBackgroundHelper.getButtonBackground(isAmoled, false, cornerRadius);
+            int emptyBgRes = WidgetBackgroundHelper.getButtonBackground(isAmoled, false, cornerRadius, isBlur);
             views.setInt(R.id.widget_button_root, "setBackgroundResource", emptyBgRes);
-            views.setInt(R.id.widget_button_icon_frame, "setBackgroundResource", isAmoled ? R.drawable.widget_icon_badge_amoled_bg : R.drawable.widget_icon_badge_bg);
+            int emptyBadgeBgRes = isBlur ? R.drawable.widget_icon_badge_blur_bg :
+                    (isAmoled ? R.drawable.widget_icon_badge_amoled_bg : R.drawable.widget_icon_badge_bg);
+            views.setInt(R.id.widget_button_icon_frame, "setBackgroundResource", emptyBadgeBgRes);
             views.setTextViewText(R.id.widget_button_label, "Setup Button");
             views.setTextViewText(R.id.widget_button_sublabel, "Tap to configure");
             views.setImageViewResource(R.id.widget_button_icon, R.drawable.ic_lucide_settings);
-            if (isAmoled) {
+            if (isBlur) {
+                views.setTextColor(R.id.widget_button_label, Color.WHITE);
+                views.setTextColor(R.id.widget_button_sublabel, Color.parseColor("#CCCCCC"));
+                views.setInt(R.id.widget_button_icon, "setColorFilter", Color.WHITE);
+            } else if (isAmoled) {
                 views.setTextColor(R.id.widget_button_label, Color.WHITE);
                 views.setTextColor(R.id.widget_button_sublabel, Color.parseColor("#9E9E9E"));
                 views.setInt(R.id.widget_button_icon, "setColorFilter", Color.WHITE);

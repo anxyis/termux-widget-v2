@@ -16,7 +16,33 @@ public final class WidgetBackgroundHelper {
 
     @DrawableRes
     public static int getButtonBackground(boolean isAmoled, boolean isToggleOn, int cornerRadiusDp) {
+        return getButtonBackground(isAmoled, isToggleOn, cornerRadiusDp, false);
+    }
+
+    @DrawableRes
+    public static int getButtonBackground(boolean isAmoled, boolean isToggleOn, int cornerRadiusDp, boolean isBlur) {
         int tier = getTier(cornerRadiusDp);
+        if (isBlur) {
+            if (isToggleOn) {
+                switch (tier) {
+                    case 0: return R.drawable.widget_toggle_card_blur_on_bg_r0;
+                    case 8: return R.drawable.widget_toggle_card_blur_on_bg_r8;
+                    case 16: return R.drawable.widget_toggle_card_blur_on_bg_r16;
+                    case 32: return R.drawable.widget_toggle_card_blur_on_bg_r32;
+                    case 24:
+                    default: return R.drawable.widget_toggle_card_blur_on_bg;
+                }
+            } else {
+                switch (tier) {
+                    case 0: return R.drawable.widget_button_single_blur_bg_r0;
+                    case 8: return R.drawable.widget_button_single_blur_bg_r8;
+                    case 16: return R.drawable.widget_button_single_blur_bg_r16;
+                    case 32: return R.drawable.widget_button_single_blur_bg_r32;
+                    case 24:
+                    default: return R.drawable.widget_button_single_blur_bg;
+                }
+            }
+        }
         if (isAmoled) {
             if (isToggleOn) {
                 switch (tier) {
@@ -62,7 +88,33 @@ public final class WidgetBackgroundHelper {
 
     @DrawableRes
     public static int getListCardBackground(boolean isAmoled, boolean isToggleOn, int cornerRadiusDp) {
+        return getListCardBackground(isAmoled, isToggleOn, cornerRadiusDp, false);
+    }
+
+    @DrawableRes
+    public static int getListCardBackground(boolean isAmoled, boolean isToggleOn, int cornerRadiusDp, boolean isBlur) {
         int tier = getTier(cornerRadiusDp);
+        if (isBlur) {
+            if (isToggleOn) {
+                switch (tier) {
+                    case 0: return R.drawable.widget_toggle_card_blur_on_bg_r0;
+                    case 8: return R.drawable.widget_toggle_card_blur_on_bg_r8;
+                    case 16: return R.drawable.widget_toggle_card_blur_on_bg_r16;
+                    case 32: return R.drawable.widget_toggle_card_blur_on_bg_r32;
+                    case 24:
+                    default: return R.drawable.widget_toggle_card_blur_on_bg;
+                }
+            } else {
+                switch (tier) {
+                    case 0: return R.drawable.widget_list_card_blur_bg_r0;
+                    case 8: return R.drawable.widget_list_card_blur_bg_r8;
+                    case 16: return R.drawable.widget_list_card_blur_bg_r16;
+                    case 32: return R.drawable.widget_list_card_blur_bg_r32;
+                    case 24:
+                    default: return R.drawable.widget_list_card_blur_bg;
+                }
+            }
+        }
         if (isAmoled) {
             if (isToggleOn) {
                 switch (tier) {
@@ -108,7 +160,33 @@ public final class WidgetBackgroundHelper {
 
     @DrawableRes
     public static int getGridCardBackground(boolean isAmoled, boolean isToggleOn, int cornerRadiusDp) {
+        return getGridCardBackground(isAmoled, isToggleOn, cornerRadiusDp, false);
+    }
+
+    @DrawableRes
+    public static int getGridCardBackground(boolean isAmoled, boolean isToggleOn, int cornerRadiusDp, boolean isBlur) {
         int tier = getTier(cornerRadiusDp);
+        if (isBlur) {
+            if (isToggleOn) {
+                switch (tier) {
+                    case 0: return R.drawable.widget_toggle_card_blur_on_bg_r0;
+                    case 8: return R.drawable.widget_toggle_card_blur_on_bg_r8;
+                    case 16: return R.drawable.widget_toggle_card_blur_on_bg_r16;
+                    case 32: return R.drawable.widget_toggle_card_blur_on_bg_r32;
+                    case 24:
+                    default: return R.drawable.widget_toggle_grid_card_blur_on_bg;
+                }
+            } else {
+                switch (tier) {
+                    case 0: return R.drawable.widget_grid_card_blur_bg_r0;
+                    case 8: return R.drawable.widget_grid_card_blur_bg_r8;
+                    case 16: return R.drawable.widget_grid_card_blur_bg_r16;
+                    case 32: return R.drawable.widget_grid_card_blur_bg_r32;
+                    case 24:
+                    default: return R.drawable.widget_grid_card_blur_bg;
+                }
+            }
+        }
         if (isAmoled) {
             if (isToggleOn) {
                 switch (tier) {

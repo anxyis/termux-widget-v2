@@ -189,13 +189,14 @@ public class ShortcutDiskChartView extends View {
             drawSlice(canvas, mCommandsCount, mColorCommands, currentAngle, availableSweep, gapDegrees);
         }
 
-        // 2. Draw Center Text
+        // 2. Draw Center Text (Calculated with density offsets to prevent any font metric collisions)
+        float density = getResources().getDisplayMetrics().density;
         String countStr = String.valueOf(mTotalCount);
-        float textY = centerY - ((mTextTitlePaint.descent() + mTextTitlePaint.ascent()) / 2f) - 6f;
+        float textY = centerY - (2f * density);
         canvas.drawText(countStr, centerX, textY, mTextTitlePaint);
 
         String subStr = "ITEMS";
-        float subY = centerY + 16f;
+        float subY = centerY + (13f * density);
         canvas.drawText(subStr, centerX, subY, mTextSubPaint);
     }
 

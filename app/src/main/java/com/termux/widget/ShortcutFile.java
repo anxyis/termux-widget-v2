@@ -313,6 +313,7 @@ public final class ShortcutFile {
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_item);
         remoteViews.setTextViewText(R.id.widget_item, getLabel());
 
+        boolean isBlur = TermuxWidgetStylePreferences.isBlurEnabled(context);
         int cornerRadius = TermuxWidgetStylePreferences.getCornerRadiusDp(context);
         int textSizeSp = TermuxWidgetStylePreferences.getTextSizeSp(context);
         int iconSizeDp = TermuxWidgetStylePreferences.getIconSizeDp(context);
@@ -330,10 +331,29 @@ public final class ShortcutFile {
         int defaultIcon = isTaskScript ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
         boolean isToggleOn = mIsToggle && mToggleIsOn;
 
-        int cardBgRes = WidgetBackgroundHelper.getListCardBackground(isAmoled, isToggleOn, cornerRadius);
+        int cardBgRes = WidgetBackgroundHelper.getListCardBackground(isAmoled, isToggleOn, cornerRadius, isBlur);
         remoteViews.setInt(R.id.widget_item_card_container, "setBackgroundResource", cardBgRes);
 
-        if (isAmoled) {
+        if (isBlur) {
+            if (mIsToggle) {
+                if (mToggleIsOn) {
+                    remoteViews.setInt(R.id.widget_item_icon_badge, "setBackgroundResource", R.drawable.widget_toggle_badge_on_bg);
+                    remoteViews.setTextColor(R.id.widget_item, Color.BLACK);
+                    IconHelper.applyToRemoteViews(remoteViews, R.id.widget_item_icon, R.id.widget_item_custom_image, mIconId, defaultIcon);
+                    remoteViews.setInt(R.id.widget_item_icon, "setColorFilter", Color.BLACK);
+                } else {
+                    remoteViews.setInt(R.id.widget_item_icon_badge, "setBackgroundResource", R.drawable.widget_list_circle_icon_blur_bg);
+                    remoteViews.setTextColor(R.id.widget_item, Color.WHITE);
+                    IconHelper.applyToRemoteViews(remoteViews, R.id.widget_item_icon, R.id.widget_item_custom_image, mIconId, defaultIcon);
+                    remoteViews.setInt(R.id.widget_item_icon, "setColorFilter", Color.WHITE);
+                }
+            } else {
+                remoteViews.setInt(R.id.widget_item_icon_badge, "setBackgroundResource", R.drawable.widget_list_circle_icon_blur_bg);
+                remoteViews.setTextColor(R.id.widget_item, Color.WHITE);
+                IconHelper.applyToRemoteViews(remoteViews, R.id.widget_item_icon, R.id.widget_item_custom_image, mIconId, defaultIcon);
+                remoteViews.setInt(R.id.widget_item_icon, "setColorFilter", Color.WHITE);
+            }
+        } else if (isAmoled) {
             if (mIsToggle) {
                 if (mToggleIsOn) {
                     remoteViews.setInt(R.id.widget_item_icon_badge, "setBackgroundResource", R.drawable.widget_toggle_badge_amoled_on_bg);
@@ -379,12 +399,14 @@ public final class ShortcutFile {
     public RemoteViews getGridWidgetView(Context context) {
         if (context != null) applyCustomMetadata(context);
         boolean isAmoled = ThemeManager.isAmoledMode(context);
+        boolean isBlur = TermuxWidgetStylePreferences.isBlurEnabled(context);
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_grid_item);
         remoteViews.setTextViewText(R.id.widget_grid_item_label, getLabel());
 
         int cornerRadius = TermuxWidgetStylePreferences.getCornerRadiusDp(context);
         int textSizeSp = TermuxWidgetStylePreferences.getTextSizeSp(context);
         int iconSizeDp = TermuxWidgetStylePreferences.getIconSizeDp(context);
+        int gridSpacingDp = TermuxWidgetStylePreferences.getGridSpacingDp(context);
         int badgeSizeDp = Math.round(iconSizeDp * 1.6f);
 
         remoteViews.setTextViewTextSize(R.id.widget_grid_item_label, TypedValue.COMPLEX_UNIT_SP, textSizeSp);
@@ -393,16 +415,35 @@ public final class ShortcutFile {
             remoteViews.setViewLayoutHeight(R.id.widget_grid_item_icon, iconSizeDp, TypedValue.COMPLEX_UNIT_DIP);
             remoteViews.setViewLayoutWidth(R.id.widget_grid_item_icon_badge, badgeSizeDp, TypedValue.COMPLEX_UNIT_DIP);
             remoteViews.setViewLayoutHeight(R.id.widget_grid_item_icon_badge, badgeSizeDp, TypedValue.COMPLEX_UNIT_DIP);
+            remoteViews.setViewLayoutMargin(R.id.widget_grid_item_layout, RemoteViews.MARGIN_TOP, gridSpacingDp, TypedValue.COMPLEX_UNIT_DIP);
+            remoteViews.setViewLayoutHeight(R.id.widget_grid_item_root, Math.max(68, gridSpacingDp + 52), TypedValue.COMPLEX_UNIT_DIP);
         }
 
         boolean isTaskScript = isTask();
         int defaultIcon = isTaskScript ? R.drawable.ic_hero_bolt : R.drawable.ic_lucide_terminal;
         boolean isToggleOn = mIsToggle && mToggleIsOn;
 
-        int gridBgRes = WidgetBackgroundHelper.getGridCardBackground(isAmoled, isToggleOn, cornerRadius);
+        int gridBgRes = WidgetBackgroundHelper.getGridCardBackground(isAmoled, isToggleOn, cornerRadius, isBlur);
         remoteViews.setInt(R.id.widget_grid_item_layout, "setBackgroundResource", gridBgRes);
 
-        if (isAmoled) {
+        if (isBlur) {
+            if (mIsToggle) {
+                if (mToggleIsOn) {
+                    remoteViews.setInt(R.id.widget_grid_item_icon_badge, "setBackgroundResource", R.drawable.widget_toggle_badge_on_bg);
+                    remoteViews.setTextColor(R.id.widget_grid_item_label, Color.BLACK);
+                    remoteViews.setInt(R.id.widget_grid_item_icon, "setColorFilter", Color.BLACK);
+                } else {
+                    remoteViews.setInt(R.id.widget_grid_item_icon_badge, "setBackgroundResource", R.drawable.widget_grid_circle_blur_bg);
+                    remoteViews.setTextColor(R.id.widget_grid_item_label, Color.WHITE);
+                    remoteViews.setInt(R.id.widget_grid_item_icon, "setColorFilter", Color.WHITE);
+                }
+            } else {
+                remoteViews.setInt(R.id.widget_grid_item_icon_badge, "setBackgroundResource", R.drawable.widget_grid_circle_blur_bg);
+                remoteViews.setTextColor(R.id.widget_grid_item_label, Color.WHITE);
+                remoteViews.setInt(R.id.widget_grid_item_icon, "setColorFilter", Color.WHITE);
+            }
+            IconHelper.applyToRemoteViews(remoteViews, R.id.widget_grid_item_icon, R.id.widget_grid_item_custom_image, mIconId, defaultIcon);
+        } else if (isAmoled) {
             if (mIsToggle) {
                 if (mToggleIsOn) {
                     remoteViews.setInt(R.id.widget_grid_item_icon_badge, "setBackgroundResource", R.drawable.widget_toggle_badge_amoled_on_bg);

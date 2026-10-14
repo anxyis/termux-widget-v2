@@ -12,10 +12,14 @@ public final class TermuxWidgetStylePreferences {
     public static final String KEY_CORNER_RADIUS_DP = "widget_corner_radius_dp";
     public static final String KEY_TEXT_SIZE_SP = "widget_text_size_sp";
     public static final String KEY_ICON_SIZE_DP = "widget_icon_size_dp";
+    public static final String KEY_GRID_SPACING_DP = "widget_grid_spacing_dp";
+    public static final String KEY_BLUR_EFFECT = "widget_blur_effect";
 
     public static final int DEFAULT_CORNER_RADIUS_DP = 24;
     public static final int DEFAULT_TEXT_SIZE_SP = 13;
     public static final int DEFAULT_ICON_SIZE_DP = 24;
+    public static final int DEFAULT_GRID_SPACING_DP = 14;
+    public static final boolean DEFAULT_BLUR_EFFECT = false;
 
     private TermuxWidgetStylePreferences() {}
 
@@ -47,11 +51,29 @@ public final class TermuxWidgetStylePreferences {
         getPrefs(context).edit().putInt(KEY_ICON_SIZE_DP, iconSizeDp).apply();
     }
 
+    public static int getGridSpacingDp(@NonNull Context context) {
+        return getPrefs(context).getInt(KEY_GRID_SPACING_DP, DEFAULT_GRID_SPACING_DP);
+    }
+
+    public static void setGridSpacingDp(@NonNull Context context, int gridSpacingDp) {
+        getPrefs(context).edit().putInt(KEY_GRID_SPACING_DP, gridSpacingDp).apply();
+    }
+
+    public static boolean isBlurEnabled(@NonNull Context context) {
+        return getPrefs(context).getBoolean(KEY_BLUR_EFFECT, DEFAULT_BLUR_EFFECT);
+    }
+
+    public static void setBlurEnabled(@NonNull Context context, boolean enabled) {
+        getPrefs(context).edit().putBoolean(KEY_BLUR_EFFECT, enabled).apply();
+    }
+
     public static void resetToDefaults(@NonNull Context context) {
         getPrefs(context).edit()
                 .putInt(KEY_CORNER_RADIUS_DP, DEFAULT_CORNER_RADIUS_DP)
                 .putInt(KEY_TEXT_SIZE_SP, DEFAULT_TEXT_SIZE_SP)
                 .putInt(KEY_ICON_SIZE_DP, DEFAULT_ICON_SIZE_DP)
+                .putInt(KEY_GRID_SPACING_DP, DEFAULT_GRID_SPACING_DP)
+                .putBoolean(KEY_BLUR_EFFECT, DEFAULT_BLUR_EFFECT)
                 .apply();
     }
 }

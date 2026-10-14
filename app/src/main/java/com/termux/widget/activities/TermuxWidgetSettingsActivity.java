@@ -39,10 +39,13 @@ public class TermuxWidgetSettingsActivity extends AppCompatActivity {
     private TextView mTxtCornerVal;
     private TextView mTxtTextVal;
     private TextView mTxtIconVal;
+    private TextView mTxtGridVal;
 
     private Slider mSliderCorner;
     private Slider mSliderText;
     private Slider mSliderIcon;
+    private Slider mSliderGrid;
+    private MaterialSwitch mSwitchBlur;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +68,12 @@ public class TermuxWidgetSettingsActivity extends AppCompatActivity {
         mTxtCornerVal = findViewById(R.id.txt_val_corner_radius);
         mTxtTextVal = findViewById(R.id.txt_val_text_size);
         mTxtIconVal = findViewById(R.id.txt_val_icon_size);
+        mTxtGridVal = findViewById(R.id.txt_val_grid_spacing);
 
         mSliderCorner = findViewById(R.id.slider_corner_radius);
         mSliderText = findViewById(R.id.slider_text_size);
         mSliderIcon = findViewById(R.id.slider_icon_size);
+        mSliderGrid = findViewById(R.id.slider_grid_spacing);
 
         // AMOLED Switch
         MaterialSwitch switchAmoled = findViewById(R.id.switch_settings_amoled);
@@ -82,10 +87,22 @@ public class TermuxWidgetSettingsActivity extends AppCompatActivity {
             });
         }
 
+        // Frosted Glass Blur Switch
+        mSwitchBlur = findViewById(R.id.switch_settings_blur);
+        if (mSwitchBlur != null) {
+            mSwitchBlur.setChecked(TermuxWidgetStylePreferences.isBlurEnabled(this));
+            mSwitchBlur.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                TermuxWidgetStylePreferences.setBlurEnabled(this, isChecked);
+                updatePreviewBlurAndTheme();
+                TermuxWidgetProvider.sendIntentToRefreshAllWidgets(this, "BlurToggleChange");
+            });
+        }
+
         // Sliders Setup
         int currentCorner = TermuxWidgetStylePreferences.getCornerRadiusDp(this);
         int currentText = TermuxWidgetStylePreferences.getTextSizeSp(this);
         int currentIcon = TermuxWidgetStylePreferences.getIconSizeDp(this);
+        int currentGridSpacing = TermuxWidgetStylePreferences.getGridSpacingDp(this);
 
         if (mSliderCorner != null) {
             mSliderCorner.setValue(Math.max(0, Math.min(32, currentCorner)));
@@ -150,6 +167,26 @@ public class TermuxWidgetSettingsActivity extends AppCompatActivity {
             });
         }
 
+        if (mSliderGrid != null) {
+            mSliderGrid.setValue(Math.max(0, Math.min(48, currentGridSpacing)));
+            if (mTxtGridVal != null) mTxtGridVal.setText(currentGridSpacing + " dp");
+            mSliderGrid.addOnChangeListener((slider, value, fromUser) -> {
+                int val = (int) value;
+                if (mTxtGridVal != null) mTxtGridVal.setText(val + " dp");
+            });
+            mSliderGrid.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
+                @Override
+                public void onStartTrackingTouch(Slider slider) {}
+
+                @Override
+                public void onStopTrackingTouch(Slider slider) {
+                    int val = (int) slider.getValue();
+                    TermuxWidgetStylePreferences.setGridSpacingDp(TermuxWidgetSettingsActivity.this, val);
+                    TermuxWidgetProvider.sendIntentToRefreshAllWidgets(TermuxWidgetSettingsActivity.this, "GridSpacingChange");
+                }
+            });
+        }
+
         // Reset to Defaults Button
         MaterialButton btnReset = findViewById(R.id.btn_reset_widget_styling);
         if (btnReset != null) {
@@ -159,9 +196,12 @@ public class TermuxWidgetSettingsActivity extends AppCompatActivity {
                 if (mSliderCorner != null) mSliderCorner.setValue(TermuxWidgetStylePreferences.DEFAULT_CORNER_RADIUS_DP);
                 if (mSliderText != null) mSliderText.setValue(TermuxWidgetStylePreferences.DEFAULT_TEXT_SIZE_SP);
                 if (mSliderIcon != null) mSliderIcon.setValue(TermuxWidgetStylePreferences.DEFAULT_ICON_SIZE_DP);
+                if (mSliderGrid != null) mSliderGrid.setValue(TermuxWidgetStylePreferences.DEFAULT_GRID_SPACING_DP);
+                if (mSwitchBlur != null) mSwitchBlur.setChecked(TermuxWidgetStylePreferences.DEFAULT_BLUR_EFFECT);
                 updatePreviewCornerRadius(TermuxWidgetStylePreferences.DEFAULT_CORNER_RADIUS_DP);
                 updatePreviewTextSize(TermuxWidgetStylePreferences.DEFAULT_TEXT_SIZE_SP);
                 updatePreviewIconSize(TermuxWidgetStylePreferences.DEFAULT_ICON_SIZE_DP);
+                updatePreviewBlurAndTheme();
                 TermuxWidgetProvider.sendIntentToRefreshAllWidgets(this, "ResetStyles");
                 Toast.makeText(this, "Widget styling reset to defaults", Toast.LENGTH_SHORT).show();
             });
@@ -197,6 +237,7 @@ public class TermuxWidgetSettingsActivity extends AppCompatActivity {
         updatePreviewIconSize(currentIcon);
 
         applyAmoledThemeIfNeeded();
+        updatePreviewBlurAndTheme();
     }
 
     private void updatePreviewCornerRadius(int radiusDp) {
@@ -230,6 +271,62 @@ public class TermuxWidgetSettingsActivity extends AppCompatActivity {
                 lp.width = dpToPx(sizeDp);
                 lp.height = dpToPx(sizeDp);
                 mPreviewIcon.setLayoutParams(lp);
+            }
+        }
+    }
+
+    private void updatePreviewBlurAndTheme() {
+        boolean isBlur = TermuxWidgetStylePreferences.isBlurEnabled(this);
+        boolean isAmoled = ThemeManager.isAmoledMode(this);
+
+        if (isBlur) {
+            if (mCardPreview != null) {
+                mCardPreview.setCardBackgroundColor(Color.parseColor("#381A1A20"));
+                mCardPreview.setStrokeColor(Color.parseColor("#4DFFFFFF"));
+            }
+            if (mPreviewIconFrame != null) {
+                mPreviewIconFrame.setBackgroundResource(R.drawable.widget_icon_badge_blur_bg);
+            }
+            if (mPreviewTitle != null) mPreviewTitle.setTextColor(Color.WHITE);
+            if (mPreviewSubtitle != null) mPreviewSubtitle.setTextColor(Color.parseColor("#CCCCCC"));
+            if (mPreviewIcon != null) mPreviewIcon.setColorFilter(Color.WHITE);
+        } else if (isAmoled) {
+            if (mCardPreview != null) {
+                mCardPreview.setCardBackgroundColor(Color.parseColor("#0A0A0A"));
+                mCardPreview.setStrokeColor(Color.parseColor("#262626"));
+            }
+            if (mPreviewIconFrame != null) {
+                mPreviewIconFrame.setBackgroundResource(R.drawable.widget_icon_badge_amoled_bg);
+            }
+            if (mPreviewTitle != null) mPreviewTitle.setTextColor(Color.WHITE);
+            if (mPreviewSubtitle != null) mPreviewSubtitle.setTextColor(Color.parseColor("#9E9E9E"));
+            if (mPreviewIcon != null) mPreviewIcon.setColorFilter(Color.WHITE);
+        } else {
+            if (mCardPreview != null) {
+                TypedValue tvBg = new TypedValue();
+                getTheme().resolveAttribute(com.google.android.material.R.attr.colorSurfaceContainer, tvBg, true);
+                mCardPreview.setCardBackgroundColor(tvBg.data);
+                TypedValue tvStroke = new TypedValue();
+                getTheme().resolveAttribute(com.google.android.material.R.attr.colorOutlineVariant, tvStroke, true);
+                mCardPreview.setStrokeColor(tvStroke.data);
+            }
+            if (mPreviewIconFrame != null) {
+                mPreviewIconFrame.setBackgroundResource(R.drawable.widget_icon_badge_bg);
+            }
+            if (mPreviewTitle != null) {
+                TypedValue tvOnSurface = new TypedValue();
+                getTheme().resolveAttribute(com.google.android.material.R.attr.colorOnSurface, tvOnSurface, true);
+                mPreviewTitle.setTextColor(tvOnSurface.data);
+            }
+            if (mPreviewSubtitle != null) {
+                TypedValue tvSub = new TypedValue();
+                getTheme().resolveAttribute(com.google.android.material.R.attr.colorOnSurfaceVariant, tvSub, true);
+                mPreviewSubtitle.setTextColor(tvSub.data);
+            }
+            if (mPreviewIcon != null) {
+                TypedValue tvPrimary = new TypedValue();
+                getTheme().resolveAttribute(com.google.android.material.R.attr.colorPrimary, tvPrimary, true);
+                mPreviewIcon.setColorFilter(tvPrimary.data);
             }
         }
     }
@@ -270,6 +367,13 @@ public class TermuxWidgetSettingsActivity extends AppCompatActivity {
         ImageView imgMoon = findViewById(R.id.img_settings_moon);
         if (imgMoon != null) imgMoon.setColorFilter(Color.WHITE);
 
+        TextView txtBlurTitle = findViewById(R.id.txt_settings_blur_title);
+        if (txtBlurTitle != null) txtBlurTitle.setTextColor(Color.WHITE);
+        TextView txtBlurSub = findViewById(R.id.txt_settings_blur_subtitle);
+        if (txtBlurSub != null) txtBlurSub.setTextColor(Color.parseColor("#9E9E9E"));
+        ImageView imgBlur = findViewById(R.id.img_settings_blur);
+        if (imgBlur != null) imgBlur.setColorFilter(Color.WHITE);
+
         if (mPreviewTitle != null) mPreviewTitle.setTextColor(Color.WHITE);
         if (mPreviewSubtitle != null) mPreviewSubtitle.setTextColor(Color.parseColor("#9E9E9E"));
         if (mPreviewIcon != null) mPreviewIcon.setColorFilter(Color.WHITE);
@@ -281,10 +385,13 @@ public class TermuxWidgetSettingsActivity extends AppCompatActivity {
         if (labelText != null) labelText.setTextColor(Color.WHITE);
         TextView labelIcon = findViewById(R.id.label_icon_size);
         if (labelIcon != null) labelIcon.setTextColor(Color.WHITE);
+        TextView labelGrid = findViewById(R.id.label_grid_spacing);
+        if (labelGrid != null) labelGrid.setTextColor(Color.WHITE);
 
         if (mTxtCornerVal != null) mTxtCornerVal.setTextColor(Color.WHITE);
         if (mTxtTextVal != null) mTxtTextVal.setTextColor(Color.WHITE);
         if (mTxtIconVal != null) mTxtIconVal.setTextColor(Color.WHITE);
+        if (mTxtGridVal != null) mTxtGridVal.setTextColor(Color.WHITE);
 
         // AMOLED Buttons
         int[] btnIds = {R.id.btn_reset_widget_styling, R.id.btn_settings_permissions, R.id.btn_settings_copy_setup};
